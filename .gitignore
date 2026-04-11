@@ -1,6 +1,54 @@
-.venv/
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets
 .env
-*.pyc
+.env.*
+!.env.example
+
+# Local data and generated artifacts
 data/
-.streamlit/
+_system/
+logs/
+*.log
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build / packaging
+dist/
+build/
+*.egg-info/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Streamlit / runtime leftovers
+.streamlit/secrets.toml
+
+# Local task files / caches if created outside data
+runtime_tasks/
+cache/
