@@ -1,0 +1,13 @@
+streamlit
+pandas
+sqlalchemy
+pydantic>=2.0
+python-dotenv
+openai>=1.35.0
+pypdf
+pymupdf
+pdfplumber
+markdown
+numpy
+scikit-learn
+json5

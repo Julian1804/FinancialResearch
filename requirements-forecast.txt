@@ -1,0 +1,4 @@
+# BSTS 预测可选依赖（单独安装，避免首次环境搭建过重）
+# 使用前执行：pip install -r requirements-forecast.txt
+tensorflow-cpu>=2.16,<2.18
+tensorflow-probability>=0.24,<0.25
