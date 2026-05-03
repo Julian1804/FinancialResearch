@@ -1,0 +1,154 @@
+{
+  "balance_sheet": [
+    {
+      "canonical_field_name": "total_assets",
+      "exact_aliases": ["资产总计", "总资产", "TOTAL ASSETS"],
+      "phrase_aliases": [],
+      "weak_aliases": ["assets"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Total assets in balance sheet."
+    },
+    {
+      "canonical_field_name": "total_liabilities",
+      "exact_aliases": ["负债合计", "负债总计", "TOTAL LIABILITIES"],
+      "phrase_aliases": [],
+      "weak_aliases": ["liabilities"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Total liabilities in balance sheet."
+    },
+    {
+      "canonical_field_name": "total_equity",
+      "exact_aliases": ["所有者权益合计", "股东权益合计", "TOTAL EQUITY"],
+      "phrase_aliases": ["归属于母公司所有者权益合计"],
+      "weak_aliases": ["equity"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Total equity in balance sheet."
+    },
+    {
+      "canonical_field_name": "cash_and_cash_equivalents",
+      "exact_aliases": ["货币资金", "现金及现金等价物"],
+      "phrase_aliases": ["现金及现金等价物余额"],
+      "weak_aliases": ["cash"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Cash and cash equivalents or monetary funds."
+    }
+  ],
+  "income_statement": [
+    {
+      "canonical_field_name": "revenue",
+      "exact_aliases": ["营业收入"],
+      "phrase_aliases": ["主营业务收入", "营业总收入", "Revenue from contracts with customers"],
+      "weak_aliases": ["收入", "收益", "Revenue"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Revenue or operating income."
+    },
+    {
+      "canonical_field_name": "operating_profit",
+      "exact_aliases": ["营业利润", "经营利润", "Operating profit"],
+      "phrase_aliases": [],
+      "weak_aliases": ["profit"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Operating profit."
+    },
+    {
+      "canonical_field_name": "net_profit",
+      "exact_aliases": ["净利润", "本期净利润", "Profit for the period"],
+      "phrase_aliases": ["归属于上市公司股东的净利润"],
+      "weak_aliases": ["Profit"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Net profit."
+    },
+    {
+      "canonical_field_name": "net_profit_attributable_parent",
+      "exact_aliases": ["归母净利润"],
+      "phrase_aliases": ["归属于母公司所有者的净利润", "归属于上市公司股东的净利润"],
+      "weak_aliases": [],
+      "value_type": "number",
+      "required": false,
+      "notes": "Net profit attributable to parent."
+    }
+  ],
+  "cash_flow_statement": [
+    {
+      "canonical_field_name": "operating_cash_flow",
+      "exact_aliases": ["经营活动产生的现金流量净额", "经营活动现金流量净额", "Net cash flows from operating activities"],
+      "phrase_aliases": [],
+      "weak_aliases": ["经营活动"],
+      "value_type": "number",
+      "required": true,
+      "notes": "Net cash flow from operating activities."
+    },
+    {
+      "canonical_field_name": "investing_cash_flow",
+      "exact_aliases": ["投资活动产生的现金流量净额", "Net cash flows from investing activities"],
+      "phrase_aliases": [],
+      "weak_aliases": ["投资活动"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Net cash flow from investing activities."
+    },
+    {
+      "canonical_field_name": "financing_cash_flow",
+      "exact_aliases": ["筹资活动产生的现金流量净额", "Net cash flows from financing activities"],
+      "phrase_aliases": [],
+      "weak_aliases": ["筹资活动"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Net cash flow from financing activities."
+    },
+    {
+      "canonical_field_name": "cash_end_period",
+      "exact_aliases": ["期末现金及现金等价物余额", "现金及现金等价物期末余额"],
+      "phrase_aliases": ["现金及现金等价物的期末余额"],
+      "weak_aliases": [],
+      "value_type": "number",
+      "required": false,
+      "notes": "Cash and cash equivalents at period end."
+    }
+  ],
+  "shareholder_table": [
+    {
+      "canonical_field_name": "shareholder_name",
+      "exact_aliases": ["股东名称", "股东姓名", "Name of shareholder"],
+      "phrase_aliases": [],
+      "weak_aliases": ["名称"],
+      "value_type": "text",
+      "required": false,
+      "notes": "Shareholder name."
+    },
+    {
+      "canonical_field_name": "shares_held",
+      "exact_aliases": ["持股数量", "持股数"],
+      "phrase_aliases": [],
+      "weak_aliases": ["持股"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Shares held."
+    },
+    {
+      "canonical_field_name": "shareholding_ratio",
+      "exact_aliases": ["持股比例", "持股百分比"],
+      "phrase_aliases": [],
+      "weak_aliases": ["比例"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Shareholding ratio."
+    },
+    {
+      "canonical_field_name": "pledged_shares",
+      "exact_aliases": ["质押股份数量", "质押数量"],
+      "phrase_aliases": ["质押、标记或冻结情况"],
+      "weak_aliases": ["质押"],
+      "value_type": "number",
+      "required": false,
+      "notes": "Pledged shares."
+    }
+  ]
+}

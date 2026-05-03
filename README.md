@@ -1,80 +1,26 @@
-# Financial Research Assistant
+# FinancialResearch
 
-## 项目简介
+FinancialResearch 是一个个人投资研究用的金融研究总集成平台，目标是提供类似研究 Dashboard 的工作台，逐步覆盖：
 
-Financial Research Assistant 是一个面向长期研究场景的财报分析系统。
+- 财报研究
+- 宏观研究
+- 舆情分析
+- 大类资产 / 商品 / 股指 / 汇率 / 利率跟踪
+- 研究资料库
+- 决策支持
 
-它不是一次性“上传几份财报、自动生成一篇报告”的聊天工具，而是一个围绕 **主财报、辅助材料、预测、回测、修正日志、管理层反馈** 持续运转的研究系统。项目核心目标是建立：
+本次重构是工程架构升级，不是推翻原有财报分析方法论。FinancialResearch 仍然围绕长期跟踪、预测、回测、修正来组织研究工作。
 
-- 持续研究
-- 持续修正预期
-- 持续回测偏差
-- 持续沉淀系统记忆
+## Research Methodology
 
-项目定位更接近一个 **研究操作系统**，而不是普通的 AI 摘要工具。
+原有财报分析方法论保持不变：
 
----
+- 先做一级 / 二级 / 三级行业分类
+- 结合宏观环境作为 benchmark
+- 围绕财报长期跟踪、预测、回测、修正
+- 区分主时序财报和辅助材料
 
-## 项目要解决的问题
-
-这个项目希望解决的不只是“看懂一份财报”，而是一整套研究流程问题：
-
-1. 如何把多期正式财报串成稳定主时序。
-2. 如何纳入业绩公告、业绩说明会、演示材料、并购公告等辅助材料，但不污染主财报时间轴。
-3. 如何站在某个时间点，基于当时全部已知信息形成一份“当时视角”的研究报告。
-4. 如何根据当前信息预测下一期或下一年表现。
-5. 如何在真实数据出来后，对照旧预测进行回测。
-6. 如何识别偏差来自宏观、行业、公司变化，还是来自分析框架本身。
-7. 如何把偏差经验写回系统记忆，让下一轮研究更稳。
-8. 如何把研究结果转译成管理层可执行的信息和决策支持。
-
----
-
-## 项目方法论
-
-### 1. 研究系统 ≠ 聊天机器人
-本项目优先级：
-
-- 可解释性 > 复杂度
-- 稳定性 > 一次性聪明
-- 时间序列认知 > 单次回答漂亮
-- 结构化输出 > 大段自然语言
-- 允许“信息不足” > 编造结论
-
-### 2. 主财报与辅助材料必须严格分离
-主财报决定：
-
-- `report_type`
-- `period_key`
-- 主时序顺序
-- actuals 口径
-- 预测映射关系
-
-辅助材料只用于：
-
-- 修正预期
-- 补充研究上下文
-- 提高时效性
-- 解释趋势变化
-
-辅助材料不能替代正式财报，不能进入主时序 actuals。
-
-### 3. 预测不是“给个数字”
-预测必须具备：
-
-- 统计模型基础
-- AI 解释层
-- 预测快照
-- 实际值对照
-- 偏差归因
-- 修正日志
-- 历史反馈
-
----
-
-## 财报分析统一框架
-
-项目内所有公司分析，统一遵循以下 10 大模块：
+财报分析核心框架仍保留：
 
 1. 行业定位
 2. 宏观环境
@@ -87,136 +33,160 @@ Financial Research Assistant 是一个面向长期研究场景的财报分析系
 9. 护城河
 10. 风险 + 预期
 
-详细定义见：[`docs/RESEARCH_FRAMEWORK.md`](docs/RESEARCH_FRAMEWORK.md)
+主时序财报和辅助材料必须区分：主时序财报才预期包含资产负债表、利润表、现金流量表；业绩新闻稿、业绩公告、业绩简报、电话会议纪要、投资者演示材料等辅助材料不应因缺少三大表被判失败。
 
----
+## Current Architecture
 
-## 当前系统能力
+当前新架构：
 
-当前系统已经具备以下主流程能力：
+- `backend/`: FastAPI 主后端
+- `frontend_web/`: 未来 React + Vite 前端
+- `requirements/`: 分层依赖文件
+- `scripts/`: 本地 smoke test / dry-run 验证脚本
+- `docs/`: 架构、集成、测试与复盘文档
 
-- 上传财报
-- 解析 PDF 并生成 `parsed_*.json`
-- 提取关键结构化信息并生成 `extracted_*.json`
-- 自动抽取标准化财务指标
-- 生成 actual metrics registry
-- 多材料 AI 财报分析报告生成
-- 基于历史信息生成最新版研究报告（update）
-- 正式 BSTS 预测页 + forecast snapshot + registry
-- forecast_check 实际值对照与偏差分析
-- 回测复盘摘要 / 偏差热力图 / 预警信号总结
-- revision log 写回 history_memory
-- 基于历史资料的 QA 检索问答
-- repository / timeline / SQLite 索引总览
-- 正式版工作台 + 测试版独立调试页面
-- 公司画像标签体系与手动覆盖能力
+核心 backend 模块：
 
----
+- `backend/app/modules/financial_report`: 财报研究模块
+- `backend/app/modules/macro_research`: 宏观研究模块占位
+- `backend/app/modules/sentiment_analysis`: 舆情分析模块占位
+- `backend/app/modules/market_data_tracking`: 大类资产跟踪模块占位
+- `backend/app/modules/research_repository`: 研究资料库模块占位
+- `backend/app/modules/decision_support`: 决策支持模块占位
+- `backend/app/modules/system_tasks`: 系统任务模块占位
 
-## 前端结构
-
-### 正式版
-面向日常使用，目标是：
-
-- 操作简化
-- 后台逻辑完整
-- 不暴露太多中间过程
-
-当前正式版主要包括：
-
-- 工作台
-- 公司画像
-
-### 测试版
-面向开发和调试，保留每一层独立页面：
-
-- Upload
-- Parse
-- Extract
-- Metrics
-- Metrics Table
-- Actuals
-- Analyze
-- Update
-- Forecast
-- Forecast Dashboard
-- Forecast Check
-- Backtest Dashboard
-- Backtest Report
-- Revision Memory
-- Master Report
-- Summary Report
-- Decision Support
-- QA
-- Repository
-
----
-
-## 当前核心目录建议
+简化目录结构：
 
 ```text
-repo/
-├── app/
-├── config/
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── RESEARCH_FRAMEWORK.md
-│   ├── ROADMAP.md
-│   └── COLLABORATION.md（可后续补）
-├── tests/
-├── scripts/
-├── data/                  # 本地数据，不建议直接入库
-├── .env.example
-├── .gitignore
-├── README.md
-└── requirements.txt
+FinancialResearch/
+  backend/
+  frontend_web/
+  requirements/
+  scripts/
+  docs/
+  README.md
 ```
 
----
+旧 `app/` Streamlit 工程已从当前 refactor 分支移除，可从 Git 历史恢复。
 
-## 当前最重要的系统原则
+## Why Streamlit Was Removed
 
-1. 不能把辅助材料当主财报。
-2. 不能为了“看起来更聪明”破坏结构化和可追溯性。
-3. 不能让 AI 编造数字。
-4. 不能只看最新一期，忽略历史误差积累。
-5. 不能把正式版做成测试版那样复杂。
+Streamlit 曾用于快速原型验证，帮助项目跑通财报上传、解析、抽取、分析、预测、回测等早期流程。
 
----
+但长期平台化阶段需要更稳定的架构。旧 Streamlit 版本暴露出：
 
-## 当前尚未完全完成的部分
+- 页面刷新、侧边栏切换、task detail 切换时容易断线或重跑
+- 长任务与 UI 进程耦合，重 parser 容易拖垮页面
+- cancel / queued / running / hung 状态不够清晰
+- logs 与真实任务状态可能不同步
+- UI 层和业务逻辑混在 `app/pages` 与 `app/services`
+- 不利于后续扩展宏观、舆情、大类资产、资料库和决策支持模块
 
-项目现在已经进入“研究系统”阶段，但仍有一些关键能力尚未完全完成：
+因此新架构改为 FastAPI + React。重任务通过 API、任务状态、registry 和 review gate 管理，前端只负责展示和交互。
 
-- 完整后台任务系统（当前为协作式取消，不是强中断）
-- parse 的单文件/单页耗时诊断
-- 更成熟的复杂页多模态解析
-- 更完整的全行业标签与行业画像映射
-- 统一状态总线 / registry 体系
-- 更强的模型输出 JSON 修复与 schema 约束
-- 更完整的 GitHub 多人协作规范
+详细复盘见：
 
-详细规划见：[`docs/ROADMAP.md`](docs/ROADMAP.md)
+- [STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md](docs/STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md)
+- [STREAMLIT_REMOVAL_REPORT.md](docs/STREAMLIT_REMOVAL_REPORT.md)
 
----
+## Parse Lab Boundary
 
-## 建议的协作流程
+Parse Lab 是独立 PDF 解析服务，不放在本仓库内。
 
-1. 先理解项目方法论，再开始改代码。
-2. 涉及 `parsed / extracted / report / registry` 结构变更时，先更新文档再改代码。
-3. 任何会影响主/辅材料判定的逻辑修改，都需要特别审查。
-4. 修改公司画像标签体系时，必须保持：
-   - BM / VC / LC 单选
-   - LC 支持 `sub_type`
-   - G 多选
-   - 手动覆盖优先级最高
-5. 预测与回测相关模块必须保证可追溯。
+边界原则：
 
----
+- FinancialResearch backend 通过 HTTP API 调用 Parse Lab
+- `frontend_web` 不直接调用 Parse Lab
+- FinancialResearch 不 import Parse Lab 内部 parser 模块
+- FinancialResearch 不直接调用 Marker / MinerU / Surya / pdfplumber / PyMuPDF
+- Parse Lab 负责 PDF 解析、页面级路由、表格恢复、跨页表格候选、quality flags
+- FinancialResearch 负责研究流程、质量门槛、review decision、字段抽取、分析、预测、回测和 Dashboard
 
-## 文档索引
+默认 Parse Lab API v1 地址：
 
-- 项目架构说明：[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-- 财报分析框架：[`docs/RESEARCH_FRAMEWORK.md`](docs/RESEARCH_FRAMEWORK.md)
-- 后续路线图：[`docs/ROADMAP.md`](docs/ROADMAP.md)
+```text
+PARSE_LAB_BASE_URL=http://127.0.0.1:8021
+```
 
+如果要运行 Parse Lab 相关接口，需要先启动 Parse Lab API v1：
+
+```text
+http://127.0.0.1:8021
+```
+
+## Completed In Current Refactor
+
+当前阶段已完成：
+
+- FastAPI backend skeleton
+- `/api/health` smoke test
+- Parse Lab HTTP client connectivity
+- Parse Lab single PDF submit + quality gate
+- Parsed document registry
+- Review queue
+- Review decision / extraction eligibility gate
+- Canonical table schema
+- Financial table candidate extraction dry-run
+- Statement field mapping prototype
+- Statement field mapping refinement
+- Minimal financial extraction dry-run prototype
+- Document role / report type gate
+- Legacy Streamlit lessons documentation
+
+## Not Yet Complete
+
+当前尚未完成：
+
+- 未接正式 extraction
+- 未接 metrics
+- 未接 forecast
+- 未接 backtest
+- 未接 report generation
+- 未做正式 frontend Dashboard
+- 未实现数据库持久化
+- 当前 registry / review decisions 仍是本地 JSONL
+- dry-run prototype 不等于正式财务字段入库
+
+## Run Backend
+
+启动 FinancialResearch backend：
+
+```powershell
+D:\workspace\envs\financial_research_backend\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8030
+```
+
+Health check：
+
+```text
+GET http://127.0.0.1:8030/api/health
+```
+
+预期返回：
+
+```json
+{"status":"ok","service":"financial_research_backend"}
+```
+
+## Development Principles
+
+- UI thin, backend-driven
+- Long-running tasks must not run inside frontend runtime
+- Parse Lab stays isolated
+- Frontend must call FinancialResearch backend, not Parse Lab directly
+- Parser dependencies must not be installed into the FinancialResearch backend environment
+- All parse outputs must pass quality gate and review decision before extraction
+- Auxiliary materials must not be penalized for missing three statements
+- No metrics / forecast / backtest before extraction regression tests
+- Keep source traceability: `source_pages`, `table_group_id`, `quality_flags`, parser source, confidence
+- Macro, sentiment, and market data modules should stay inside the main platform until heavy dependencies, long tasks, real-time collection, or model inference justify splitting them out
+
+## Documentation Index
+
+- [FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md](docs/FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md)
+- [FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md](docs/FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md)
+- [STREAMLIT_REMOVAL_REPORT.md](docs/STREAMLIT_REMOVAL_REPORT.md)
+- [STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md](docs/STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md)
+- [FINANCIAL_RESEARCH_PARSE_INTEGRATION_TODO.md](docs/FINANCIAL_RESEARCH_PARSE_INTEGRATION_TODO.md)
+- [PRE_COMMIT_REVIEW_REPORT.md](docs/PRE_COMMIT_REVIEW_REPORT.md)
+- [RESEARCH_FRAMEWORK.md](docs/RESEARCH_FRAMEWORK.md)
+- [ROADMAP.md](docs/ROADMAP.md)

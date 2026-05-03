@@ -20,6 +20,7 @@ env/
 
 # Local data and generated artifacts
 data/
+runtime/
 _system/
 logs/
 *.log
