@@ -12,6 +12,11 @@ Generated at: 2026-05-03
    - Keep UI thin and backend-driven.
    - Do not reintroduce long-running parser tasks into frontend runtime.
    - Keep Parse Lab isolated from the FinancialResearch backend environment.
+   - Run automated validation suite before each major refactor.
+   - Generate human review pack for semantic/numeric verification only.
+   - Do not delegate machine-checkable conditions to the user.
+   - Rank high-risk extraction candidates before manual review.
+   - Build review result recording mechanism.
 
 2. Parsed document registry persistence strategy
    - Current storage is local JSONL.
