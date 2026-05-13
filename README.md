@@ -37,6 +37,8 @@ FinancialResearch 是一个个人投资研究用的金融研究总集成平台�
 
 ## Current Architecture
 
+`financial_report` remains the core financial-report research module inside the platform. The detailed financial-report methodology is maintained in [docs/FINANCIAL_REPORT_MODULE_GUIDE.md](docs/FINANCIAL_REPORT_MODULE_GUIDE.md) and [backend/app/modules/financial_report/README.md](backend/app/modules/financial_report/README.md), so the root README can stay as a concise platform overview.
+
 当前新架构：
 
 - `backend/`: FastAPI 主后端
@@ -182,6 +184,7 @@ GET http://127.0.0.1:8030/api/health
 
 ## Documentation Index
 
+- [FINANCIAL_REPORT_MODULE_GUIDE.md](docs/FINANCIAL_REPORT_MODULE_GUIDE.md)
 - [FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md](docs/FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md)
 - [FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md](docs/FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md)
 - [STREAMLIT_REMOVAL_REPORT.md](docs/STREAMLIT_REMOVAL_REPORT.md)
