@@ -389,10 +389,13 @@ def _write_outputs(output_dir: Path, result: TrustedFactEnrichmentResult) -> Non
 
 
 def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
-    with path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(rows)
+    try:
+        with path.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+    except PermissionError:
+        return
 
 
 def _normalize_text(text: str) -> str:
