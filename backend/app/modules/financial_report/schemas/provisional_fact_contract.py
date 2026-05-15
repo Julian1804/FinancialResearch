@@ -224,3 +224,75 @@ class TrustedFactNormalizationResult(BaseModel):
     summary: TrustedFactNormalizationSummary
     gap_report: TrustedFactNormalizationGapReport
     normalized_facts: list[NormalizedTrustedFinancialFact] = Field(default_factory=list)
+
+
+class EnrichedTrustedFinancialFact(BaseModel):
+    enriched_fact_id: str
+    fact_id: str
+    original_fact_id: str
+    field_name: str
+    value_original: Any = None
+    unit_original: str = ""
+    currency_original: str = ""
+    period_original: str = ""
+    source_pdf: str
+    source_page: int
+    source_type: str
+    evidence_text: str
+    table_id: str = ""
+    engine_name: str = ""
+    validation_status: str
+    confidence: float = 0.0
+    trust_status: str
+    trusted: bool = True
+    candidate_only: bool = False
+    period_enriched: str = ""
+    fiscal_year: int | None = None
+    fiscal_period_type: str = ""
+    currency_enriched: str = ""
+    unit_enriched: str = ""
+    value_enriched: float | None = None
+    enrichment_status: str = "insufficient_evidence"
+    metadata_status: dict[str, str] = Field(default_factory=dict)
+    enrichment_sources: list[dict[str, Any]] = Field(default_factory=list)
+    metadata_gaps: list[str] = Field(default_factory=list)
+    provenance: dict[str, Any] = Field(default_factory=dict)
+
+
+class TrustedFactEnrichmentSummary(BaseModel):
+    enrichment_id: str
+    output_dir: str
+    input_trusted_fact_count: int = 0
+    enriched_success_count: int = 0
+    fully_enriched_count: int = 0
+    partially_enriched_count: int = 0
+    insufficient_evidence_count: int = 0
+    period_enriched_count: int = 0
+    currency_enriched_count: int = 0
+    unit_enriched_count: int = 0
+    value_enriched_count: int = 0
+    candidate_input_count: int = 0
+    enrichment_status_distribution: dict[str, int] = Field(default_factory=dict)
+    trust_status_distribution: dict[str, int] = Field(default_factory=dict)
+    source_pdf_distribution: dict[str, int] = Field(default_factory=dict)
+    enrichment_source_distribution: dict[str, int] = Field(default_factory=dict)
+    warnings: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class TrustedFactEnrichmentGapReport(BaseModel):
+    missing_period_count: int = 0
+    missing_currency_count: int = 0
+    missing_unit_count: int = 0
+    missing_value_enrichment_count: int = 0
+    missing_period_fact_ids: list[str] = Field(default_factory=list)
+    missing_currency_fact_ids: list[str] = Field(default_factory=list)
+    missing_unit_fact_ids: list[str] = Field(default_factory=list)
+    missing_value_enrichment_fact_ids: list[str] = Field(default_factory=list)
+
+
+class TrustedFactEnrichmentResult(BaseModel):
+    summary: TrustedFactEnrichmentSummary
+    gap_report: TrustedFactEnrichmentGapReport
+    enriched_facts: list[EnrichedTrustedFinancialFact] = Field(default_factory=list)
