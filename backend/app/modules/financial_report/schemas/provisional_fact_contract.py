@@ -125,3 +125,35 @@ class TrustResolutionResult(BaseModel):
     candidate_only_facts: list[ResolvedFinancialFact] = Field(default_factory=list)
     needs_human_review: list[ResolvedFinancialFact] = Field(default_factory=list)
     rejected_facts: list[ResolvedFinancialFact] = Field(default_factory=list)
+
+
+class TrustedFactGroupSummary(BaseModel):
+    group_id: str
+    source_pdf: str
+    source_page: int
+    field_name: str
+    period: str = ""
+    unit: str = ""
+    trust_status: str
+    fact_count: int = 0
+    values: list[Any] = Field(default_factory=list)
+    provenance: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class TrustedFactsAnalysisDigest(BaseModel):
+    digest_id: str
+    trusted_fact_count: int = 0
+    source_pdf_count: int = 0
+    source_page_count: int = 0
+    field_group_count: int = 0
+    trust_status_distribution: dict[str, int] = Field(default_factory=dict)
+    source_pdf_distribution: dict[str, int] = Field(default_factory=dict)
+    insufficient_trusted_evidence: list[str] = Field(default_factory=list)
+    notes: list[str] = Field(default_factory=list)
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class TrustedFactsAnalysisConsumptionResult(BaseModel):
+    digest: TrustedFactsAnalysisDigest
+    grouped_summary: list[TrustedFactGroupSummary] = Field(default_factory=list)
+    consumption_payload: list[ResolvedFinancialFact] = Field(default_factory=list)
