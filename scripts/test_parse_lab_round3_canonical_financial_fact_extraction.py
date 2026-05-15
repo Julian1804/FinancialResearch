@@ -26,17 +26,25 @@ def test_canonical_financial_fact_extraction() -> dict[str, object]:
     assert summary["trusted_canonical_fact_count"] > 0
     assert summary["trusted_by_text_count"] > 0
     assert summary["trusted_by_external_count"] > 0
+    assert summary["trusted_by_real_external_count"] == 0
+    assert summary["trusted_by_simulated_external_count"] > 0
+    assert summary["production_consumable_count"] == summary["trusted_by_text_count"]
+    assert summary["dev_test_consumable_count"] == summary["trusted_canonical_fact_count"]
     assert summary["candidate_only_count"] > 0
     assert summary["needs_human_review_count"] > 0
     assert summary["excluded_note_header_or_time_bucket_count"] > 0
     assert not summary["errors"]
 
-    trusted = load_trusted_canonical_facts_for_analysis()
+    trusted = load_trusted_canonical_facts_for_analysis(mode="test")
+    production_trusted = load_trusted_canonical_facts_for_analysis(mode="production")
     assert len(trusted) == summary["trusted_canonical_fact_count"]
+    assert len(production_trusted) == summary["production_consumable_count"]
+    assert all(not fact.is_simulated for fact in production_trusted)
+    assert all(fact.trust_status in {"trusted_by_text", "trusted_by_real_external"} for fact in production_trusted)
     canonical_fields = {field.canonical_field for field in result.canonical_fields}
     for fact in trusted:
         assert fact.canonical_field in canonical_fields
-        assert fact.trust_status in {"trusted_by_text", "trusted_by_external"}
+        assert fact.trust_status in {"trusted_by_text", "trusted_by_real_external", "trusted_by_simulated_external"}
         assert fact.sufficient_for_analysis is True
         assert fact.value_normalized is not None
         assert fact.unit
@@ -44,6 +52,12 @@ def test_canonical_financial_fact_extraction() -> dict[str, object]:
         assert fact.period
         assert fact.source_pdf
         assert fact.source_text
+        if fact.trust_status == "trusted_by_simulated_external":
+            assert fact.is_simulated is True
+            assert fact.provider_name
+            assert fact.provider_type == "mock_external_provider"
+            assert fact.retrieved_at
+            assert fact.source_url_or_reference.startswith("mock://")
         original = fact.original_field_name.lower()
         assert "note" not in original
         assert "1 year" not in original

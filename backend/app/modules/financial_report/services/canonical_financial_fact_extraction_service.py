@@ -15,6 +15,11 @@ from backend.app.modules.financial_report.schemas.canonical_fact_contract import
     CanonicalNeedsHumanReviewItem,
     TrustedCanonicalFinancialFact,
 )
+from backend.app.modules.financial_report.services.external_provider_interface import (
+    ExternalFinancialDataProvider,
+    ExternalProviderFact,
+    SimulatedExternalFinancialDataProvider,
+)
 from backend.app.modules.financial_report.services.parse_lab_field_candidate_ingestion_service import (
     DEFAULT_PARSE_LAB_EXPORT_DIR,
 )
@@ -25,7 +30,9 @@ CANONICAL_EXTRACTION_OUTPUT_DIR = (
     PROJECT_ROOT / "runtime" / "financial_report" / "canonical_extraction" / "parse_lab_round3"
 )
 
-TRUSTED_STATUSES = {"trusted_by_text", "trusted_by_external"}
+PRODUCTION_TRUSTED_STATUSES = {"trusted_by_text", "trusted_by_real_external"}
+DEV_TEST_TRUSTED_STATUSES = {"trusted_by_text", "trusted_by_real_external", "trusted_by_simulated_external"}
+TRUSTED_STATUSES = DEV_TEST_TRUSTED_STATUSES
 EXCLUDED_FIELD_TOKENS = {
     "note",
     "附註",
@@ -117,12 +124,18 @@ TRUSTED_FACT_CSV_FIELDS = [
     "sufficient_for_analysis",
     "extraction_method",
     "confidence",
+    "provider_name",
+    "provider_type",
+    "retrieved_at",
+    "source_url_or_reference",
+    "is_simulated",
 ]
 
 
 def extract_parse_lab_round3_canonical_financial_facts(
     source_dir: Path | str = DEFAULT_PARSE_LAB_EXPORT_DIR,
     output_dir: Path | str = CANONICAL_EXTRACTION_OUTPUT_DIR,
+    external_providers: list[ExternalFinancialDataProvider] | None = None,
 ) -> CanonicalExtractionResult:
     source_dir = Path(source_dir)
     output_dir = Path(output_dir)
@@ -131,7 +144,11 @@ def extract_parse_lab_round3_canonical_financial_facts(
     page_context = _build_page_context(raw_candidates)
 
     trusted_by_text, used_candidate_ids = _extract_trusted_by_text(raw_candidates, page_context)
-    trusted_by_external = _simulate_external_provider_facts(source_pdfs, trusted_by_text)
+    trusted_by_external = _external_provider_facts(
+        source_pdfs,
+        trusted_by_text,
+        external_providers or [SimulatedExternalFinancialDataProvider()],
+    )
     trusted_facts = _dedupe_trusted_facts([*trusted_by_text, *trusted_by_external])
     trusted_keys = {(fact.source_pdf, fact.canonical_field) for fact in trusted_facts}
     needs_human_review = _build_human_review_queue(source_pdfs, trusted_keys)
@@ -151,6 +168,7 @@ def extract_parse_lab_round3_canonical_financial_facts(
 
 def load_trusted_canonical_facts_for_analysis(
     output_dir: Path | str = CANONICAL_EXTRACTION_OUTPUT_DIR,
+    mode: str = "production",
 ) -> list[TrustedCanonicalFinancialFact]:
     output_dir = Path(output_dir)
     trusted_path = output_dir / "trusted_canonical_facts.json"
@@ -158,12 +176,14 @@ def load_trusted_canonical_facts_for_analysis(
         extract_parse_lab_round3_canonical_financial_facts(output_dir=output_dir)
     payload = _read_json(trusted_path, {"items": []})
     facts = [TrustedCanonicalFinancialFact(**row) for row in payload.get("items", [])]
+    allowed_statuses = DEV_TEST_TRUSTED_STATUSES if mode in {"dev", "test"} else PRODUCTION_TRUSTED_STATUSES
     return [
         fact
         for fact in facts
-        if fact.trust_status in TRUSTED_STATUSES
+        if fact.trust_status in allowed_statuses
         and fact.sufficient_for_analysis
         and fact.canonical_field in _canonical_field_names()
+        and (mode in {"dev", "test"} or not fact.is_simulated)
     ]
 
 
@@ -242,69 +262,56 @@ def _extract_trusted_by_text(
     return facts, used_candidate_ids
 
 
-def _simulate_external_provider_facts(
+def _external_provider_facts(
     source_pdfs: list[str],
     text_facts: list[TrustedCanonicalFinancialFact],
+    external_providers: list[ExternalFinancialDataProvider],
 ) -> list[TrustedCanonicalFinancialFact]:
     text_keys = {(fact.source_pdf, fact.canonical_field) for fact in text_facts}
-    provider_values: dict[str, dict[str, float]] = {
-        "泡泡玛特2025年中报.pdf": {
-            "revenue": 13876000000,
-            "gross_profit": 9742000000,
-            "operating_profit": 4733000000,
-            "net_profit_attributable_to_parent": 4681700000,
-            "total_assets": 28650000000,
-            "total_liabilities": 8020000000,
-            "total_equity": 20630000000,
-            "cash_and_cash_equivalents": 10680000000,
-            "cost": 4134000000,
-        },
-        "华钰矿业2025年半年报.pdf": {
-            "revenue": 588000000,
-            "net_profit": 124000000,
-            "total_assets": 514042225.98,
-            "total_liabilities": 369971038.66,
-            "total_equity": 144071187.32,
-            "operating_cash_flow": 77000000,
-            "cash_and_cash_equivalents": 98000000,
-            "cost": 355000000,
-            "expense": 46000000,
-        },
-    }
     facts: list[TrustedCanonicalFinancialFact] = []
-    for source_pdf in source_pdfs:
-        period, fiscal_year, fiscal_period_type = _period_from_pdf_name(source_pdf)
-        for canonical_field, value in provider_values.get(source_pdf, {}).items():
-            if (source_pdf, canonical_field) in text_keys:
+    for provider in external_providers:
+        for external_fact in provider.fetch_canonical_facts(source_pdfs):
+            if (external_fact.source_pdf, external_fact.canonical_field) in text_keys:
                 continue
-            facts.append(
-                TrustedCanonicalFinancialFact(
-                    fact_id=f"external_{_slug(source_pdf)}_{canonical_field}",
-                    canonical_field=canonical_field,
-                    original_field_name=canonical_field,
-                    value=value,
-                    value_normalized=value,
-                    unit="yuan",
-                    currency="CNY",
-                    period=period,
-                    fiscal_year=fiscal_year or 0,
-                    fiscal_period_type=fiscal_period_type,
-                    source_pdf=source_pdf,
-                    source_page=0,
-                    source_type="simulated_authoritative_external_provider",
-                    source_text=f"Simulated authoritative provider value for {canonical_field} in {source_pdf}.",
-                    trust_status="trusted_by_external",
-                    sufficient_for_analysis=True,
-                    extraction_method="deterministic_simulated_external_provider",
-                    confidence=0.9,
-                    provenance={
-                        "provider": "simulated_authoritative_financial_data_provider",
-                        "provider_class": "external_authoritative_financial_data",
-                        "table_candidate_used_for": "not_used_for_trust",
-                    },
-                )
-            )
+            facts.append(_trusted_fact_from_external_provider(external_fact))
     return facts
+
+
+def _trusted_fact_from_external_provider(external_fact: ExternalProviderFact) -> TrustedCanonicalFinancialFact:
+    trust_status = "trusted_by_simulated_external" if external_fact.is_simulated else "trusted_by_real_external"
+    return TrustedCanonicalFinancialFact(
+        fact_id=f"external_{_slug(external_fact.provider_name)}_{_slug(external_fact.source_pdf)}_{external_fact.canonical_field}",
+        canonical_field=external_fact.canonical_field,
+        original_field_name=external_fact.canonical_field,
+        value=external_fact.value,
+        value_normalized=external_fact.value,
+        unit=external_fact.unit,
+        currency=external_fact.currency,
+        period=external_fact.period,
+        fiscal_year=external_fact.fiscal_year,
+        fiscal_period_type=external_fact.fiscal_period_type,
+        source_pdf=external_fact.source_pdf,
+        source_page=0,
+        source_type=external_fact.provider_type,
+        source_text=f"{external_fact.provider_name}: {external_fact.source_url_or_reference}",
+        trust_status=trust_status,
+        sufficient_for_analysis=True,
+        extraction_method="external_provider_interface",
+        confidence=external_fact.confidence,
+        provider_name=external_fact.provider_name,
+        provider_type=external_fact.provider_type,
+        retrieved_at=external_fact.retrieved_at,
+        source_url_or_reference=external_fact.source_url_or_reference,
+        is_simulated=external_fact.is_simulated,
+        provenance={
+            "provider_name": external_fact.provider_name,
+            "provider_type": external_fact.provider_type,
+            "retrieved_at": external_fact.retrieved_at.isoformat(),
+            "source_url_or_reference": external_fact.source_url_or_reference,
+            "is_simulated": external_fact.is_simulated,
+            "table_candidate_used_for": "not_used_for_trust",
+        },
+    )
 
 
 def _build_human_review_queue(
@@ -415,6 +422,14 @@ def _validate_trusted_facts(facts: list[TrustedCanonicalFinancialFact]) -> list[
             errors.append(f"{fact.fact_id}: noncanonical field entered trusted facts")
         if fact.trust_status not in TRUSTED_STATUSES:
             errors.append(f"{fact.fact_id}: invalid trust status")
+        if fact.trust_status in {"trusted_by_real_external", "trusted_by_simulated_external"}:
+            for provider_field in ("provider_name", "provider_type", "retrieved_at", "source_url_or_reference"):
+                if not getattr(fact, provider_field):
+                    errors.append(f"{fact.fact_id}: missing external provider field {provider_field}")
+        if fact.trust_status == "trusted_by_real_external" and fact.is_simulated:
+            errors.append(f"{fact.fact_id}: real external fact marked simulated")
+        if fact.trust_status == "trusted_by_simulated_external" and not fact.is_simulated:
+            errors.append(f"{fact.fact_id}: simulated external fact missing is_simulated")
         if not fact.sufficient_for_analysis:
             errors.append(f"{fact.fact_id}: trusted fact is not sufficient for analysis")
         for field_name in ("unit", "currency", "period", "source_pdf", "source_text"):
@@ -439,8 +454,22 @@ def _build_summary(
         output_dir=str(output_dir),
         canonical_field_count=len(CANONICAL_FIELD_DEFINITIONS),
         trusted_by_text_count=sum(1 for fact in trusted_facts if fact.trust_status == "trusted_by_text"),
-        trusted_by_external_count=sum(1 for fact in trusted_facts if fact.trust_status == "trusted_by_external"),
+        trusted_by_external_count=sum(
+            1 for fact in trusted_facts if fact.trust_status in {"trusted_by_real_external", "trusted_by_simulated_external"}
+        ),
+        trusted_by_real_external_count=sum(1 for fact in trusted_facts if fact.trust_status == "trusted_by_real_external"),
+        trusted_by_simulated_external_count=sum(
+            1 for fact in trusted_facts if fact.trust_status == "trusted_by_simulated_external"
+        ),
         trusted_canonical_fact_count=len(trusted_facts),
+        production_consumable_count=sum(
+            1
+            for fact in trusted_facts
+            if fact.trust_status in PRODUCTION_TRUSTED_STATUSES and fact.sufficient_for_analysis and not fact.is_simulated
+        ),
+        dev_test_consumable_count=sum(
+            1 for fact in trusted_facts if fact.trust_status in DEV_TEST_TRUSTED_STATUSES and fact.sufficient_for_analysis
+        ),
         needs_human_review_count=len(needs_human_review),
         candidate_only_count=len(candidate_only),
         excluded_note_header_or_time_bucket_count=sum(

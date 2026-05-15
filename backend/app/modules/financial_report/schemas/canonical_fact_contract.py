@@ -32,6 +32,11 @@ class TrustedCanonicalFinancialFact(BaseModel):
     sufficient_for_analysis: bool = True
     extraction_method: str
     confidence: float = 0.0
+    provider_name: str = ""
+    provider_type: str = ""
+    retrieved_at: datetime | None = None
+    source_url_or_reference: str = ""
+    is_simulated: bool = False
     provenance: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -67,7 +72,11 @@ class CanonicalExtractionSummary(BaseModel):
     canonical_field_count: int = 0
     trusted_by_text_count: int = 0
     trusted_by_external_count: int = 0
+    trusted_by_real_external_count: int = 0
+    trusted_by_simulated_external_count: int = 0
     trusted_canonical_fact_count: int = 0
+    production_consumable_count: int = 0
+    dev_test_consumable_count: int = 0
     needs_human_review_count: int = 0
     candidate_only_count: int = 0
     excluded_note_header_or_time_bucket_count: int = 0
