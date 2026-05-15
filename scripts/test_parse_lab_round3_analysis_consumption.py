@@ -21,10 +21,11 @@ from backend.app.modules.financial_report.services.trust_resolution_service impo
 def test_trusted_analysis_consumption() -> dict[str, object]:
     result = build_parse_lab_round3_trusted_analysis_consumption()
     digest = summarize_analysis_consumption(result)
-    assert digest["trusted_fact_count"] == 82
-    assert digest["field_group_count"] > 0
-    assert digest["trust_status_distribution"] == {"trusted_by_text": 80, "trusted_by_external": 2}
+    assert digest["trusted_fact_count"] == 0
+    assert digest["field_group_count"] == 0
+    assert digest["trust_status_distribution"] == {}
     assert digest["insufficient_trusted_evidence"]
+    assert "insufficient_trusted_evidence:no_trusted_facts" in digest["insufficient_trusted_evidence"]
 
     for fact in result.consumption_payload:
         assert fact.trusted is True

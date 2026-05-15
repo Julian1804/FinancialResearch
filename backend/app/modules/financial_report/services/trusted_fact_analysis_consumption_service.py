@@ -14,8 +14,9 @@ from backend.app.modules.financial_report.schemas.provisional_fact_contract impo
 )
 from backend.app.modules.financial_report.services.trust_resolution_service import (
     TRUSTED_STATUSES,
-    TRUST_RESOLUTION_OUTPUT_DIR,
-    load_trusted_facts_for_analysis,
+)
+from backend.app.modules.financial_report.services.trusted_fact_quality_audit_service import (
+    load_revised_trusted_facts_for_analysis,
 )
 
 
@@ -36,7 +37,7 @@ def build_parse_lab_round3_trusted_analysis_consumption(
     output_dir: Path | str = ANALYSIS_CONSUMPTION_OUTPUT_DIR,
 ) -> TrustedFactsAnalysisConsumptionResult:
     output_dir = Path(output_dir)
-    trusted_facts = load_trusted_facts_for_analysis(TRUST_RESOLUTION_OUTPUT_DIR)
+    trusted_facts = load_revised_trusted_facts_for_analysis()
     consumption_payload = _trusted_only_payload(trusted_facts)
     grouped_summary = _group_trusted_facts(consumption_payload)
     digest = _build_digest(consumption_payload, grouped_summary)
@@ -112,7 +113,7 @@ def _build_digest(
         insufficient_trusted_evidence=_find_insufficient_trusted_evidence(facts),
         notes=[
             "Digest is intentionally small and does not perform forecasting, backtesting, or valuation.",
-            "Consumption payload is populated only through load_trusted_facts_for_analysis().",
+            "Consumption payload is populated only through revised trusted facts after quality audit.",
         ],
     )
 

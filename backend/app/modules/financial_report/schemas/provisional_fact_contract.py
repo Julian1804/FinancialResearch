@@ -296,3 +296,45 @@ class TrustedFactEnrichmentResult(BaseModel):
     summary: TrustedFactEnrichmentSummary
     gap_report: TrustedFactEnrichmentGapReport
     enriched_facts: list[EnrichedTrustedFinancialFact] = Field(default_factory=list)
+
+
+class TrustedFactQualityAuditRecord(BaseModel):
+    audit_record_id: str
+    fact_id: str
+    field_name: str
+    value_original: Any = None
+    source_pdf: str
+    source_page: int
+    trust_status_before: str
+    audit_decision: str
+    revised_trust_status: str
+    downgrade_reasons: list[str] = Field(default_factory=list)
+    canonical_field_name: str = ""
+    value_interpretability: str = "unknown"
+    metadata_status: dict[str, str] = Field(default_factory=dict)
+    quality_warnings: list[str] = Field(default_factory=list)
+    provenance: dict[str, Any] = Field(default_factory=dict)
+
+
+class TrustedFactQualityAuditSummary(BaseModel):
+    audit_id: str
+    output_dir: str
+    original_trusted_count: int = 0
+    revised_trusted_count: int = 0
+    downgraded_count: int = 0
+    downgrade_reason_distribution: dict[str, int] = Field(default_factory=dict)
+    audit_decision_distribution: dict[str, int] = Field(default_factory=dict)
+    revised_analysis_consumption_policy: str = "revised_trusted_only"
+    note_or_year_excluded: bool = False
+    missing_metadata_amount_handling: str = ""
+    candidate_retained: bool = True
+    warnings: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class TrustedFactQualityAuditResult(BaseModel):
+    summary: TrustedFactQualityAuditSummary
+    audit_records: list[TrustedFactQualityAuditRecord] = Field(default_factory=list)
+    downgraded_facts: list[EnrichedTrustedFinancialFact] = Field(default_factory=list)
+    revised_trusted_facts: list[ResolvedFinancialFact] = Field(default_factory=list)
