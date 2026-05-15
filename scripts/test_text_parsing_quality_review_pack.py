@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -46,15 +47,39 @@ def test_text_quality_review_pack() -> dict[str, object]:
         assert sample["sample_id"]
         assert sample["raw_text"]
         assert sample["parsed_text"]
+        assert sample["normalized_text"]
+        assert "normalization_diff" in sample
+        assert "normalization_warnings" in sample
+        assert "normalization_loss_risk" in sample
         assert sample["ai_summary"]
         assert sample["ai_precheck"]
         assert sample["ai_precheck"]["risk_labels"]
+        assert "extracted_numbers" in sample["ai_precheck"]
+        assert "extracted_unit_currency_percent" in sample["ai_precheck"]
+        assert "extracted_periods" in sample["ai_precheck"]
         assert "trusted_by_text_candidate" in sample["ai_precheck"]
         assert sample["human_review_fields"]
 
+    expected_human_fields = {
+        "can_use_as_trusted_by_text",
+        "number_correct",
+        "unit_currency_percent_correct",
+        "period_correct",
+        "meaning_correct",
+        "ai_summary_correct",
+        "not_trusted_reason",
+        "add_to_regression_set",
+        "reviewer_note",
+    }
     for item in review_queue:
+        assert item["raw_text"]
+        assert item["parsed_text"]
+        assert item["normalized_text"]
+        assert "normalization_diff" in item
+        assert "normalization_warnings" in item
         assert item["ai_precheck_snapshot"]
         assert item["human_review"]
+        assert set(item["human_review"]) == expected_human_fields
         assert item["ai_human_disagreement_fields"]
 
     html_path = TEXT_QUALITY_REVIEW_OUTPUT_DIR / "text_quality_review_index.html"
@@ -63,6 +88,23 @@ def test_text_quality_review_pack() -> dict[str, object]:
     assert "ai_precheck_snapshot" in html
     assert "data-field" in html
     assert "text_quality_review:" in html
+    assert "review-layout" in html
+    assert "Raw Text" in html
+    assert "Parsed Text" in html
+    assert "AI Extracted Signals" in html
+    assert "Export JSONL" in html
+    assert "can_use_as_trusted_by_text" in html
+    assert "number_correct" in html
+    assert "normalization_loss_risk" in html
+    embedded_json = re.search(
+        r'<script id="review-data" type="application/json">(.*?)</script>',
+        html,
+        re.DOTALL,
+    ).group(1)
+    assert "&quot;" not in embedded_json
+    embedded_payload = json.loads(embedded_json)
+    assert len(embedded_payload["reviewQueue"]) == 100
+    assert len(embedded_payload["samples"]) == 220
 
     production_facts = load_trusted_canonical_facts_for_analysis(mode="production")
     assert all(not fact.is_simulated for fact in production_facts)

@@ -34,6 +34,7 @@ RISK_LABELS = [
     "sentiment_or_strategy_summary_risk",
     "missing_context_risk",
     "hallucinated_summary_risk",
+    "normalization_loss_risk",
     "low_risk",
 ]
 
@@ -322,7 +323,10 @@ def _select_samples(candidates: list[dict[str, Any]], target_count: int) -> list
 
 def _build_precheck(sample: dict[str, Any], index: int) -> dict[str, Any]:
     parsed_text = sample["parsed_text"]
+    normalized = _normalized_text_with_audit(sample["raw_text"], parsed_text)
     risk_labels = _risk_labels(parsed_text, sample["categories"])
+    if normalized["normalization_loss_risk"] and "normalization_loss_risk" not in risk_labels:
+        risk_labels.append("normalization_loss_risk")
     risk_score = _risk_score(risk_labels, parsed_text)
     trusted_candidate = _trusted_by_text_candidate(risk_labels, sample["categories"])
     return {
@@ -334,6 +338,10 @@ def _build_precheck(sample: dict[str, Any], index: int) -> dict[str, Any]:
         "categories": sample["categories"],
         "raw_text": sample["raw_text"],
         "parsed_text": parsed_text,
+        "normalized_text": normalized["normalized_text"],
+        "normalization_diff": normalized["normalization_diff"],
+        "normalization_warnings": normalized["normalization_warnings"],
+        "normalization_loss_risk": normalized["normalization_loss_risk"],
         "ai_summary": _one_sentence_summary(parsed_text, sample["categories"]),
         "ai_precheck": {
             "parsed_text_complete": not _has_missing_context_risk(parsed_text),
@@ -343,6 +351,10 @@ def _build_precheck(sample: dict[str, Any], index: int) -> dict[str, Any]:
             "period_identification_ok": not ("period_risk" in risk_labels),
             "growth_direction_identification_ok": not ("growth_direction_risk" in risk_labels),
             "negative_or_condition_preserved": not ("negative_or_condition_missing_risk" in risk_labels),
+            "normalization_loss_risk": normalized["normalization_loss_risk"],
+            "extracted_numbers": _extract_numbers(parsed_text),
+            "extracted_unit_currency_percent": _extract_units_currency_percent(parsed_text),
+            "extracted_periods": _extract_periods(parsed_text),
             "trusted_by_text_candidate": trusted_candidate,
             "trusted_by_text_decision": "needs_human_review" if not trusted_candidate else "candidate_after_human_confirmation",
             "risk_labels": risk_labels,
@@ -361,6 +373,16 @@ def _build_human_review_queue(machine_precheck: list[dict[str, Any]], review_que
             "review_priority": row["review_priority"],
             "source_pdf": row["source_pdf"],
             "source_page": row["source_page"],
+            "source_kind": row["source_kind"],
+            "source_ref": row["source_ref"],
+            "categories": row["categories"],
+            "raw_text": row["raw_text"],
+            "parsed_text": row["parsed_text"],
+            "normalized_text": row["normalized_text"],
+            "normalization_diff": row["normalization_diff"],
+            "normalization_warnings": row["normalization_warnings"],
+            "normalization_loss_risk": row["normalization_loss_risk"],
+            "ai_summary": row["ai_summary"],
             "ai_precheck_snapshot": row["ai_precheck"],
             "human_review": _human_review_fields(),
             "ai_human_disagreement_fields": {
@@ -379,17 +401,14 @@ def _build_human_review_queue(machine_precheck: list[dict[str, Any]], review_que
 
 def _human_review_fields() -> dict[str, Any]:
     return {
-        "original_text_complete": None,
-        "numbers_correct": None,
+        "can_use_as_trusted_by_text": None,
+        "number_correct": None,
         "unit_currency_percent_correct": None,
         "period_correct": None,
-        "growth_direction_correct": None,
-        "negative_condition_preserved": None,
-        "ai_summary_accurate": None,
-        "over_summary_misunderstanding_or_omission": "",
-        "can_be_trusted_by_text": None,
+        "meaning_correct": None,
+        "ai_summary_correct": None,
         "not_trusted_reason": "",
-        "should_add_to_regression_set": None,
+        "add_to_regression_set": None,
         "reviewer_note": "",
     }
 
@@ -419,7 +438,7 @@ def _write_outputs(output_dir: Path, machine_precheck: list[dict[str, Any]], rev
     _write_html(output_dir / "text_quality_review_index.html", machine_precheck, review_queue)
 
 
-def _write_html(path: Path, samples: list[dict[str, Any]], review_queue: list[dict[str, Any]]) -> None:
+def _write_html_legacy_unused(path: Path, samples: list[dict[str, Any]], review_queue: list[dict[str, Any]]) -> None:
     data_json = json.dumps({"samples": samples, "reviewQueue": review_queue}, ensure_ascii=False)
     path.write_text(
         f"""<!doctype html>
@@ -605,6 +624,7 @@ def _risk_score(labels: list[str], text: str) -> int:
         "sentiment_or_strategy_summary_risk": 1,
         "missing_context_risk": 1,
         "hallucinated_summary_risk": 2,
+        "normalization_loss_risk": 3,
         "low_risk": 0,
     }
     return sum(weights[label] for label in labels) + min(2, len(re.findall(r"\d", text)) // 20)
@@ -745,3 +765,354 @@ def _write_json(path: Path, payload: Any) -> None:
 
 def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n", encoding="utf-8")
+
+
+def _json_for_script(payload: Any) -> str:
+    return (
+        json.dumps(payload, ensure_ascii=False)
+        .replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+    )
+
+
+def _normalized_text_with_audit(raw_text: str, parsed_text: str) -> dict[str, Any]:
+    normalized_text = _clean_text(parsed_text)
+    raw_tokens = _audit_tokens(raw_text)
+    normalized_tokens = _audit_tokens(normalized_text)
+    warnings = []
+    lost = {
+        name: sorted(tokens - normalized_tokens[name])
+        for name, tokens in raw_tokens.items()
+        if tokens - normalized_tokens[name]
+    }
+    if lost.get("numbers"):
+        warnings.append("normalization removed numeric tokens")
+    if lost.get("units"):
+        warnings.append("normalization removed unit/currency/percent tokens")
+    if lost.get("periods"):
+        warnings.append("normalization removed period tokens")
+    if lost.get("negations"):
+        warnings.append("normalization removed negative or conditional tokens")
+    return {
+        "normalized_text": normalized_text,
+        "normalization_diff": {"lost_tokens": lost},
+        "normalization_warnings": warnings,
+        "normalization_loss_risk": bool(warnings),
+    }
+
+
+def _audit_tokens(text: str) -> dict[str, set[str]]:
+    lowered = text.lower()
+    return {
+        "numbers": set(_extract_numbers(text)),
+        "units": set(_extract_units_currency_percent(text)),
+        "periods": set(_extract_periods(text)),
+        "negations": {token for token in (*NEGATIVE_KEYWORDS, *UNCERTAINTY_OR_CONDITION_KEYWORDS) if token in lowered},
+    }
+
+
+def _extract_numbers(text: str) -> list[str]:
+    return _unique_limited(re.findall(r"[-+]?\d[\d,]*(?:\.\d+)?%?", text), 20)
+
+
+def _extract_units_currency_percent(text: str) -> list[str]:
+    patterns = [
+        r"%",
+        r"RMB",
+        r"CNY",
+        r"HKD",
+        r"HK\$",
+        r"USD",
+        r"million",
+        r"billion",
+        r"人民币",
+        r"港元",
+        r"美元",
+        r"元",
+        r"千元",
+        r"万元",
+        r"亿元",
+        r"百万元",
+        r"百分比",
+        r"鍗冨厓",
+        r"浜垮厓",
+        r"浜烘皯甯",
+        r"娓厓",
+    ]
+    regex = re.compile("|".join(patterns), re.IGNORECASE)
+    return _unique_limited(regex.findall(text), 20)
+
+
+def _extract_periods(text: str) -> list[str]:
+    patterns = [
+        r"20\d{2}\s*年(?:\s*[一二三四]季度|\s*半年度|\s*年度)?",
+        r"20\d{2}",
+        r"first half",
+        r"reporting period",
+        r"annual",
+        r"interim",
+        r"截至\s*20\d{2}[^,，。；;]{0,20}",
+        r"报告期",
+        r"本期",
+        r"上年同期",
+        r"骞村害",
+        r"鍗婂勾",
+        r"鎶ュ憡鏈",
+    ]
+    regex = re.compile("|".join(patterns), re.IGNORECASE)
+    return _unique_limited(regex.findall(text), 20)
+
+
+def _unique_limited(values: list[str], limit: int) -> list[str]:
+    seen = set()
+    result = []
+    for value in values:
+        clean = str(value).strip()
+        if not clean or clean in seen:
+            continue
+        result.append(clean)
+        seen.add(clean)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def _write_html(path: Path, samples: list[dict[str, Any]], review_queue: list[dict[str, Any]]) -> None:
+    data_json = _json_for_script({"samples": samples, "reviewQueue": review_queue})
+    html_template = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Text Parsing Quality Review</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f6f7; color: #1f2328; }
+    header { display: flex; justify-content: space-between; gap: 16px; padding: 14px 18px; background: #24292f; color: white; }
+    main { display: grid; grid-template-columns: 260px 1fr; height: calc(100vh - 52px); }
+    aside { overflow: auto; border-right: 1px solid #d0d7de; background: white; padding: 10px; }
+    section { overflow: auto; padding: 14px; }
+    button { cursor: pointer; margin: 2px; padding: 7px 9px; border: 1px solid #b8c0cc; background: white; border-radius: 4px; }
+    button.active { background: #0969da; border-color: #0969da; color: white; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: white; border: 1px solid #d0d7de; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+    .review-layout { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.1fr) minmax(280px, 0.95fr); gap: 10px; align-items: start; }
+    .panel { background: white; border: 1px solid #d0d7de; border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+    .panel h2, .panel h3 { margin: 0 0 8px; }
+    .text { white-space: pre-wrap; line-height: 1.45; max-height: 280px; overflow: auto; background: #fbfbfc; border: 1px solid #d8dee4; padding: 10px; }
+    .small { font-size: 12px; color: #57606a; }
+    .tag { display: inline-block; padding: 2px 6px; margin: 2px; border-radius: 4px; background: #eaeef2; font-size: 12px; }
+    .risk { background: #ffebe9; color: #82071e; }
+    .ok { background: #dafbe1; color: #116329; }
+    label { display: block; margin: 10px 0; font-weight: 600; }
+    select, textarea { width: 100%; box-sizing: border-box; margin-top: 4px; font: inherit; }
+    textarea { min-height: 64px; }
+    .ai { font-size: 12px; color: #57606a; margin-top: 3px; font-weight: 400; }
+    .kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px; font-size: 13px; }
+    .list-button { display: block; width: 100%; text-align: left; margin: 0 0 5px; }
+    details pre { white-space: pre-wrap; overflow: auto; max-height: 240px; }
+    @media (max-width: 1100px) {
+      main { grid-template-columns: 1fr; height: auto; }
+      aside { max-height: 220px; border-right: 0; border-bottom: 1px solid #d0d7de; }
+      .review-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <strong>Text Parsing Quality Review</strong>
+  <span id="counter"></span>
+</header>
+<main>
+  <aside><div id="sampleList"></div></aside>
+  <section>
+    <div class="toolbar">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+      <button id="saveBtn">Save</button>
+      <button id="exportJsonBtn">Export JSON</button>
+      <button id="exportJsonlBtn">Export JSONL</button>
+      <span class="small" id="saveStatus"></span>
+    </div>
+    <div id="content"></div>
+  </section>
+</main>
+<script id="review-data" type="application/json">__DATA_JSON__</script>
+<script>
+const data = JSON.parse(document.getElementById('review-data').textContent);
+const sampleMap = new Map(data.samples.map(sample => [sample.sample_id, sample]));
+const reviewItems = data.reviewQueue.map(item => ({...sampleMap.get(item.sample_id), ...item}));
+let index = 0;
+function storageKey(id) { return 'text_quality_review:' + id; }
+function saved(id) {
+  try { return JSON.parse(localStorage.getItem(storageKey(id)) || '{}'); }
+  catch { return {}; }
+}
+function renderList() {
+  const list = document.getElementById('sampleList');
+  list.innerHTML = '';
+  reviewItems.forEach((sample, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = `${i + 1}. ${sample.review_priority} ${sample.sample_id}`;
+    btn.className = i === index ? 'active' : '';
+    btn.classList.add('list-button');
+    btn.onclick = () => { save(false); index = i; render(); };
+    list.appendChild(btn);
+  });
+}
+function selectField(name, label, options, aiValue) {
+  const current = saved(reviewItems[index].sample_id)[name] ?? '';
+  const optionHtml = ['unreviewed', ...options].map(value => {
+    const optionValue = value === 'unreviewed' ? '' : value;
+    const selected = String(current) === String(optionValue) ? ' selected' : '';
+    return `<option value="${escapeAttr(optionValue)}"${selected}>${escapeHtml(value)}</option>`;
+  }).join('');
+  return `<label>${escapeHtml(label)}<div class="ai">AI pre-check: ${escapeHtml(formatAiValue(aiValue))}</div>
+    <select data-field="${escapeAttr(name)}">${optionHtml}</select></label>`;
+}
+function textField(name, label) {
+  const current = saved(reviewItems[index].sample_id)[name] || '';
+  return `<label>${escapeHtml(label)}<textarea data-field="${escapeAttr(name)}">${escapeHtml(current)}</textarea></label>`;
+}
+function pill(value, className = '') {
+  return `<span class="tag ${className}">${escapeHtml(value)}</span>`;
+}
+function render() {
+  renderList();
+  const sample = reviewItems[index];
+  document.getElementById('counter').textContent = `${index + 1} / ${reviewItems.length}`;
+  const ai = sample.ai_precheck || sample.ai_precheck_snapshot || {};
+  const riskTags = (ai.risk_labels || []).map(x => pill(x, 'risk')).join('');
+  const categoryTags = (sample.categories || []).map(x => pill(x)).join('');
+  const normalizationClass = sample.normalization_loss_risk ? 'risk' : 'ok';
+  document.getElementById('content').innerHTML = `
+    <div class="review-layout">
+      <div>
+        <div class="panel">
+          <h2>Source</h2>
+          <div class="kv">
+            <strong>sample_id</strong><span>${escapeHtml(sample.sample_id)}</span>
+            <strong>source_pdf</strong><span>${escapeHtml(sample.source_pdf || '')}</span>
+            <strong>source_page</strong><span>${escapeHtml(sample.source_page || '')}</span>
+            <strong>source_kind</strong><span>${escapeHtml(sample.source_kind || '')}</span>
+            <strong>source_ref</strong><span>${escapeHtml(sample.source_ref || '')}</span>
+          </div>
+          <div>${categoryTags}</div>
+        </div>
+        <div class="panel">
+          <h3>Raw Text</h3>
+          <div class="small">Original source text. This is never overwritten by normalized_text.</div>
+          <div class="text">${escapeHtml(sample.raw_text || '')}</div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>Parsed Text</h3>
+          <div class="text">${escapeHtml(sample.parsed_text || '')}</div>
+        </div>
+        <div class="panel">
+          <h3>Normalized Text</h3>
+          <div>${pill(sample.normalization_loss_risk ? 'normalization_loss_risk' : 'no_normalization_loss_detected', normalizationClass)}</div>
+          <div class="text">${escapeHtml(sample.normalized_text || '')}</div>
+          <details><summary>normalization diff / warnings</summary>
+            <pre>${escapeHtml(JSON.stringify({
+              diff: sample.normalization_diff || {},
+              warnings: sample.normalization_warnings || []
+            }, null, 2))}</pre>
+          </details>
+        </div>
+        <div class="panel">
+          <h3>AI Extracted Signals</h3>
+          <div class="kv">
+            <strong>numbers</strong><span>${escapeHtml((ai.extracted_numbers || []).join(', ') || 'none')}</span>
+            <strong>unit/currency/%</strong><span>${escapeHtml((ai.extracted_unit_currency_percent || []).join(', ') || 'none')}</span>
+            <strong>periods</strong><span>${escapeHtml((ai.extracted_periods || []).join(', ') || 'none')}</span>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>AI Summary</h3>
+          <div>${escapeHtml(sample.ai_summary || '')}</div>
+        </div>
+        <div class="panel">
+          <h3>AI Pre-check</h3>
+          <div>${riskTags}</div>
+          <details><summary>show full AI pre-check snapshot</summary><pre>${escapeHtml(JSON.stringify(ai, null, 2))}</pre></details>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>Human Review</h3>
+          ${selectField('can_use_as_trusted_by_text', 'can_use_as_trusted_by_text', ['yes', 'no', 'not_sure'], ai.trusted_by_text_decision)}
+          ${selectField('number_correct', 'number_correct', ['yes', 'no', 'not_applicable', 'not_sure'], ai.numeric_identification_ok)}
+          ${selectField('unit_currency_percent_correct', 'unit_currency_percent_correct', ['yes', 'no', 'not_applicable', 'not_sure'], ai.unit_currency_identification_ok)}
+          ${selectField('period_correct', 'period_correct', ['yes', 'no', 'not_applicable', 'not_sure'], ai.period_identification_ok)}
+          ${selectField('meaning_correct', 'meaning_correct', ['yes', 'no', 'not_sure'], [
+            'parsed_text_complete=' + ai.parsed_text_complete,
+            'negative_or_condition_preserved=' + ai.negative_or_condition_preserved,
+            'growth_direction_ok=' + ai.growth_direction_identification_ok
+          ].join('; '))}
+          ${selectField('ai_summary_correct', 'ai_summary_correct', ['yes', 'no', 'not_applicable', 'not_sure'], sample.ai_summary)}
+          ${selectField('add_to_regression_set', 'add_to_regression_set', ['yes', 'no', 'not_sure'], 'manual decision')}
+          ${textField('not_trusted_reason', 'not_trusted_reason')}
+          ${textField('reviewer_note', 'reviewer_note')}
+        </div>
+      </div>
+    </div>`;
+}
+function save(showStatus = true) {
+  const sample = reviewItems[index];
+  const payload = {
+    sample_id: sample.sample_id,
+    source_pdf: sample.source_pdf,
+    source_page: sample.source_page,
+    raw_text: sample.raw_text,
+    parsed_text: sample.parsed_text,
+    normalized_text: sample.normalized_text,
+    normalization_diff: sample.normalization_diff,
+    normalization_warnings: sample.normalization_warnings,
+    normalization_loss_risk: sample.normalization_loss_risk,
+    ai_summary: sample.ai_summary,
+    ai_precheck_snapshot: sample.ai_precheck || sample.ai_precheck_snapshot,
+    saved_at: new Date().toISOString()
+  };
+  document.querySelectorAll('[data-field]').forEach(el => {
+    if (el.tagName === 'SELECT') payload[el.dataset.field] = el.value === '' ? null : el.value;
+    else payload[el.dataset.field] = el.value;
+  });
+  localStorage.setItem(storageKey(sample.sample_id), JSON.stringify(payload));
+  if (showStatus) {
+    document.getElementById('saveStatus').textContent = `Saved ${sample.sample_id}`;
+    setTimeout(() => document.getElementById('saveStatus').textContent = '', 1800);
+  }
+}
+function savedRows() {
+  return reviewItems.map(s => saved(s.sample_id)).filter(x => x.sample_id);
+}
+function exportSaved(format) {
+  save(false);
+  const rows = savedRows();
+  const content = format === 'jsonl'
+    ? rows.map(row => JSON.stringify(row)).join('\\n') + '\\n'
+    : JSON.stringify(rows, null, 2);
+  const blob = new Blob([content], {type: format === 'jsonl' ? 'application/x-jsonlines' : 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = format === 'jsonl' ? 'text_quality_human_reviews.jsonl' : 'text_quality_human_reviews.json';
+  a.click();
+}
+function formatAiValue(value) {
+  if (Array.isArray(value)) return value.join(', ');
+  if (value && typeof value === 'object') return JSON.stringify(value);
+  return value === undefined || value === null ? '' : String(value);
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
+document.getElementById('prevBtn').onclick = () => { save(false); index = Math.max(0, index - 1); render(); };
+document.getElementById('nextBtn').onclick = () => { save(false); index = Math.min(reviewItems.length - 1, index + 1); render(); };
+document.getElementById('saveBtn').onclick = save;
+document.getElementById('exportJsonBtn').onclick = () => exportSaved('json');
+document.getElementById('exportJsonlBtn').onclick = () => exportSaved('jsonl');
+render();
+</script>
+</body>
+</html>"""
+    path.write_text(html_template.replace("__DATA_JSON__", data_json), encoding="utf-8")
