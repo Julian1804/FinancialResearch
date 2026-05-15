@@ -28,6 +28,12 @@ Real providers such as Eastmoney, Tonghuashun, Morningstar, or Wind should use:
 - `is_simulated = false`
 - `trust_status = "trusted_by_real_external"`
 
+Real external data must come from an authoritative institution's official website or officially licensed API. Examples include official Eastmoney, Tonghuashun, Morningstar, Wind, exchange, regulator, or issuer data interfaces where usage rights are clear.
+
+Media reposts, forums, public-account articles, social media posts, scraped screenshots, and second-hand summaries must not be used as `trusted_by_real_external` sources. They may be retained only as untrusted reference material or routed to a separate review/crawler workflow.
+
+Future crawler work should live in a dedicated official-data acquisition project with provider-specific authentication, rate limits, source URLs, retrieval timestamps, and licensing notes.
+
 The built-in mock provider uses:
 
 - `provider_name = "simulated_authoritative_external_provider"`
