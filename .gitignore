@@ -17,6 +17,11 @@ env/
 .env
 .env.*
 !.env.example
+config/local_secrets.json
+**/local_secrets.json
+*.key
+*.secret
+.env.local
 
 # Local data and generated artifacts
 data/
