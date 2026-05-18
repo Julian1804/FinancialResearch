@@ -1,0 +1,269 @@
+{
+  "version": "data_connector_phase3_metrics_registry",
+  "metrics": [
+    {
+      "metric_id": "open",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative", "duplicate_date_check"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "high",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "low",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "close",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "volume",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["numeric_format_ok", "volume_non_negative"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "amount",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "quality_rules": ["numeric_format_ok", "price_non_negative"],
+      "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
+    },
+    {
+      "metric_id": "adjusted_close",
+      "category": "market_daily",
+      "value_type": "number",
+      "unit_required": false,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["future_adjustment_provider"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
+      "consumption_eligible_when": "adjustment_method_documented_and_quality_passed"
+    },
+    {
+      "metric_id": "report_type",
+      "category": "financial_report",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["cninfo_disclosure", "sse_official_disclosure", "szse_official_disclosure"],
+      "quality_rules": ["source_url_retrieved_at_checksum", "field_mapping_ok"],
+      "consumption_eligible_when": "official_disclosure_metadata_quality_passed"
+    },
+    {
+      "metric_id": "report_period",
+      "category": "financial_report",
+      "value_type": "period",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["cninfo_disclosure", "sse_official_disclosure", "szse_official_disclosure"],
+      "quality_rules": ["date_format_ok", "field_mapping_ok"],
+      "consumption_eligible_when": "official_disclosure_metadata_quality_passed"
+    },
+    {
+      "metric_id": "announcement_date",
+      "category": "financial_report",
+      "value_type": "date",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["cninfo_disclosure", "sse_official_disclosure", "szse_official_disclosure"],
+      "quality_rules": ["date_format_ok", "duplicate_check"],
+      "consumption_eligible_when": "official_disclosure_metadata_quality_passed"
+    },
+    {
+      "metric_id": "source_url",
+      "category": "financial_report",
+      "value_type": "url",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["cninfo_disclosure", "sse_official_disclosure", "szse_official_disclosure"],
+      "quality_rules": ["source_id_present", "retrieved_at_present", "checksum_present"],
+      "consumption_eligible_when": "source_url_and_checksum_present"
+    },
+    {
+      "metric_id": "pdf_path",
+      "category": "financial_report",
+      "value_type": "path",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["cninfo_disclosure", "sse_official_disclosure", "szse_official_disclosure"],
+      "quality_rules": ["checksum_present"],
+      "consumption_eligible_when": "pdf_downloaded_and_checksum_present"
+    },
+    {
+      "metric_id": "checksum",
+      "category": "financial_report",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "filing",
+      "allowed_sources": ["all"],
+      "quality_rules": ["checksum_present"],
+      "consumption_eligible_when": "always_required_for_storage_index"
+    },
+    {
+      "metric_id": "cpi",
+      "category": "macro",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": false,
+      "frequency": "monthly",
+      "allowed_sources": ["bls_public_api"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "unit_present_if_required"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "ppi",
+      "category": "macro",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": false,
+      "frequency": "monthly",
+      "allowed_sources": ["bls_public_api"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "unit_present_if_required"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "unemployment_rate",
+      "category": "macro",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": false,
+      "frequency": "monthly",
+      "allowed_sources": ["bls_public_api", "fred_public_csv"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "rate_reasonable_range"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "treasury_yield",
+      "category": "macro",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": false,
+      "frequency": "daily",
+      "allowed_sources": ["fred_public_csv", "treasury_fiscaldata"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "rate_reasonable_range"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "exchange_rate",
+      "category": "macro",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": true,
+      "frequency": "daily",
+      "allowed_sources": ["future_official_fx_source"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "policy_event_date",
+      "category": "macro",
+      "value_type": "date",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "event",
+      "allowed_sources": ["official_statistical_agency", "central_bank"],
+      "quality_rules": ["date_format_ok", "source_url_retrieved_at_checksum"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "price",
+      "category": "commodity",
+      "value_type": "number",
+      "unit_required": true,
+      "currency_required": true,
+      "frequency": "monthly_or_daily",
+      "allowed_sources": ["world_bank_pink_sheet", "fred_public_csv"],
+      "quality_rules": ["date_format_ok", "numeric_format_ok", "unit_present_if_required", "currency_present_if_required"],
+      "consumption_eligible_when": "official_source_and_quality_passed"
+    },
+    {
+      "metric_id": "unit",
+      "category": "commodity",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "metadata",
+      "allowed_sources": ["world_bank_pink_sheet"],
+      "quality_rules": ["field_mapping_ok"],
+      "consumption_eligible_when": "required_metadata_present"
+    },
+    {
+      "metric_id": "currency",
+      "category": "commodity",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "metadata",
+      "allowed_sources": ["world_bank_pink_sheet"],
+      "quality_rules": ["field_mapping_ok"],
+      "consumption_eligible_when": "required_metadata_present"
+    },
+    {
+      "metric_id": "frequency",
+      "category": "commodity",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "metadata",
+      "allowed_sources": ["world_bank_pink_sheet"],
+      "quality_rules": ["field_mapping_ok"],
+      "consumption_eligible_when": "required_metadata_present"
+    },
+    {
+      "metric_id": "source",
+      "category": "commodity",
+      "value_type": "string",
+      "unit_required": false,
+      "currency_required": false,
+      "frequency": "metadata",
+      "allowed_sources": ["all"],
+      "quality_rules": ["source_id_present", "retrieved_at_present"],
+      "consumption_eligible_when": "source_metadata_present"
+    }
+  ]
+}
