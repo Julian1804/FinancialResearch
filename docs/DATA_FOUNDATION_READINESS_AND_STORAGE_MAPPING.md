@@ -115,3 +115,55 @@ This mapping aligns the new FR data foundation with the old NAS framework:
 - No NAS folder was moved, deleted, or renamed.
 - Only one small Z write-test file was created and deleted.
 - parse_lab and trusted consumption were not changed.
+## Phase 1.5 Finalization
+
+
+Status: finalized on 2026-05-18T11:12:58Z.
+
+### Existing NAS Framework
+
+This finalization uses the existing `Z:\financial_research` framework and its `data_lake_master/raw`, `parsed`, `structured`, `features`, and `exports` layers. It did not move, delete, or rename existing NAS directories.
+
+### NAS Directories
+
+- `Z:\data_lake_master\raw\financial_reports`: exists
+- `Z:\data_lake_master\raw\api_responses`: created_by_phase1_5
+- `Z:\data_lake_master\parsed\financial_reports\parser_outputs`: created_by_phase1_5
+- `Z:\data_lake_master\structured`: exists
+- `Z:\data_lake_master\features`: exists
+- `Z:\data_lake_master\exports`: exists
+- `Z:\data_lake_master\trusted_consumption`: created_by_phase1_5
+- `Z:\data_lake_master\normalized`: created_by_phase1_5
+- `Z:\backups\FinancialResearch`: created_by_phase1_5
+- `Z:\logs_archive\FinancialResearch`: created_by_phase1_5
+
+### Local Bulk Directories
+
+- `E:\FinancialResearchData`: created_by_phase1_5
+- `E:\FinancialResearchData\temp_downloads`: created_by_phase1_5
+- `E:\FinancialResearchData\intermediate_cache`: created_by_phase1_5
+- `E:\FinancialResearchData\local_bulk_parquet`: created_by_phase1_5
+
+### Storage Config
+
+- `config/storage_paths.json`
+- Connectors should read this config before writing raw, parsed, normalized, trusted consumption, backup, or log artifacts.
+
+### Python Environment
+
+- FinancialResearch Python: `D:\workspace\envs\financial_research_backend\Scripts\python.exe`
+- Global pip used: `False`
+- Parser independent env polluted: `False`
+
+Package verification:
+
+- akshare: import=True, version=1.18.62
+- baostock: import=True, version=0.9.1
+- duckdb: import=True, version=1.5.2
+
+### Boundaries
+
+- No full download.
+- No parse_lab parser routing change.
+- No trusted consumption change.
+- No default V1.1 replacement.

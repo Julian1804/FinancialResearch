@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-05-18T11:12:54Z",
+  "source": "Data Foundation Phase 1.5 confirmed storage mapping",
+  "uses_existing_nas_framework": true,
+  "nas_root": "Z:\\data_lake_master",
+  "paths": {
+    "hot_data_root": "D:\\workspace\\FinancialResearch\\runtime",
+    "local_bulk_data_root": "E:\\FinancialResearchData",
+    "cold_data_root": "Z:\\data_lake_master",
+    "incoming_root": "Z:\\incoming",
+    "financial_report_pdf_root": "Z:\\data_lake_master\\raw\\financial_reports",
+    "raw_api_response_root": "Z:\\data_lake_master\\raw\\api_responses",
+    "parser_raw_output_root": "Z:\\data_lake_master\\parsed\\financial_reports\\parser_outputs",
+    "normalized_data_root": "D:\\workspace\\FinancialResearch\\runtime\\normalized_data",
+    "normalized_cold_root": "Z:\\data_lake_master\\normalized",
+    "structured_data_root": "Z:\\data_lake_master\\structured",
+    "trusted_consumption_root": "Z:\\data_lake_master\\trusted_consumption",
+    "analysis_packet_root": "D:\\workspace\\FinancialResearch\\runtime\\analysis_packets",
+    "ingested_report_root": "D:\\workspace\\FinancialResearch\\runtime\\analysis_reports",
+    "backup_root": "Z:\\backups\\FinancialResearch",
+    "logs_archive_root": "Z:\\logs_archive\\FinancialResearch"
+  },
+  "safety": {
+    "no_full_download": true,
+    "no_existing_nas_dir_move_delete_rename": true,
+    "parse_lab_affected": false,
+    "trusted_consumption_affected": false,
+    "default_v1_1_replaced": false
+  }
+}
