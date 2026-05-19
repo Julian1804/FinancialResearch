@@ -14,16 +14,20 @@ The user pastes the complete GPT Web report into FR. FR preserves:
 
 The pasted report must include a fenced JSON block after `FINAL_REPORT_JSON` with:
 
-- `report_title`
+- `packet_id`
+- `data_snapshot_id`
+- `target_symbol`
 - `as_of_date`
-- `summary`
-- `assumptions`
-- `forecasts`
-- `risks`
+- `analysis_scope`
+- `key_assumptions`
+- `investment_view`
+- `forecast_items`
+- `risk_items`
 - `watchlist_signals`
 - `confidence`
 - `next_review_date`
-- `insufficient_evidence`
+- `insufficient_evidence_items`
+- `candidate_data_usage_note`
 
 ## Forecast / Backtest Fields
 
@@ -41,3 +45,7 @@ Each forecast item stores:
 - `actual_value_later`
 - `backtest_result`
 - `revision_note`
+
+## Candidate Data Rule
+
+Reports must not treat candidate/staging data as trusted final facts. Any use of candidate data must be explained in `candidate_data_usage_note`.
