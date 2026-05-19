@@ -8,7 +8,7 @@
       "unit_required": false,
       "currency_required": true,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative", "duplicate_date_check"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },
@@ -19,7 +19,7 @@
       "unit_required": false,
       "currency_required": true,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },
@@ -30,7 +30,7 @@
       "unit_required": false,
       "currency_required": true,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },
@@ -41,7 +41,7 @@
       "unit_required": false,
       "currency_required": true,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["date_format_ok", "numeric_format_ok", "price_non_negative"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },
@@ -52,7 +52,7 @@
       "unit_required": false,
       "currency_required": false,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["numeric_format_ok", "volume_non_negative"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },
@@ -63,7 +63,7 @@
       "unit_required": false,
       "currency_required": true,
       "frequency": "daily",
-      "allowed_sources": ["baostock_daily", "akshare_traceable_official"],
+      "allowed_sources": ["baostock_daily", "akshare_tencent_daily", "akshare_traceable_official"],
       "quality_rules": ["numeric_format_ok", "price_non_negative"],
       "consumption_eligible_when": "source_provenance_confirmed_and_quality_passed"
     },

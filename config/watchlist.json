@@ -5,7 +5,7 @@
     {
       "symbol": "600519",
       "market": "CN_A_SHARE",
-      "data_sources": ["baostock_daily", "akshare_traceable_official"],
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
       "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
       "start_date": "rolling_30_trading_days",
       "update_frequency": "daily",
@@ -15,7 +15,7 @@
     {
       "symbol": "000001",
       "market": "CN_A_SHARE",
-      "data_sources": ["baostock_daily", "cninfo_disclosure", "akshare_traceable_official"],
+      "data_sources": ["baostock_daily", "cninfo_disclosure", "akshare_tencent_daily"],
       "required_metrics": ["open", "high", "low", "close", "volume", "financial_report_metadata"],
       "start_date": "rolling_30_trading_days",
       "update_frequency": "daily_and_filing_driven",
@@ -25,7 +25,77 @@
     {
       "symbol": "300750",
       "market": "CN_A_SHARE",
-      "data_sources": ["baostock_daily", "akshare_traceable_official"],
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "601318",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "600036",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "000858",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "002594",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "600276",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "601899",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
+      "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
+      "start_date": "rolling_30_trading_days",
+      "update_frequency": "daily",
+      "enabled": true,
+      "priority": "sample_medium"
+    },
+    {
+      "symbol": "300760",
+      "market": "CN_A_SHARE",
+      "data_sources": ["baostock_daily", "akshare_tencent_daily"],
       "required_metrics": ["open", "high", "low", "close", "volume", "amount"],
       "start_date": "rolling_30_trading_days",
       "update_frequency": "daily",
@@ -42,6 +112,17 @@
       "update_frequency": "filing_driven",
       "enabled": true,
       "priority": "sample_high"
+    },
+    {
+      "symbol": "MSFT",
+      "market": "US_EQUITY",
+      "entity_id": "CIK0000789019",
+      "data_sources": ["sec_edgar_companyfacts"],
+      "required_metrics": ["revenue"],
+      "start_date": "latest_filings_sample",
+      "update_frequency": "filing_driven",
+      "enabled": true,
+      "priority": "sample_medium"
     },
     {
       "symbol": "CPI",
