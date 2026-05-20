@@ -29,14 +29,35 @@ DOC_REVISION = PROJECT_ROOT / "docs" / "FORECAST_REVISION_WORKFLOW.md"
 TESTABLE_DIRECTIONS = {"up", "down", "flat"}
 
 
-def run_backtest_execution_v1() -> dict[str, Any]:
+def run_backtest_execution_v1(only_testable: bool = False) -> dict[str, Any]:
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     WORKSPACE_ROOT.mkdir(parents=True, exist_ok=True)
     BACKTEST_QUEUE_ROOT.mkdir(parents=True, exist_ok=True)
 
     forecasts = load_all_forecasts()
     original_queue = read_json(BACKTEST_QUEUE_ROOT / "pending_backtest_queue.json") if (BACKTEST_QUEUE_ROOT / "pending_backtest_queue.json").exists() else {"items": []}
+    if only_testable:
+        forecasts = [forecast for forecast in forecasts if is_testable_forecast(forecast)]
     results = [execute_forecast_backtest(forecast) for forecast in forecasts]
+    if only_testable:
+        summary = build_report_backtest_summary(results)
+        write_json(OUTPUT_ROOT / "backtest_results_testable_only.json", {"generated_at": utc_now(), "items": results})
+        write_json(OUTPUT_ROOT / "report_backtest_summary_testable_only.json", summary)
+        return {
+            "backtest_execution_v1_completed": True,
+            "forecast_count": len(forecasts),
+            "only_testable": True,
+            "result_counts": summary["result_counts"],
+            "non_destructive_output": True,
+            "cli_available": True,
+            "no_openai_api_called": True,
+            "parse_lab_affected": False,
+            "trusted_consumption_affected": False,
+            "outputs": {
+                "backtest_results_testable_only": str(OUTPUT_ROOT / "backtest_results_testable_only.json"),
+                "report_backtest_summary_testable_only": str(OUTPUT_ROOT / "report_backtest_summary_testable_only.json"),
+            },
+        }
     updated_forecasts = merge_forecasts_with_results(forecasts, results)
     updated_queue = build_updated_pending_queue(results)
     revision_candidates = build_revision_candidates(updated_forecasts, results)
@@ -57,6 +78,7 @@ def run_backtest_execution_v1() -> dict[str, Any]:
     return {
         "backtest_execution_v1_completed": True,
         "forecast_count": len(forecasts),
+        "only_testable": only_testable,
         "original_queue_count": len(original_queue.get("items", [])),
         "result_counts": report_summary["result_counts"],
         "research_workspace_index_completed": True,
@@ -104,6 +126,8 @@ def execute_forecast_backtest(forecast: dict[str, Any]) -> dict[str, Any]:
         "as_of_date": forecast.get("as_of_date"),
         "review_date": forecast.get("review_date"),
         "target_metric": forecast.get("target_metric"),
+        "forecast_type": forecast.get("forecast_type"),
+        "testability_status": forecast.get("testability_status"),
         "forecast_horizon": forecast.get("forecast_horizon"),
         "expected_direction": forecast.get("expected_direction"),
         "expected_range_low": forecast.get("expected_range_low"),
@@ -122,6 +146,10 @@ def execute_forecast_backtest(forecast: dict[str, Any]) -> dict[str, Any]:
 
 
 def evaluate_forecast(forecast: dict[str, Any], base: dict[str, Any], actual: dict[str, Any]) -> tuple[str, str]:
+    forecast_type = str(forecast.get("forecast_type") or "").lower()
+    testability_status = str(forecast.get("testability_status") or "").lower()
+    if forecast_type in {"insufficient_evidence", "qualitative"} or testability_status in {"manual_review_required", "insufficient_evidence", "not_backtestable"}:
+        return "manual_review_required", f"forecast_type={forecast_type or 'unspecified'} testability_status={testability_status or 'unspecified'} is not automatically backtestable"
     direction = str(forecast.get("expected_direction") or "").lower()
     low = forecast.get("expected_range_low")
     high = forecast.get("expected_range_high")
@@ -144,6 +172,18 @@ def evaluate_forecast(forecast: dict[str, Any], base: dict[str, Any], actual: di
     if direction in {"insufficient_evidence", "unknown", "not_forecasted", ""}:
         return "manual_review_required", "forecast has no testable expected direction or range"
     return "manual_review_required", "qualitative or unsupported forecast type requires manual review"
+
+
+def is_testable_forecast(forecast: dict[str, Any]) -> bool:
+    forecast_type = str(forecast.get("forecast_type") or "").lower()
+    status = str(forecast.get("testability_status") or "").lower()
+    if status == "testable":
+        return True
+    if forecast_type in {"price_direction", "price_range", "volume_direction", "metric_direction"}:
+        direction = str(forecast.get("expected_direction") or "").lower()
+        has_range = forecast.get("expected_range_low") is not None and forecast.get("expected_range_high") is not None
+        return bool(forecast.get("target_metric") and forecast.get("review_date") and (direction in TESTABLE_DIRECTIONS or has_range))
+    return False
 
 
 def lookup_actual_data(symbol: str | None, metric: str | None, review_date: str | None) -> dict[str, Any]:
@@ -398,6 +438,15 @@ Generated: {summary['generated_at']}
 ```
 
 Backtest execution uses existing candidate/staging market data only. GPT-generated forecasts remain interpretation records and are not trusted facts.
+
+## v1.1 Testable Forecast Support
+
+`run-backtest --only-testable` filters to forecasts that carry a testable contract (`price_direction`, `price_range`, `volume_direction`, or `metric_direction`) and writes non-destructive outputs:
+
+- `runtime/backtest_execution_v1/backtest_results_testable_only.json`
+- `runtime/backtest_execution_v1/report_backtest_summary_testable_only.json`
+
+Non-testable forecasts such as `qualitative` and `insufficient_evidence` remain in manual review.
 """
 
 
@@ -458,17 +507,19 @@ def utc_now() -> str:
 def cli() -> int:
     parser = argparse.ArgumentParser(description="Backtest execution and research workspace v1")
     sub = parser.add_subparsers(dest="command")
-    sub.add_parser("run-backtest")
+    run = sub.add_parser("run-backtest")
+    run.add_argument("--only-testable", action="store_true")
     sub.add_parser("list-reports")
     sub.add_parser("list-forecasts")
     sub.add_parser("list-backtest-results")
+    sub.add_parser("list-manual-review")
     show = sub.add_parser("show-symbol-workspace")
     show.add_argument("--symbol", required=True)
     export = sub.add_parser("export-workspace")
     export.add_argument("--symbol", required=True)
     args = parser.parse_args()
     if args.command in {None, "run-backtest"}:
-        print(json.dumps(run_backtest_execution_v1(), ensure_ascii=False, indent=2))
+        print(json.dumps(run_backtest_execution_v1(only_testable=getattr(args, "only_testable", False)), ensure_ascii=False, indent=2))
         return 0
     if args.command == "list-reports":
         print(json.dumps({"items": collect_reports()}, ensure_ascii=False, indent=2))
@@ -479,6 +530,12 @@ def cli() -> int:
     if args.command == "list-backtest-results":
         path = OUTPUT_ROOT / "backtest_results.json"
         print(path.read_text(encoding="utf-8") if path.exists() else json.dumps({"items": []}, indent=2))
+        return 0
+    if args.command == "list-manual-review":
+        path = OUTPUT_ROOT / "backtest_results.json"
+        payload = read_json(path) if path.exists() else {"items": []}
+        items = [item for item in payload.get("items", []) if item.get("backtest_result") == "manual_review_required"]
+        print(json.dumps({"items": items}, ensure_ascii=False, indent=2))
         return 0
     if args.command == "show-symbol-workspace":
         path = WORKSPACE_ROOT / f"{args.symbol}_workspace.json"

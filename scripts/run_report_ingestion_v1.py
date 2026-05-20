@@ -274,6 +274,7 @@ def normalize_forecast_items(items: list[dict[str, Any]], report: dict[str, Any]
                 "packet_id": report["packet_id"],
                 "target_symbol": report["target_symbol"],
                 "as_of_date": report["as_of_date"],
+                "forecast_type": item.get("forecast_type", infer_forecast_type(item)),
                 "forecast_horizon": item.get("forecast_horizon"),
                 "target_metric": item.get("target_metric"),
                 "expected_direction": item.get("expected_direction"),
@@ -284,7 +285,10 @@ def normalize_forecast_items(items: list[dict[str, Any]], report: dict[str, Any]
                 "thesis": item.get("thesis"),
                 "supporting_evidence": item.get("supporting_evidence", []),
                 "key_assumptions": item.get("key_assumptions", []),
-                "risk_triggers": item.get("risk_triggers", []),
+                "risk_triggers": item.get("risk_triggers", item.get("invalidation_triggers", [])),
+                "invalidation_triggers": item.get("invalidation_triggers", item.get("risk_triggers", [])),
+                "data_dependency": item.get("data_dependency", []),
+                "testability_status": item.get("testability_status", "manual_review_required"),
                 "review_date": review_date,
                 "actual_value_later": actual.get("value"),
                 "actual_value_source": actual.get("source"),
@@ -294,6 +298,21 @@ def normalize_forecast_items(items: list[dict[str, Any]], report: dict[str, Any]
             }
         )
     return normalized
+
+
+def infer_forecast_type(item: dict[str, Any]) -> str:
+    direction = str(item.get("expected_direction") or "").lower()
+    target_metric = str(item.get("target_metric") or "").lower()
+    expected_range = item.get("expected_range") or {}
+    if direction == "insufficient_evidence":
+        return "insufficient_evidence"
+    if expected_range.get("low") is not None or expected_range.get("high") is not None:
+        return "price_range" if target_metric == "close" else "metric_direction"
+    if target_metric == "volume" and direction:
+        return "volume_direction"
+    if target_metric and direction in {"up", "down", "flat"}:
+        return "price_direction" if target_metric == "close" else "metric_direction"
+    return "qualitative"
 
 
 def build_pending_backtest_queue() -> dict[str, Any]:
