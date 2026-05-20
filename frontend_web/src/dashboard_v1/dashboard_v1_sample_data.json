@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T07:20:20Z",
+  "generated_at": "2026-05-20T07:40:33Z",
   "snapshot_counts": {
     "included": 20,
     "excluded": 7,
@@ -579,7 +579,7 @@
       "exclusion_reason": "publish_date_later_than_window_end"
     }
   ],
-  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T07:20:20Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
+  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T07:40:33Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
   "report_upload_classification": {
     "schema_valid": true,
     "validation_errors": [],
@@ -1597,6 +1597,348 @@
     ],
     "candidate_only": true,
     "formal_trusted_consumption": false
+  },
+  "commodity_dashboard": {
+    "generated_at": "2026-05-20T07:36:53Z",
+    "overview_cards": {
+      "commodity_series_count": 10,
+      "spot_series_count": 0,
+      "futures_series_count": 0,
+      "exchange_covered_series_count": 0,
+      "world_bank_benchmark_series_count": 10,
+      "quality_passed_count": 10,
+      "quality_warning_count": 0,
+      "missing_publish_date_count": 10,
+      "source_coverage_warning": "World Bank/FRED coverage is benchmark/spot-like; exchange futures coverage is deferred."
+    },
+    "category_view": [
+      {
+        "group": "agriculture",
+        "series_count": 2,
+        "representative_instrument": "Soybeans",
+        "latest_value": 463.13,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 2
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      },
+      {
+        "group": "base_metals",
+        "series_count": 2,
+        "representative_instrument": "Aluminum",
+        "latest_value": 3599.85,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 2
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      },
+      {
+        "group": "energy",
+        "series_count": 3,
+        "representative_instrument": "Coal, Australian",
+        "latest_value": 130.92,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 3
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      },
+      {
+        "group": "ferrous_metals",
+        "series_count": 1,
+        "representative_instrument": "Iron ore, cfr spot",
+        "latest_value": 106.05,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 1
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      },
+      {
+        "group": "precious_metals",
+        "series_count": 2,
+        "representative_instrument": "Gold",
+        "latest_value": 4721.42,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 2
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      }
+    ],
+    "exchange_view": [
+      {
+        "group": "World Bank",
+        "series_count": 10,
+        "representative_instrument": "Aluminum",
+        "latest_value": 3599.85,
+        "latest_observation_date": "2026-04-01",
+        "quality_counts": {
+          "quality_passed": 10
+        },
+        "source_coverage": [
+          "World Bank"
+        ]
+      }
+    ],
+    "chart_builder": {
+      "available_series": [
+        {
+          "dataset_id": "world_bank_pink_sheet:ALUMINUM",
+          "instrument_name": "Aluminum",
+          "commodity_category": "base_metals",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 3599.85,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:COAL_AUS",
+          "instrument_name": "Coal, Australian",
+          "commodity_category": "energy",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 130.92,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:COPPER",
+          "instrument_name": "Copper",
+          "commodity_category": "base_metals",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 12950.96,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:CRUDE_BRENT",
+          "instrument_name": "Crude oil, Brent",
+          "commodity_category": "energy",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 120.423,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:CRUDE_WTI",
+          "instrument_name": "Crude oil, WTI",
+          "commodity_category": "energy",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 98.63,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:GOLD",
+          "instrument_name": "Gold",
+          "commodity_category": "precious_metals",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 4721.42,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:IRON_ORE",
+          "instrument_name": "Iron ore, cfr spot",
+          "commodity_category": "ferrous_metals",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 106.05,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:SILVER",
+          "instrument_name": "Silver",
+          "commodity_category": "precious_metals",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 75.86,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:SOYBEANS",
+          "instrument_name": "Soybeans",
+          "commodity_category": "agriculture",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 463.13,
+          "latest_observation_date": "2026-04-01"
+        },
+        {
+          "dataset_id": "world_bank_pink_sheet:WHEAT_US_HRW",
+          "instrument_name": "Wheat, US HRW",
+          "commodity_category": "agriculture",
+          "exchange": "World Bank",
+          "price_type": "benchmark",
+          "latest_value": 282.0,
+          "latest_observation_date": "2026-04-01"
+        }
+      ],
+      "chart_types": [
+        "line",
+        "bar",
+        "pie"
+      ],
+      "grouping_options": [
+        "by_category",
+        "by_exchange",
+        "by_price_type"
+      ],
+      "normalize_options": [
+        "raw_value",
+        "indexed_to_100",
+        "pct_change"
+      ],
+      "implementation_status": "line_and_bar_client_side; pie/share control available as partial"
+    },
+    "source_audit_summary": {
+      "generated_at": "2026-05-20T07:36:53Z",
+      "items": [
+        {
+          "source_id": "world_bank_pink_sheet",
+          "source_name": "World Bank Pink Sheet",
+          "official_source": true,
+          "free_level": true,
+          "requires_account_or_license": false,
+          "current_status": "connected",
+          "note": "benchmark/monthly commodity prices; not exchange futures",
+          "trust_eligibility": "trusted_by_real_external_candidate_if_quality_passed"
+        },
+        {
+          "source_id": "fred_commodity_series",
+          "source_name": "FRED commodity series",
+          "official_source": true,
+          "free_level": true,
+          "requires_account_or_license": false,
+          "current_status": "connected_partial",
+          "note": "WTI and other public series available; provider-specific definitions required",
+          "trust_eligibility": "trusted_by_real_external_candidate_if_quality_passed"
+        },
+        {
+          "source_id": "cme_comex_nymex",
+          "source_name": "CME/COMEX/NYMEX",
+          "official_source": true,
+          "free_level": "limited",
+          "requires_account_or_license": "often",
+          "current_status": "future_connector",
+          "note": "Official historical settlements typically require CME DataMine/licensing or limited product pages; do not scrape aggressively.",
+          "trust_eligibility": "candidate_or_authorized_source_required"
+        },
+        {
+          "source_id": "lme",
+          "source_name": "LME",
+          "official_source": true,
+          "free_level": "limited",
+          "requires_account_or_license": "likely",
+          "current_status": "future_connector",
+          "note": "Historical data generally requires licensing/subscription; current phase does not use it.",
+          "trust_eligibility": "authorized_source_required"
+        },
+        {
+          "source_id": "shfe",
+          "source_name": "SHFE",
+          "official_source": true,
+          "free_level": "possible",
+          "requires_account_or_license": false,
+          "current_status": "small_sample_candidate",
+          "note": "Official site may publish daily/monthly market data; requires endpoint-specific smoke before use.",
+          "trust_eligibility": "candidate_until_stable"
+        },
+        {
+          "source_id": "ine",
+          "source_name": "INE",
+          "official_source": true,
+          "free_level": "possible",
+          "requires_account_or_license": false,
+          "current_status": "small_sample_candidate",
+          "note": "Official energy exchange data may be available; endpoint stability must be verified.",
+          "trust_eligibility": "candidate_until_stable"
+        },
+        {
+          "source_id": "dce",
+          "source_name": "DCE",
+          "official_source": true,
+          "free_level": "possible",
+          "requires_account_or_license": false,
+          "current_status": "small_sample_candidate",
+          "note": "Official historical quotes may be available; endpoint/format needs separate connector.",
+          "trust_eligibility": "candidate_until_stable"
+        },
+        {
+          "source_id": "czce",
+          "source_name": "CZCE",
+          "official_source": true,
+          "free_level": "possible",
+          "requires_account_or_license": false,
+          "current_status": "small_sample_candidate",
+          "note": "Official data may be available; needs low-frequency endpoint verification.",
+          "trust_eligibility": "candidate_until_stable"
+        },
+        {
+          "source_id": "nasdaq_data_link",
+          "source_name": "Nasdaq Data Link",
+          "official_source": false,
+          "free_level": "dataset_dependent",
+          "requires_account_or_license": "sometimes",
+          "current_status": "optional_candidate",
+          "note": "Useful datasets may be free or paid; dataset-level license required.",
+          "trust_eligibility": "candidate_only"
+        },
+        {
+          "source_id": "stooq_yahoo_investing",
+          "source_name": "Stooq/Yahoo/Investing",
+          "official_source": false,
+          "free_level": "free_or_scraped",
+          "requires_account_or_license": false,
+          "current_status": "optional_candidate",
+          "note": "Non-official or terms-sensitive; never trusted by default.",
+          "trust_eligibility": "candidate_only"
+        }
+      ],
+      "official_exchange_ingestion_decision": "defer_exchange_connectors_until_endpoint_specific_smoke",
+      "no_exchange_data_fabricated": true
+    },
+    "sample_ingestion": {
+      "generated_at": "2026-05-20T07:36:53Z",
+      "status": "connected_non_exchange_official_sample",
+      "sample_source": "FRED DCOILWTICO",
+      "sample_type": "official spot/benchmark commodity series, not exchange futures",
+      "record_count": 10158,
+      "latest_observation_date": "2026-05-11",
+      "latest_value": 101.56,
+      "exchange_sample_connected": false,
+      "exchange_sample_deferred_reason": "No free official exchange endpoint was confirmed stable without separate endpoint-specific smoke; World Bank/FRED remain connected non-exchange samples.",
+      "candidate_only": true
+    },
+    "candidate_only": true
+  },
+  "bls_resilient_status": {
+    "generated_at": "2026-05-20T07:37:01Z",
+    "bls_resilient_ingestion_completed": true,
+    "api_retry_status": "deferred_retry",
+    "final_status": "deferred_retry_needs_api_key_or_later_retry",
+    "failure_classifications": [
+      "daily_threshold_reached"
+    ],
+    "diagnosis_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\bls_resilient_ingestion\\bls_failure_diagnosis.json",
+    "retry_plan_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\bls_resilient_ingestion\\bls_retry_plan.json",
+    "deferred_retry_queue_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\bls_resilient_ingestion\\bls_deferred_retry_queue.json",
+    "fallback_source_audit_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\bls_resilient_ingestion\\bls_fallback_source_audit.json",
+    "candidate_only": true,
+    "formal_trusted_consumption": false,
+    "no_openai_api_called": true
   },
   "legacy_streamlit_used": false,
   "old_ui_false_positive_guard": true

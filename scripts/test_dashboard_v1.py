@@ -209,6 +209,13 @@ def test_ui_smoke_markers_and_http_serving() -> None:
     for marker in [
         "FR Dashboard v1",
         "Research Workspace",
+        "Commodity Dashboard",
+        "Category View",
+        "Exchange View",
+        "Custom Chart Builder",
+        "line",
+        "bar",
+        "pie",
         "Macro & Asset Mini Charts",
         "Recent Event Ticker",
         "Research Object Type",
@@ -217,7 +224,9 @@ def test_ui_smoke_markers_and_http_serving() -> None:
         "as_of_check_enabled",
         "Generate Statistical Report",
         "Download Markdown Report",
+        "Download JSON Report",
         "Download GPT Prompt",
+        "Download Evidence Boundary",
         "Report Upload",
         "Analysis Zone",
         "Forecast Zone",
@@ -225,6 +234,7 @@ def test_ui_smoke_markers_and_http_serving() -> None:
     ]:
         assert marker in html
     assert "category-checkbox" in html
+    assert html.count('data-target="console">Research Workspace</button>') == 1
     assert "legacy_streamlit_used = false" in html
 
 
@@ -237,6 +247,7 @@ def test_acceptance_dynamic_action_outputs() -> None:
     assert summary["e2e_custom_topic"]["status"] == "success"
     assert summary["report_upload_smoke"]["status"] == "success"
     assert summary["ui_smoke"]["status"] == "passed"
+    assert summary["ui_smoke"]["duplicate_research_workspace_count"] == 1
     assert summary["legacy_streamlit_used"] is False
     assert summary["no_openai_api_called"] is True
     assert summary["trusted_consumption_affected"] is False

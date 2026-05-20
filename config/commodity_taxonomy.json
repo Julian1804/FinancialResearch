@@ -1,0 +1,62 @@
+{
+  "version": "commodity_data_model_v1",
+  "generated_at": "2026-05-20T07:36:53Z",
+  "price_types": [
+    "spot",
+    "futures",
+    "index",
+    "benchmark",
+    "settlement",
+    "average_price",
+    "spot_or_benchmark_unclear",
+    "unknown"
+  ],
+  "exchanges": [
+    "COMEX",
+    "LME",
+    "SHFE",
+    "NYMEX",
+    "ICE",
+    "CBOT",
+    "DCE",
+    "CZCE",
+    "INE",
+    "World Bank",
+    "FRED",
+    "other",
+    "unknown"
+  ],
+  "commodity_categories": [
+    "energy",
+    "precious_metals",
+    "base_metals",
+    "ferrous_metals",
+    "agriculture",
+    "chemicals",
+    "livestock",
+    "softs",
+    "freight",
+    "other"
+  ],
+  "instrument_fields": [
+    "instrument_name",
+    "underlying_commodity",
+    "contract_code",
+    "contract_month",
+    "currency",
+    "unit",
+    "frequency",
+    "source_id",
+    "provider_name",
+    "publish_date",
+    "observation_date",
+    "data_period_start",
+    "data_period_end",
+    "vintage_date",
+    "revision_status",
+    "quality_status",
+    "trust_status",
+    "candidate_only"
+  ],
+  "world_bank_policy": "World Bank Pink Sheet is benchmark/average-price evidence, not exchange futures."
+}

@@ -256,6 +256,10 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
         markers = [
             "FR Dashboard v1",
             "Research Workspace",
+            "Commodity Dashboard",
+            "Category View",
+            "Exchange View",
+            "Custom Chart Builder",
             "Macro & Asset Mini Charts",
             "Recent Event Ticker",
             "Research Object Type",
@@ -264,7 +268,9 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
             "as_of_check_enabled",
             "Generate Statistical Report",
             "Download Markdown Report",
+            "Download JSON Report",
             "Download GPT Prompt",
+            "Download Evidence Boundary",
             "Report Upload",
             "Analysis Zone",
             "Forecast Zone",
@@ -344,10 +350,11 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
         "expected_new_ui_markers": markers,
         "detected_new_ui_markers": detected,
         "tested_actions": tested_actions,
+        "duplicate_research_workspace_count": page_html.count('data-target="console">Research Workspace</button>'),
         "action_outputs_created": [item for item in tested_actions if item.get("output_created")],
         "missing_actions": [item for item in tested_actions if not item.get("output_created")],
         "manual_verification_required": False,
-        "status": "passed" if len(detected) == len(markers) and all(item.get("output_created") for item in tested_actions) else "failed",
+        "status": "passed" if len(detected) == len(markers) and all(item.get("output_created") for item in tested_actions) and page_html.count('data-target="console">Research Workspace</button>') == 1 else "failed",
     }
     write_json(RUNTIME_ROOT / "ui_smoke_results.json", result)
     return result

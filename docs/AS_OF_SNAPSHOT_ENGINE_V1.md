@@ -1,6 +1,6 @@
 # As-of Snapshot Engine v1
 
-Generated: 2026-05-20T07:20:20Z
+Generated: 2026-05-20T07:40:33Z
 
 The engine accepts research object fields, selected data categories, time_mode, date window,
 fiscal_year/reporting_period and `as_of_check_enabled`.

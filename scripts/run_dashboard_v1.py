@@ -28,6 +28,8 @@ ANALYSIS_REPORT_ROOT = PROJECT_ROOT / "runtime" / "analysis_reports"
 BACKTEST_ROOT = PROJECT_ROOT / "runtime" / "backtest_execution_v1"
 WORKSPACE_ROOT = PROJECT_ROOT / "runtime" / "research_workspace"
 MACRO_ASSET_ROOT = PROJECT_ROOT / "runtime" / "macro_asset_historical_ingestion"
+COMMODITY_DASHBOARD_ROOT = PROJECT_ROOT / "runtime" / "commodity_exchange_sample_ingestion"
+BLS_RESILIENT_ROOT = MACRO_ASSET_ROOT / "bls_resilient_ingestion"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -812,6 +814,8 @@ def classify_report_text(raw_text: str) -> dict[str, Any]:
 
 def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, Any], upload_stub: dict[str, Any], evidence_items: list[dict[str, Any]]) -> dict[str, Any]:
     macro_asset_summary = read_json(MACRO_ASSET_ROOT / "dashboard_macro_asset_summary.json")
+    commodity_dashboard = read_json(COMMODITY_DASHBOARD_ROOT / "commodity_dashboard_v1_data.json")
+    bls_resilient = read_json(BLS_RESILIENT_ROOT / "bls_resilient_ingestion_results.json")
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -829,6 +833,8 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "copy_prompt": statistical_report["prompt_text"],
         "report_upload_classification": upload_stub["classification"],
         "macro_asset_summary": macro_asset_summary,
+        "commodity_dashboard": commodity_dashboard,
+        "bls_resilient_status": bls_resilient,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
     }
@@ -850,6 +856,13 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
     expected_markers = [
         "FR Dashboard v1",
         "Research Workspace",
+        "Commodity Dashboard",
+        "Category View",
+        "Exchange View",
+        "Custom Chart Builder",
+        "line",
+        "bar",
+        "pie",
         "Research Object Type",
         "Macro & Asset Mini Charts",
         "Recent Event Ticker",
@@ -859,6 +872,8 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Generate Statistical Report",
         "Download Markdown Report",
         "Download GPT Prompt",
+        "Download JSON Report",
+        "Download Evidence Boundary",
         "Report Upload",
         "Analysis Zone",
         "Forecast Zone",
@@ -1015,10 +1030,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       <button data-target="console">Research Workspace</button>
       <button data-target="macro">Macro Dashboard</button>
       <button data-target="asset">Asset Class Dashboard</button>
+      <button data-target="commodity">Commodity Dashboard</button>
       <button data-target="sector">Sector Dashboard</button>
       <button data-target="company">Company Dashboard</button>
       <button data-target="capital">Capital Flow Dashboard</button>
-      <button data-target="workspace">Research Workspace</button>
       <button data-target="upload">Report Upload</button>
     </nav>
     <main>
@@ -1099,15 +1114,46 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           </div>
           <label>copy_to_gpt_research_prompt.md</label>
           <textarea id="promptBox" readonly>{html.escape(prompt)}</textarea>
+          <div class="panel">
+            <h3>Workspace History</h3>
+            <p>Packets, reports, report versions, forecast items, backtest results and revision candidates are linked here.</p>
+            <div class="actions"><button onclick="loadWorkspace()">Load Research Workspace History</button></div>
+            <pre id="workspacePaths"></pre>
+          </div>
         </div>
       </section>
 
       <section id="macro"><h2>Macro Dashboard</h2><div class="panel" id="macroPanel"></div></section>
       <section id="asset"><h2>Asset Class Dashboard</h2><div class="panel" id="assetPanel"></div></section>
+      <section id="commodity">
+        <h2>Commodity Dashboard</h2>
+        <div class="grid cols-3" id="commodityOverviewCards"></div>
+        <div class="grid cols-2">
+          <div class="panel"><h3>Category View</h3><div id="commodityCategoryView"></div></div>
+          <div class="panel"><h3>Exchange View</h3><div id="commodityExchangeView"></div></div>
+        </div>
+        <div class="panel">
+          <h3>Custom Chart Builder</h3>
+          <div class="row">
+            <div><label>Select Series / Instruments</label><select id="commoditySeriesSelect"></select></div>
+            <div><label>Date Range</label><select><option>full_history</option><option>5y</option><option>1y</option><option>90d</option></select></div>
+            <div><label>Chart Type</label><select id="commodityChartType"><option>line</option><option>bar</option><option>pie</option></select></div>
+            <div><label>Normalize</label><select><option>raw value</option><option>indexed to 100</option><option>pct change</option></select></div>
+          </div>
+          <div class="row">
+            <div><label>Grouping</label><select><option>by category</option><option>by exchange</option><option>by price_type</option></select></div>
+            <div><label>Price Type</label><select><option>benchmark</option><option>spot</option><option>futures</option><option>index</option></select></div>
+            <div><label>Exchange / Venue</label><select><option>World Bank</option><option>FRED</option><option>COMEX</option><option>LME</option><option>SHFE</option><option>INE</option><option>DCE</option><option>CZCE</option></select></div>
+            <div><label>Generate</label><button onclick="renderCommodityChartPreview()">Generate Chart</button></div>
+          </div>
+          <div id="commodityChartPreview"></div>
+          <p class="small">V1 uses lightweight client-side line/bar previews from latest values; pie/share is a partial control until broader exchange coverage is connected.</p>
+        </div>
+        <div class="panel"><h3>Commodity Data Table</h3><div id="commodityDataTable"></div></div>
+      </section>
       <section id="sector"><h2>Sector Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>Sector-level connectors are not connected in v1. Schema and future connector slots are visible, but no sector data is fabricated.</p></div></section>
       <section id="company"><h2>Company Dashboard</h2><div class="panel" id="companyPanel"></div></section>
       <section id="capital"><h2>Capital Flow Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>ETF flow, fund holdings, northbound flow, margin financing and block trades are planned data types. No current capital-flow data is fabricated.</p></div></section>
-      <section id="workspace"><h2>Research Workspace</h2><div class="panel"><p>Packets, reports, report versions, forecast items, backtest results and revision candidates are linked through runtime research workspace indexes.</p><div class="actions"><button onclick="loadWorkspace()">Load Research Workspace</button></div><pre id="workspacePaths"></pre></div></section>
       <section id="upload">
         <h2>Report Upload</h2>
         <div class="grid cols-2">
@@ -1131,6 +1177,8 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
   <script>
     const DASHBOARD_DATA = {ui_json};
     const MACRO_ASSET = DASHBOARD_DATA.macro_asset_summary || {{}};
+    const COMMODITY = DASHBOARD_DATA.commodity_dashboard || {{}};
+    const BLS_STATUS = DASHBOARD_DATA.bls_resilient_status || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
     document.getElementById('missingCount').textContent = DASHBOARD_DATA.snapshot_counts.missing_publish_date_review;
@@ -1144,6 +1192,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     updateDownloadLinks(DASHBOARD_DATA.report_paths || {{}});
     document.getElementById('macroPanel').innerHTML = '<h3>Historical Macro Data</h3>' + renderSeriesTable(MACRO_ASSET.macro_series || []);
     document.getElementById('assetPanel').innerHTML = '<h3>Historical Asset Class / Commodity Data</h3>' + renderSeriesTable(MACRO_ASSET.asset_series || []);
+    renderCommodityDashboard();
     document.getElementById('companyPanel').innerHTML = summaryPanel('market_daily') + '<p class="small">A-share market data remains candidate/staging and is not formal trusted consumption.</p>';
     document.getElementById('workspacePaths').textContent = JSON.stringify(DASHBOARD_DATA.report_paths, null, 2);
     document.getElementById('reportInput').value = {sample_upload_js};
@@ -1160,6 +1209,44 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const tag = count ? 'good' : 'warn';
       return `<span class="tag ${{tag}}">${{category}}: ${{count ? count + ' evidence items' : 'insufficient_evidence'}}</span>`;
     }}
+    function renderCommodityDashboard() {{
+      const cards = COMMODITY.overview_cards || {{}};
+      const cardItems = [
+        ['Commodity series', cards.commodity_series_count || 0],
+        ['Spot series', cards.spot_series_count || 0],
+        ['Futures series', cards.futures_series_count || 0],
+        ['Exchange-covered', cards.exchange_covered_series_count || 0],
+        ['World Bank benchmark', cards.world_bank_benchmark_series_count || 0],
+        ['Missing publish_date', cards.missing_publish_date_count || 0],
+      ];
+      document.getElementById('commodityOverviewCards').innerHTML = cardItems.map(([title, value]) => `<div class="panel summary-card"><strong>${{title}}</strong><div class="metric">${{value}}</div><div class="sub">${{escapeHtml(cards.source_coverage_warning || '')}}</div></div>`).join('');
+      document.getElementById('commodityCategoryView').innerHTML = renderGroupTable(COMMODITY.category_view || []);
+      document.getElementById('commodityExchangeView').innerHTML = renderGroupTable(COMMODITY.exchange_view || []);
+      const available = COMMODITY.chart_builder?.available_series || [];
+      document.getElementById('commoditySeriesSelect').innerHTML = available.map(item => `<option value="${{escapeHtml(item.dataset_id)}}">${{escapeHtml(item.instrument_name)}} · ${{escapeHtml(item.exchange)}} · ${{escapeHtml(item.price_type)}}</option>`).join('');
+      document.getElementById('commodityDataTable').innerHTML = renderCommodityTable(available);
+      renderCommodityChartPreview();
+    }}
+    function renderGroupTable(rows) {{
+      if (!rows.length) return '<span class="tag warn">source_unavailable</span>';
+      return `<table><thead><tr><th>Group</th><th>Series</th><th>Representative</th><th>Latest</th><th>Source coverage</th></tr></thead><tbody>${{rows.map(row => `<tr><td>${{escapeHtml(row.group)}}</td><td>${{row.series_count}}</td><td>${{escapeHtml(row.representative_instrument)}}</td><td>${{escapeHtml(row.latest_value)}} @ ${{escapeHtml(row.latest_observation_date)}}</td><td>${{escapeHtml((row.source_coverage || []).join(', '))}}</td></tr>`).join('')}}</tbody></table>`;
+    }}
+    function renderCommodityTable(rows) {{
+      if (!rows.length) return '<span class="tag warn">insufficient_evidence</span>';
+      return `<table><thead><tr><th>Instrument</th><th>Category</th><th>Exchange</th><th>Price Type</th><th>Latest</th><th>Date</th></tr></thead><tbody>${{rows.map(row => `<tr><td>${{escapeHtml(row.instrument_name)}}</td><td>${{escapeHtml(row.commodity_category)}}</td><td>${{escapeHtml(row.exchange)}}</td><td>${{escapeHtml(row.price_type)}}</td><td>${{escapeHtml(row.latest_value)}}</td><td>${{escapeHtml(row.latest_observation_date)}}</td></tr>`).join('')}}</tbody></table>`;
+    }}
+    function renderCommodityChartPreview() {{
+      const rows = COMMODITY.chart_builder?.available_series || [];
+      const type = document.getElementById('commodityChartType')?.value || 'line';
+      const top = rows.slice(0, 8);
+      const max = Math.max(...top.map(row => Number(row.latest_value) || 0), 1);
+      if (type === 'bar' || type === 'pie') {{
+        document.getElementById('commodityChartPreview').innerHTML = top.map(row => `<div class="small">${{escapeHtml(row.instrument_name)}} <span class="tag">${{escapeHtml(row.price_type)}}</span></div><div style="height:12px;width:${{Math.max(4, (Number(row.latest_value)||0)/max*100)}}%;background:var(--accent);border-radius:4px;margin:4px 0 8px"></div>`).join('');
+        return;
+      }}
+      const points = top.map((row, idx) => `${{idx * 70 + 20}},${{150 - ((Number(row.latest_value) || 0) / max) * 120}}`).join(' ');
+      document.getElementById('commodityChartPreview').innerHTML = `<svg viewBox="0 0 560 170" width="100%" height="180" role="img" aria-label="line chart preview"><polyline points="${{points}}" fill="none" stroke="var(--green)" stroke-width="3"/><text x="10" y="165" fill="var(--muted)">line chart preview from latest commodity values</text></svg>`;
+    }}
     function escapeHtml(value) {{
       return String(value).replace(/[&<>"']/g, char => ({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}}[char]));
     }}
@@ -1168,7 +1255,8 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const countCards = [
         {{title:'Macro series', value: MACRO_ASSET.macro_series_count || 0, sub:'official-source candidate datasets'}},
         {{title:'Asset/commodity series', value: MACRO_ASSET.asset_commodity_series_count || 0, sub:'World Bank/FRED commodity coverage'}},
-        {{title:'Records loaded', value: MACRO_ASSET.record_count || 0, sub:'raw + normalized + QA catalogued'}}
+        {{title:'Records loaded', value: MACRO_ASSET.record_count || 0, sub:'raw + normalized + QA catalogued'}},
+        {{title:'BLS status', value: BLS_STATUS.final_status || 'deferred_retry', sub:'resilient diagnosis + retry queue'}}
       ];
       return [...countCards, ...cards.slice(0, 6).map(card => ({{
         title: card.title || card.series_id,
@@ -1367,6 +1455,8 @@ research workspace:
 - Generated reports expose download controls for Markdown, JSON, GPT prompt and evidence boundary.
 - Report Upload supports paste and Markdown file loading, then classifies Analysis Zone, Forecast Zone and Evidence Zone.
 - Macro and Asset dashboards read real `macro_asset_historical_ingestion` outputs.
+- Commodity Dashboard v1 adds overview cards, Category View, Exchange View and Custom Chart Builder controls.
+- Navigation has exactly one Research Workspace entry; workspace history is merged into the same page.
 
 Historical data currently visible in the dashboard:
 
@@ -1374,6 +1464,9 @@ Historical data currently visible in the dashboard:
 - Asset/commodity series: {summary.get('asset_commodity_series_count', 0)}
 - Records: {summary.get('record_count', 0)}
 - Quality counts: {json.dumps(summary.get('quality_counts', {}), ensure_ascii=False)}
+
+Commodity data keeps spot/futures/exchange distinctions explicit. Current World Bank Pink Sheet
+series are benchmark/average-price evidence, not exchange futures.
 
 The UI remains a new Dashboard architecture and does not use Streamlit.
 
@@ -1489,10 +1582,10 @@ Core pages:
 - Research Workspace: research object/theme selection, data categories, time mode and report generation.
 - Macro Dashboard: current official/candidate macro samples and evidence gaps.
 - Asset Class Dashboard: commodity/rate/asset-class sample coverage and gaps.
+- Commodity Dashboard: commodity overview cards, Category View, Exchange View and Custom Chart Builder.
 - Sector Dashboard: schema and insufficient_evidence until sector connectors exist.
 - Company Dashboard: watchlist market data, packets, reports, forecasts and backtests.
 - Capital Flow Dashboard: framework for ETF/fund/flow data; current data is insufficient.
-- Research Workspace: packets, reports, versions, forecasts, backtests and revisions by object.
 - Report Upload: paste/upload GPT Web final report, classify into Analysis Zone, Forecast Zone and Evidence Zone.
 
 Research object abstraction supports company, sector, asset_class, macro_theme, capital_flow_theme,
