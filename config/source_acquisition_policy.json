@@ -1,0 +1,49 @@
+{
+  "version": "v1",
+  "updated_at": "2026-05-20T10:00:31Z",
+  "sources": [
+    {
+      "source_id": "morningstar_direct",
+      "source_name": "Morningstar Direct / Analytics Lab",
+      "source_type": "licensed_authorized_platform",
+      "access_method": "morningstar_data_python / direct_web_services / api_center",
+      "provider_type": "licensed_financial_data_platform",
+      "official_source": false,
+      "authorized_platform": true,
+      "cost_status": "existing_user_account_entitlement_needs_check",
+      "crawler_allowed": false,
+      "api_allowed": "manual_token_required",
+      "token_expiry": "24h",
+      "token_status": "available",
+      "redistribution_status": "needs_review",
+      "raw_storage_allowed": "needs_user_confirmation",
+      "full_backfill_allowed": "no_until_entitlement_review",
+      "trust_status": "licensed_source_candidate",
+      "consumption_eligibility": "not_formal_trusted_consumption",
+      "dashboard_status": {
+        "source_gap_status": "entitlement_check_needed",
+        "token_status": "available",
+        "last_smoke_test_result": "success",
+        "authorized_source_warning": "Licensed source; do not treat as public free source and do not redistribute without entitlement review."
+      },
+      "security_controls": {
+        "no_auto_login": true,
+        "no_password_saved": true,
+        "no_browser_automation": true,
+        "manual_copy_authentication_token": true,
+        "token_not_logged": true
+      },
+      "package": {
+        "installed": true,
+        "version": "1.13.0",
+        "import_ok": true
+      },
+      "smoke": {
+        "attempted": true,
+        "status": "success",
+        "entitlement_assessment": "at_least_one_small_request_authorized"
+      }
+    }
+  ],
+  "policy_type": "source_acquisition"
+}
