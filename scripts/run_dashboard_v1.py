@@ -886,6 +886,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Category View",
         "Exchange View",
         "Custom Chart Builder",
+        "Morningstar Fund Validation",
+        "Global Fund / ETF Coverage",
+        "China Fund Coverage Validation",
+        "Fund Flow Proxy Readiness",
+        "Trusted Candidate Status",
         "line",
         "bar",
         "pie",
@@ -1245,7 +1250,23 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       </section>
       <section id="sector"><h2>Sector Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>Sector-level connectors are not connected in v1. Schema and future connector slots are visible, but no sector data is fabricated.</p></div></section>
       <section id="company"><h2>Company Dashboard</h2><div class="panel" id="companyPanel"></div></section>
-      <section id="capital"><h2>Capital Flow Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>ETF flow, fund holdings, northbound flow, margin financing and block trades are planned data types. No current capital-flow data is fabricated.</p></div></section>
+      <section id="capital">
+        <h2>Capital Flow Dashboard</h2>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Morningstar Fund Validation</h3>
+            <div id="morningstarFundValidationPanel"></div>
+          </div>
+          <div class="panel">
+            <h3>Fund Flow Proxy Readiness</h3>
+            <div id="fundFlowProxyPanel"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <span class="tag warn">candidate / validation in progress</span>
+          <p>ETF flow, fund holdings, northbound flow, margin financing and block trades remain candidate or planned data types. Morningstar is treated as a licensed source candidate and no capital-flow data is fabricated.</p>
+        </div>
+      </section>
       <section id="upload">
         <h2>Report Upload</h2>
         <div class="grid cols-2">
@@ -1291,6 +1312,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     renderMacroDashboardV2();
     renderAssetDashboardV2();
     renderCommodityDashboard();
+    renderMorningstarFundValidation();
     document.getElementById('companyPanel').innerHTML = summaryPanel('market_daily') + '<p class="small">A-share market data remains candidate/staging and is not formal trusted consumption.</p>';
     document.getElementById('workspacePaths').textContent = JSON.stringify(DASHBOARD_DATA.report_paths, null, 2);
     document.getElementById('reportInput').value = {sample_upload_js};
@@ -1467,6 +1489,29 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         value: card.latest_value ?? 'insufficient_evidence',
         sub: `${{card.series_id || ''}} · ${{card.latest_observation_date || ''}} · ${{card.quality_status || ''}}`
       }}))].map(card => `<div class="panel summary-card"><strong>${{escapeHtml(card.title)}}</strong><div class="metric">${{escapeHtml(card.value)}}</div><div class="sub">${{escapeHtml(card.sub || '')}}</div></div>`).join('');
+    }}
+    function renderMorningstarFundValidation() {{
+      const source = (AUTHORITATIVE_STATUS.sources || []).find(item => item.source_id === 'morningstar_direct') || {{}};
+      const status = source.status || 'manual_token_required';
+      const trustedCount = source.trust_upgrade_candidate_count ?? 0;
+      const datasetCount = source.dataset_metadata_visible_count ?? 'unknown';
+      const chinaStatus = source.china_fund_coverage_pilot_status || 'not_run';
+      const rows = [
+        ['Token status', source.token_status || 'missing_or_unknown'],
+        ['Entitlement mapping', source.entitlement_mapping_status || 'not_run'],
+        ['Dataset metadata visible', datasetCount],
+        ['Global Fund / ETF Coverage', source.global_fund_coverage_audit_status || 'not_run'],
+        ['China Fund Coverage Validation', chinaStatus],
+        ['Trusted Candidate Status', trustedCount ? `${{trustedCount}} trusted_candidate` : '0 trusted_candidate'],
+      ];
+      document.getElementById('morningstarFundValidationPanel').innerHTML =
+        `<div><span class="tag warn">${{escapeHtml(status)}}</span><span class="tag">licensed_authorized_platform</span><span class="tag warn">candidate_only</span></div>` +
+        `<table><tbody>${{rows.map(([k,v]) => `<tr><th>${{escapeHtml(k)}}</th><td>${{escapeHtml(v)}}</td></tr>`).join('')}}</tbody></table>` +
+        `<p class="small">${{escapeHtml(source.warning || 'Morningstar data remains licensed candidate evidence until coverage, freshness, field and cross-source validation pass.')}}</p>`;
+      document.getElementById('fundFlowProxyPanel').innerHTML =
+        `<p><strong>Fund Flow Proxy Readiness</strong></p>` +
+        `<p>Global ETF holdings, fund holdings, sector/country exposure and AUM/NAV/performance can support proxy analysis only when entitlement and cross-source checks pass.</p>` +
+        `<div><span class="tag warn">proxy_only_not_true_flow</span><span class="tag warn">manual_review_required</span><span class="tag">no_large_download</span></div>`;
     }}
     function renderSeriesTable(series) {{
       if (!series.length) return '<span class="tag warn">insufficient_evidence</span>';
