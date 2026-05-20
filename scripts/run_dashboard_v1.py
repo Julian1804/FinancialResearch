@@ -31,6 +31,7 @@ MACRO_ASSET_ROOT = PROJECT_ROOT / "runtime" / "macro_asset_historical_ingestion"
 COMMODITY_DASHBOARD_ROOT = PROJECT_ROOT / "runtime" / "commodity_exchange_sample_ingestion"
 BLS_RESILIENT_ROOT = MACRO_ASSET_ROOT / "bls_resilient_ingestion"
 FOUNDATION_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_catalog"
+MARKET_DATA_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_phase2"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -815,6 +816,9 @@ def classify_report_text(raw_text: str) -> dict[str, Any]:
 
 def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, Any], upload_stub: dict[str, Any], evidence_items: list[dict[str, Any]]) -> dict[str, Any]:
     macro_asset_summary = read_json(MACRO_ASSET_ROOT / "dashboard_macro_asset_summary.json")
+    phase2_market_summary = read_json(MARKET_DATA_PHASE2_ROOT / "dashboard_market_data_summary.json")
+    if phase2_market_summary.get("phase2_summary"):
+        macro_asset_summary = phase2_market_summary
     commodity_dashboard = read_json(COMMODITY_DASHBOARD_ROOT / "commodity_dashboard_v1_data.json")
     bls_resilient = read_json(BLS_RESILIENT_ROOT / "bls_resilient_ingestion_results.json")
     foundation_summary = read_json(FOUNDATION_ROOT / "foundation_summary.json")
@@ -841,6 +845,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "bls_resilient_status": bls_resilient,
         "foundation_summary": foundation_summary,
         "foundation_catalog_items": foundation_catalog.get("items", []),
+        "market_data_phase2_summary": read_json(MARKET_DATA_PHASE2_ROOT / "phase2_summary.json"),
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
@@ -1265,6 +1270,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     const BLS_STATUS = DASHBOARD_DATA.bls_resilient_status || {{}};
     const FOUNDATION = DASHBOARD_DATA.foundation_summary || {{}};
     const FOUNDATION_ITEMS = DASHBOARD_DATA.foundation_catalog_items || [];
+    const PHASE2 = DASHBOARD_DATA.market_data_phase2_summary || {{}};
     const COMMODITY_TAXONOMY = DASHBOARD_DATA.commodity_taxonomy || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
@@ -1447,6 +1453,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         {{title:'Macro series', value: MACRO_ASSET.macro_series_count || 0, sub:'official-source candidate datasets'}},
         {{title:'Asset/commodity series', value: MACRO_ASSET.asset_commodity_series_count || 0, sub:'World Bank/FRED commodity coverage'}},
         {{title:'Records loaded', value: MACRO_ASSET.record_count || 0, sub:'raw + normalized + QA catalogued'}},
+        {{title:'Phase2 catalog processed', value: PHASE2.catalog_items_processed || 'not_run', sub:'catalog-driven ingestion batch'}},
         {{title:'BLS status', value: BLS_STATUS.final_status || 'deferred_retry', sub:'resilient diagnosis + retry queue'}}
       ];
       return [...countCards, ...cards.slice(0, 6).map(card => ({{

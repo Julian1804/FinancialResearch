@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T08:16:04Z",
+  "generated_at": "2026-05-20T08:31:50Z",
   "snapshot_counts": {
     "included": 20,
     "excluded": 7,
@@ -579,7 +579,7 @@
       "exclusion_reason": "publish_date_later_than_window_end"
     }
   ],
-  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T08:16:04Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
+  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T08:31:50Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
   "report_upload_classification": {
     "schema_valid": true,
     "validation_errors": [],
@@ -630,10 +630,10 @@
     "gpt_report_not_trusted_fact": true
   },
   "macro_asset_summary": {
-    "generated_at": "2026-05-20T06:48:52Z",
-    "macro_series_count": 31,
+    "generated_at": "2026-05-20T08:31:47Z",
+    "macro_series_count": 37,
     "asset_commodity_series_count": 10,
-    "record_count": 86877,
+    "record_count": 147168,
     "quality_counts": {
       "quality_passed": 40,
       "quality_warning": 1
@@ -1367,6 +1367,132 @@
         "publish_date_source": "source_confirmed_record_date",
         "revision_status": "vintage_support_limited",
         "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:DEXUSEU",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "fx",
+        "series_id": "DEXUSEU",
+        "metric_name": "EUR/USD",
+        "category": "spot_fx",
+        "frequency": "daily",
+        "record_count": 6864,
+        "first_observation_date": "1999-01-04",
+        "latest_observation_date": "2026-05-15",
+        "latest_value": 1.1627,
+        "unit": "USD_per_EUR",
+        "currency": "USD",
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:DEXUSUK",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "fx",
+        "series_id": "DEXUSUK",
+        "metric_name": "GBP/USD",
+        "category": "spot_fx",
+        "frequency": "daily",
+        "record_count": 13885,
+        "first_observation_date": "1971-01-04",
+        "latest_observation_date": "2026-05-15",
+        "latest_value": 1.3332,
+        "unit": "USD_per_GBP",
+        "currency": "USD",
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:SOFR",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "rates_bonds",
+        "series_id": "SOFR",
+        "metric_name": "Secured Overnight Financing Rate",
+        "category": "overnight_rate",
+        "frequency": "daily",
+        "record_count": 2029,
+        "first_observation_date": "2018-04-03",
+        "latest_observation_date": "2026-05-18",
+        "latest_value": 3.53,
+        "unit": "percent",
+        "currency": null,
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:DGS30",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "rates_bonds",
+        "series_id": "DGS30",
+        "metric_name": "US 30Y Treasury yield",
+        "category": "sovereign_yield",
+        "frequency": "daily",
+        "record_count": 12309,
+        "first_observation_date": "1977-02-15",
+        "latest_observation_date": "2026-05-18",
+        "latest_value": 5.14,
+        "unit": "percent",
+        "currency": null,
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:DEXCHUS",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "fx",
+        "series_id": "DEXCHUS",
+        "metric_name": "USD/CNY",
+        "category": "spot_fx",
+        "frequency": "daily",
+        "record_count": 11325,
+        "first_observation_date": "1981-01-02",
+        "latest_observation_date": "2026-05-15",
+        "latest_value": 6.8092,
+        "unit": "CNY_per_USD",
+        "currency": "CNY",
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
+      },
+      {
+        "dataset_id": "fred_public_api:DEXJPUS",
+        "source_id": "fred_public_api",
+        "provider_name": "FRED",
+        "schema_type": "fx",
+        "series_id": "DEXJPUS",
+        "metric_name": "USD/JPY",
+        "category": "spot_fx",
+        "frequency": "daily",
+        "record_count": 13879,
+        "first_observation_date": "1971-01-04",
+        "latest_observation_date": "2026-05-15",
+        "latest_value": 158.69,
+        "unit": "JPY_per_USD",
+        "currency": "JPY",
+        "quality_status": "quality_passed",
+        "trust_status": "trusted_by_real_external_candidate",
+        "publish_date_source": "unavailable",
+        "revision_status": "vintage_available",
+        "candidate_only": true
       }
     ],
     "asset_series": [
@@ -1584,6 +1710,18 @@
     "recent_events": [
       {
         "event_type": "data_ingestion",
+        "title": "Market Data Foundation Phase 2 processed 48 catalog items",
+        "event_date": "2026-05-20",
+        "source": "Foundation Catalog"
+      },
+      {
+        "event_type": "quality_gate",
+        "title": "Phase 2 official/candidate datasets remain outside formal trusted consumption",
+        "event_date": "2026-05-20",
+        "source": "Quality Gate"
+      },
+      {
+        "event_type": "data_ingestion",
         "title": "Macro/asset historical ingestion updated 41 datasets",
         "event_date": "2026-05-20",
         "source": "FRDataConnectors"
@@ -1596,7 +1734,15 @@
       }
     ],
     "candidate_only": true,
-    "formal_trusted_consumption": false
+    "formal_trusted_consumption": false,
+    "phase2_summary": {
+      "item_count": 48,
+      "available": 24,
+      "missing": 17,
+      "future_connector": 7,
+      "dashboard_ready": 24,
+      "records_loaded": 141719
+    }
   },
   "commodity_dashboard": {
     "generated_at": "2026-05-20T07:36:53Z",
@@ -1941,7 +2087,7 @@
     "no_openai_api_called": true
   },
   "foundation_summary": {
-    "generated_at": "2026-05-20T08:16:03Z",
+    "generated_at": "2026-05-20T08:31:47Z",
     "item_count": 48,
     "domain_counts": {
       "macro": 13,
@@ -1951,12 +2097,12 @@
       "futures": 7
     },
     "status_counts": {
-      "available": 18,
-      "missing": 28,
-      "future_connector": 2
+      "available": 24,
+      "missing": 17,
+      "future_connector": 7
     },
     "schema_ready_count": 48,
-    "dashboard_ready_count": 18
+    "dashboard_ready_count": 24
   },
   "foundation_catalog_items": [
     {
@@ -1972,7 +2118,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 951,
+      "earliest_observation": "1947-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "macro",
@@ -1987,7 +2141,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 1360,
+      "earliest_observation": "1913-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "macro",
@@ -2002,7 +2164,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 939,
+      "earliest_observation": "1948-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "macro",
@@ -2017,7 +2187,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 1048,
+      "earliest_observation": "1939-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "macro",
@@ -2032,7 +2210,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 26255,
+      "earliest_observation": "1954-07-01",
+      "latest_observation": "2026-05-18",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "macro",
@@ -2047,7 +2233,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for NBS official; non-official scraping not used"
     },
     {
       "domain": "macro",
@@ -2062,7 +2254,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for NBS official; non-official scraping not used"
     },
     {
       "domain": "macro",
@@ -2077,7 +2275,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for PBOC official; non-official scraping not used"
     },
     {
       "domain": "macro",
@@ -2092,7 +2296,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for SAFE/PBOC official; non-official scraping not used"
     },
     {
       "domain": "macro",
@@ -2107,7 +2317,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "macro",
@@ -2122,7 +2338,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "macro",
@@ -2137,7 +2359,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "macro",
@@ -2152,7 +2380,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "rates_bonds",
@@ -2167,7 +2401,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 12487,
+      "earliest_observation": "1976-06-01",
+      "latest_observation": "2026-05-18",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "rates_bonds",
@@ -2182,22 +2424,38 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 16079,
+      "earliest_observation": "1962-01-02",
+      "latest_observation": "2026-05-18",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "rates_bonds",
       "display_name": "US 30Y",
       "metric_id": "us_30y_yield",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "FRED:DGS30",
       "alternative_source": "FRED:DGS30",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 2,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 12309,
+      "earliest_observation": "1977-02-15",
+      "latest_observation": "2026-05-18",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "rates_bonds",
@@ -2212,7 +2470,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for ChinaBond/CFETS; non-official scraping not used"
     },
     {
       "domain": "rates_bonds",
@@ -2227,7 +2491,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official China source feasibility required for ChinaBond/CFETS; non-official scraping not used"
     },
     {
       "domain": "rates_bonds",
@@ -2242,7 +2512,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "rates_bonds",
@@ -2257,22 +2533,36 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "rates_bonds",
       "display_name": "SOFR",
       "metric_id": "sofr",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "FRED:SOFR",
       "alternative_source": "FRED:SOFR",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 2,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 2029,
+      "earliest_observation": "2018-04-03",
+      "latest_observation": "2026-05-18",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "rates_bonds",
@@ -2287,7 +2577,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official interbank source feasibility required for SHIBOR official; not mixed with Treasury/FRED data"
     },
     {
       "domain": "rates_bonds",
@@ -2302,7 +2598,13 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "official interbank source feasibility required for CFETS/PBOC; not mixed with Treasury/FRED data"
     },
     {
       "domain": "rates_bonds",
@@ -2317,7 +2619,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "fx",
@@ -2332,67 +2640,107 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 5107,
+      "earliest_observation": "2006-01-02",
+      "latest_observation": "2026-05-15",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "fx",
       "display_name": "USD/CNY",
       "metric_id": "usd_cny",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "PBOC/SAFE",
       "alternative_source": "PBOC/SAFE",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 2,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 11325,
+      "earliest_observation": "1981-01-02",
+      "latest_observation": "2026-05-15",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "fx",
       "display_name": "USD/JPY",
       "metric_id": "usd_jpy",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "FRED/ECB/BoJ",
       "alternative_source": "FRED/ECB/BoJ",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 2,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 13879,
+      "earliest_observation": "1971-01-04",
+      "latest_observation": "2026-05-15",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "fx",
       "display_name": "EUR/USD",
       "metric_id": "eur_usd",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "FRED/ECB",
       "alternative_source": "FRED/ECB",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 2,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 6864,
+      "earliest_observation": "1999-01-04",
+      "latest_observation": "2026-05-15",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "fx",
       "display_name": "GBP/USD",
       "metric_id": "gbp_usd",
-      "current_status": "missing",
+      "current_status": "available",
       "preferred_source": "FRED/BoE",
       "alternative_source": "FRED/BoE",
       "official_source_available": true,
       "cost_status": "free_source_to_build",
-      "connector_status": "future_connector",
+      "connector_status": "connected",
       "priority": 3,
       "schema_ready": true,
-      "dashboard_ready": false,
-      "QA_ready": false
+      "dashboard_ready": true,
+      "QA_ready": false,
+      "records_loaded": 13885,
+      "earliest_observation": "1971-01-04",
+      "latest_observation": "2026-05-15",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "monitor_incremental_updates_and_revision_snapshots"
     },
     {
       "domain": "fx",
@@ -2407,7 +2755,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "commodity",
@@ -2422,7 +2776,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2437,7 +2799,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2452,7 +2822,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 10158,
+      "earliest_observation": "1986-01-02",
+      "latest_observation": "2026-05-11",
+      "source_used": "fred_public_api",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_available",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2467,7 +2845,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2482,7 +2868,15 @@
       "priority": 1,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2497,7 +2891,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2512,7 +2914,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2527,7 +2937,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2542,7 +2960,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 796,
+      "earliest_observation": "1960-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2557,7 +2983,15 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": true,
-      "QA_ready": true
+      "QA_ready": true,
+      "records_loaded": 676,
+      "earliest_observation": "1970-01-01",
+      "latest_observation": "2026-04-01",
+      "source_used": "world_bank_pink_sheet",
+      "quality_status": "quality_passed",
+      "publish_date_coverage": "unavailable",
+      "revision_status": "vintage_support_limited",
+      "next_action": "reuse_existing_ingested_dataset"
     },
     {
       "domain": "commodity",
@@ -2572,7 +3006,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "not_selected_in_phase2_batch"
     },
     {
       "domain": "futures",
@@ -2587,7 +3027,13 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but CME DataMine/authorized requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
@@ -2602,13 +3048,19 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but CME DataMine/authorized requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
       "display_name": "LME Copper",
       "metric_id": "lme_copper",
-      "current_status": "missing",
+      "current_status": "future_connector",
       "preferred_source": "LME licensed",
       "alternative_source": "LME licensed",
       "official_source_available": true,
@@ -2617,13 +3069,19 @@
       "priority": 3,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but LME licensed requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
       "display_name": "SHFE Copper",
       "metric_id": "shfe_copper",
-      "current_status": "missing",
+      "current_status": "future_connector",
       "preferred_source": "SHFE official",
       "alternative_source": "SHFE official",
       "official_source_available": true,
@@ -2632,13 +3090,19 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but SHFE official requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
       "display_name": "INE Crude",
       "metric_id": "ine_crude",
-      "current_status": "missing",
+      "current_status": "future_connector",
       "preferred_source": "INE official",
       "alternative_source": "INE official",
       "official_source_available": true,
@@ -2647,13 +3111,19 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but INE official requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
       "display_name": "DCE Iron Ore",
       "metric_id": "dce_iron_ore",
-      "current_status": "missing",
+      "current_status": "future_connector",
       "preferred_source": "DCE official",
       "alternative_source": "DCE official",
       "official_source_available": true,
@@ -2662,13 +3132,19 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but DCE official requires source-specific connector and authorization/terms review before ingestion"
     },
     {
       "domain": "futures",
       "display_name": "CZCE agriculture futures",
       "metric_id": "czce_agri",
-      "current_status": "missing",
+      "current_status": "future_connector",
       "preferred_source": "CZCE official",
       "alternative_source": "CZCE official",
       "official_source_available": true,
@@ -2677,12 +3153,49 @@
       "priority": 2,
       "schema_ready": true,
       "dashboard_ready": false,
-      "QA_ready": false
+      "QA_ready": false,
+      "records_loaded": 0,
+      "source_used": "",
+      "quality_status": "not_run",
+      "publish_date_coverage": "not_applicable",
+      "revision_status": "not_applicable",
+      "next_action": "futures schema ready, but CZCE official requires source-specific connector and authorization/terms review before ingestion"
     }
   ],
+  "market_data_phase2_summary": {
+    "generated_at": "2026-05-20T08:31:49Z",
+    "phase2_market_data_foundation_completed": true,
+    "catalog_items_processed": 39,
+    "successful_ingestion_count": 24,
+    "deferred_count": 15,
+    "records_normalized": 60291,
+    "quality_counts": {
+      "quality_passed": 6
+    },
+    "revision_count": 0,
+    "candidate_only": true,
+    "formal_trusted_consumption": false,
+    "no_openai_api_called": true,
+    "parse_lab_affected": false,
+    "trusted_consumption_affected": false,
+    "outputs": {
+      "run_records": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\phase2_run_records.json",
+      "raw_artifact_index": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\raw_artifact_index.json",
+      "normalized_records": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\normalized_phase2_records.jsonl",
+      "normalized_paths": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\normalized_paths.json",
+      "quality_results": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\quality_results.json",
+      "revision_log": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\revision_log.json",
+      "vintage_summary": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\vintage_summary.json",
+      "foundation_catalog_update": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\foundation_catalog_update.json",
+      "source_availability_audit": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\source_availability_audit.json",
+      "dashboard_market_data_summary": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\dashboard_market_data_summary.json",
+      "metadata_db": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\market_data_foundation_metadata.sqlite",
+      "report": "D:\\workspace\\FinancialResearch\\docs\\MARKET_DATA_FOUNDATION_PHASE2_REPORT.md"
+    }
+  },
   "commodity_taxonomy": {
     "version": "commodity_taxonomy_v2",
-    "generated_at": "2026-05-20T08:16:03Z",
+    "generated_at": "2026-05-20T08:31:41Z",
     "price_types": [
       "spot",
       "futures",
