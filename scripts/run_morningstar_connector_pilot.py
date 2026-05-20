@@ -20,12 +20,14 @@ from scripts.run_morningstar_safe_access_audit import (  # noqa: E402
     DOCS_ROOT,
     LOCAL_SECRETS,
     RUNTIME_ROOT as AUTHORITATIVE_RUNTIME_ROOT,
+    TOKEN_STATE_PATH,
     check_gitignore,
     mask_token,
-    parse_created_at,
+    parse_utc,
     read_json,
     run_git_ls_files,
     sanitize_error,
+    update_token_state,
     update_policy_file,
     utc_now,
     write_json,
@@ -51,23 +53,13 @@ def load_morningstar_secret() -> dict[str, Any]:
 def token_health_check() -> dict[str, Any]:
     secret = load_morningstar_secret()
     token = secret.get("md_auth_token")
-    created_at_raw = secret.get("token_created_at")
-    expires_hours = int(secret.get("token_expires_hours") or 24)
-    created_at = parse_created_at(created_at_raw)
+    state = update_token_state(token)
     age_hours = None
-    status = "missing"
-    expiry_check = "missing"
-    if token:
-        status = "available"
-        if created_at:
-            age_hours = round((datetime.now(timezone.utc) - created_at).total_seconds() / 3600, 2)
-            if age_hours > expires_hours:
-                status = "expired"
-                expiry_check = "expired"
-            else:
-                expiry_check = "within_expiry_window"
-        else:
-            expiry_check = "missing_created_at"
+    status = state.get("token_status", "missing")
+    expiry_check = "expired" if status == "expired" else "within_expiry_window" if token else "missing"
+    first_seen = parse_utc(state.get("first_seen_at"))
+    if first_seen:
+        age_hours = round((datetime.now(timezone.utc) - first_seen).total_seconds() / 3600, 2)
 
     token_parts = token.split(".") if token else []
     token_format = {
@@ -85,20 +77,26 @@ def token_health_check() -> dict[str, Any]:
         "token_present": bool(token),
         "token_status": status,
         "masked_token": mask_token(token),
-        "token_created_at_present": bool(created_at_raw),
+        "local_secrets_minimal_format_supported": True,
+        "token_created_at_required": False,
+        "token_expires_hours_required": False,
         "token_age_hours": age_hours,
-        "token_expires_hours": expires_hours,
+        "token_expires_hours": state.get("expires_hours", 24),
         "expiry_check": expiry_check,
-        "token_created_at_user_reported_unreliable": True,
-        "token_probe_allowed_despite_created_at": bool(token),
+        "first_seen_at": state.get("first_seen_at"),
+        "last_seen_at": state.get("last_seen_at"),
+        "expires_at": state.get("expires_at"),
+        "fingerprint_sha256": state.get("fingerprint_sha256"),
+        "fingerprint_changed": state.get("fingerprint_changed"),
+        "token_state_path": str(TOKEN_STATE_PATH),
+        "expiry_source": state.get("expiry_source"),
+        "local_secrets_mtime_used_as_expiry_source": False,
         "token_format_diagnostic": token_format,
         "user_action_required": (
             "paste_morningstar_md_auth_token"
             if not token
             else "refresh_expired_token"
             if status == "expired"
-            else "fill_token_created_at"
-            if expiry_check == "missing_created_at"
             else None
         ),
         "no_auto_login": True,

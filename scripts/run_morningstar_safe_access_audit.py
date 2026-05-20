@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import sys
+from hashlib import sha256
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,8 @@ RUNTIME_ROOT = PROJECT_ROOT / "runtime" / "authoritative_crawler_framework"
 DOCS_ROOT = PROJECT_ROOT / "docs"
 LOCAL_SECRETS = CONFIG_ROOT / "local_secrets.json"
 GITIGNORE = PROJECT_ROOT / ".gitignore"
+TOKEN_STATE_PATH = RUNTIME_ROOT / "morningstar_token_state.json"
+DEFAULT_TOKEN_EXPIRES_HOURS = 24
 
 REQUIRED_GITIGNORE_RULES = [
     "config/local_secrets.json",
@@ -52,6 +55,99 @@ def mask_token(token: str | None) -> str | None:
         return None
     suffix = token[-4:] if len(token) >= 4 else token
     return f"****{suffix}"
+
+
+def token_fingerprint(token: str | None) -> str | None:
+    if not token:
+        return None
+    return sha256(token.encode("utf-8")).hexdigest()
+
+
+def parse_utc(value: Any) -> datetime | None:
+    if not value:
+        return None
+    text = str(value).strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    except ValueError:
+        return None
+
+
+def iso_from_timestamp(timestamp: float) -> str:
+    return datetime.fromtimestamp(timestamp, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def update_token_state(token: str | None, expires_hours: int = DEFAULT_TOKEN_EXPIRES_HOURS) -> dict[str, Any]:
+    """Persist token lifecycle metadata without storing the token itself.
+
+    The local secret intentionally remains minimal. A new token is detected by
+    sha256 fingerprint change, then the first_seen/expires_at window resets.
+    File mtimes are stored for diagnostics only and never used as the sole
+    expiry source.
+    """
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    now_text = now.isoformat().replace("+00:00", "Z")
+    existing = read_json(TOKEN_STATE_PATH, default={})
+    fingerprint = token_fingerprint(token)
+    masked = mask_token(token)
+
+    if not token:
+        state = {
+            "generated_at": now_text,
+            "token_present": False,
+            "token_status": "missing",
+            "masked_token": None,
+            "fingerprint_sha256": None,
+            "fingerprint_changed": False,
+            "first_seen_at": None,
+            "last_seen_at": None,
+            "expires_at": None,
+            "expires_hours": expires_hours,
+            "expiry_source": "fingerprint_state_default_24h",
+            "local_secrets_mtime_recorded_for_diagnostics": iso_from_timestamp(LOCAL_SECRETS.stat().st_mtime) if LOCAL_SECRETS.exists() else None,
+            "local_secrets_mtime_used_as_expiry_source": False,
+            "token_leaked": False,
+        }
+        write_json(TOKEN_STATE_PATH, state)
+        return state
+
+    fingerprint_changed = existing.get("fingerprint_sha256") != fingerprint
+    if fingerprint_changed:
+        first_seen_at = now_text
+        expires_at_dt = now.replace(microsecond=0)
+        expires_at = datetime.fromtimestamp(expires_at_dt.timestamp() + expires_hours * 3600, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    else:
+        first_seen_at = existing.get("first_seen_at") or now_text
+        expires_at = existing.get("expires_at")
+        if not expires_at:
+            first_dt = parse_utc(first_seen_at) or now
+            expires_at = datetime.fromtimestamp(first_dt.timestamp() + expires_hours * 3600, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+    expires_dt = parse_utc(expires_at)
+    token_status = "expired" if expires_dt and now > expires_dt else "available"
+    state = {
+        "generated_at": now_text,
+        "token_present": True,
+        "token_status": token_status,
+        "masked_token": masked,
+        "fingerprint_sha256": fingerprint,
+        "fingerprint_changed": fingerprint_changed,
+        "first_seen_at": first_seen_at,
+        "last_seen_at": now_text,
+        "expires_at": expires_at,
+        "expires_hours": expires_hours,
+        "expiry_source": "fingerprint_state_default_24h",
+        "local_secrets_mtime_recorded_for_diagnostics": iso_from_timestamp(LOCAL_SECRETS.stat().st_mtime) if LOCAL_SECRETS.exists() else None,
+        "local_secrets_mtime_used_as_expiry_source": False,
+        "token_leaked": False,
+    }
+    write_json(TOKEN_STATE_PATH, state)
+    return state
 
 
 def sanitize_error(error: BaseException | str, token: str | None) -> str:
@@ -103,8 +199,6 @@ def secret_check() -> dict[str, Any]:
     exists = LOCAL_SECRETS.exists()
     parse_ok = False
     token = None
-    token_created_at_raw = None
-    token_expires_hours = 24
     json_shape: dict[str, Any] = {}
     error_message = None
 
@@ -115,31 +209,26 @@ def secret_check() -> dict[str, Any]:
             morningstar = data.get("morningstar", {}) if isinstance(data, dict) else {}
             if isinstance(morningstar, dict):
                 token = morningstar.get("md_auth_token")
-                token_created_at_raw = morningstar.get("token_created_at")
-                token_expires_hours = int(morningstar.get("token_expires_hours") or 24)
                 json_shape = {
                     "morningstar": {
                         "md_auth_token": "present" if token else "missing",
-                        "token_created_at": "present" if token_created_at_raw else "missing",
-                        "token_expires_hours": "present" if morningstar.get("token_expires_hours") else "default_24",
+                        "account_hint": "present" if morningstar.get("account_hint") else "missing",
+                        "token_created_at": "optional_legacy_present" if morningstar.get("token_created_at") else "optional_not_required",
+                        "token_expires_hours": "optional_legacy_present" if morningstar.get("token_expires_hours") else "default_24_not_required",
                     }
                 }
         except Exception as exc:  # noqa: BLE001 - this is a diagnostic script
             error_message = sanitize_error(exc, None)
 
-    created_at = parse_created_at(token_created_at_raw)
+    token_state = update_token_state(token, DEFAULT_TOKEN_EXPIRES_HOURS)
+    token_status = token_state.get("token_status", "missing")
+    expires_dt = parse_utc(token_state.get("expires_at"))
     token_age_hours = None
-    expiry_check = "missing"
-    if token:
-        if created_at:
-            age = (datetime.now(timezone.utc) - created_at).total_seconds() / 3600
-            token_age_hours = round(age, 2)
-            expiry_check = "expired" if age > token_expires_hours else "within_expiry_window"
-        else:
-            expiry_check = "missing_created_at"
-    token_status = "missing"
-    if token:
-        token_status = "expired" if expiry_check == "expired" else "available"
+    if token_state.get("first_seen_at"):
+        first_dt = parse_utc(token_state.get("first_seen_at"))
+        if first_dt:
+            token_age_hours = round((datetime.now(timezone.utc) - first_dt).total_seconds() / 3600, 2)
+    expiry_check = "expired" if token_status == "expired" else "within_expiry_window" if token else "missing"
 
     result = {
         "generated_at": utc_now(),
@@ -153,18 +242,26 @@ def secret_check() -> dict[str, Any]:
         "token_present": bool(token),
         "token_status": token_status,
         "masked_token": mask_token(token),
-        "token_created_at_present": bool(token_created_at_raw),
+        "local_secrets_minimal_format_supported": True,
+        "token_created_at_required": False,
+        "token_expires_hours_required": False,
         "token_age_hours": token_age_hours,
-        "token_expires_hours": token_expires_hours,
+        "token_expires_hours": DEFAULT_TOKEN_EXPIRES_HOURS,
         "expiry_check": expiry_check,
+        "expires_at": token_state.get("expires_at"),
+        "first_seen_at": token_state.get("first_seen_at"),
+        "last_seen_at": token_state.get("last_seen_at"),
+        "fingerprint_sha256": token_state.get("fingerprint_sha256"),
+        "fingerprint_changed": token_state.get("fingerprint_changed"),
+        "token_state_path": str(TOKEN_STATE_PATH),
+        "expiry_source": token_state.get("expiry_source"),
+        "local_secrets_mtime_used_as_expiry_source": False,
         "safe_to_attempt_smoke": bool(token) and token_status == "available" and not tracked,
         "user_action_required": (
             "paste_morningstar_md_auth_token"
             if not token
             else "refresh_expired_token"
             if token_status == "expired"
-            else "fill_token_created_at"
-            if expiry_check == "missing_created_at"
             else None
         ),
         "no_password_read": True,
@@ -462,10 +559,10 @@ Before any raw data storage or larger retrieval, confirm Morningstar entitlement
 1. Manually log in to Morningstar Direct or Analytics Lab.
 2. Use Morningstar's UI to Copy Authentication Token.
 3. Paste the token into `config/local_secrets.json` under `morningstar.md_auth_token`.
-4. Fill `morningstar.token_created_at` with the token creation timestamp.
-5. Keep `morningstar.token_expires_hours` at `24` unless Morningstar states otherwise.
-6. Run the Morningstar safe access smoke test from the FinancialResearch backend environment.
-7. Refresh the token after it expires.
+4. Optionally keep `morningstar.account_hint` for human context; do not store passwords.
+5. Run the Morningstar safe access smoke test from the FinancialResearch backend environment.
+6. Token timing is tracked by `runtime/authoritative_crawler_framework/morningstar_token_state.json`.
+7. Refresh the token after it expires, normally after 24 hours.
 8. Do not write a Morningstar password into any config file.
 9. Do not upload `config/local_secrets.json` or token-bearing files to git.
 10. Review entitlement and redistribution terms before any large request or raw storage workflow.

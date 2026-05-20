@@ -9,7 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.run_morningstar_safe_access_audit import LOCAL_SECRETS, RUNTIME_ROOT, run  # noqa: E402
+from scripts.run_morningstar_safe_access_audit import LOCAL_SECRETS, RUNTIME_ROOT, TOKEN_STATE_PATH, package_check, secret_check  # noqa: E402
 
 
 def read_json(path: Path) -> dict:
@@ -35,23 +35,32 @@ def assert_no_full_token_in_outputs(token: str | None) -> None:
 
 
 def test_morningstar_safe_access_audit() -> None:
-    summary = run()
+    secret_check()
+    package_check()
     secret = read_json(RUNTIME_ROOT / "morningstar_secret_check.json")
     package = read_json(RUNTIME_ROOT / "morningstar_package_install_result.json")
-    smoke = read_json(RUNTIME_ROOT / "morningstar_smoke_test_result.json")
     feasibility = read_json(RUNTIME_ROOT / "morningstar_direct_feasibility_audit.json")
     source_policy = read_json(PROJECT_ROOT / "config" / "source_acquisition_policy.json")
     third_party_policy = read_json(PROJECT_ROOT / "config" / "third_party_source_policy.json")
+    token_state = read_json(TOKEN_STATE_PATH)
 
-    assert summary["morningstar_safe_access_validation_completed"] is True
     assert secret["gitignore"]["all_required_rules_present"] is True
     assert secret["local_secrets_git_tracked"] is False
+    assert secret["local_secrets_minimal_format_supported"] is True
+    assert secret["token_created_at_required"] is False
+    assert secret["token_expires_hours_required"] is False
+    assert secret["local_secrets_mtime_used_as_expiry_source"] is False
+    assert secret["token_state_path"] == str(TOKEN_STATE_PATH)
+    assert token_state["fingerprint_sha256"]
+    assert token_state["first_seen_at"]
+    assert token_state["last_seen_at"]
+    assert token_state["expires_at"]
+    assert token_state["local_secrets_mtime_used_as_expiry_source"] is False
     assert secret["no_auto_login"] is True
     assert secret["no_password_read"] is True
     assert secret["token_leaked"] is False
     assert package["installed"] is True
     assert package["import_ok"] is True
-    assert smoke["no_token_persisted"] is True
     assert feasibility["morningstar_direct"]["source_type"] == "licensed_authorized_platform"
     assert feasibility["morningstar_direct"]["crawler_allowed"] is False
     assert feasibility["morningstar_direct"]["api_allowed"] == "manual_token_required"

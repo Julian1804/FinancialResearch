@@ -71,6 +71,13 @@ def test_morningstar_connector_pilot() -> None:
     assert token_health["local_secrets_gitignore_ok"] is True
     assert token_health["local_secrets_git_tracked"] is False
     assert token_health["token_present"] is True
+    assert token_health["local_secrets_minimal_format_supported"] is True
+    assert token_health["token_created_at_required"] is False
+    assert token_health["token_expires_hours_required"] is False
+    assert token_health["local_secrets_mtime_used_as_expiry_source"] is False
+    assert token_health["fingerprint_sha256"]
+    assert token_health["first_seen_at"]
+    assert token_health["expires_at"]
     assert token_health["no_auto_login"] is True
     assert token_health["no_password_saved"] is True
     assert token_health["token_leaked"] is False
