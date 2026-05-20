@@ -1,0 +1,45 @@
+{
+  "version": "fund_etf_taxonomy_v1",
+  "generated_at": "2026-05-20T16:10:12Z",
+  "domains": [
+    "fund_market",
+    "etf_market",
+    "capital_flow_proxy",
+    "holdings",
+    "licensed_source"
+  ],
+  "fund_types": [
+    "mutual_fund",
+    "etf",
+    "lof",
+    "money_market_fund",
+    "index_fund",
+    "closed_end_fund",
+    "unknown"
+  ],
+  "flow_proxy_types": [
+    "volume",
+    "amount",
+    "shares_outstanding_change",
+    "aum_change",
+    "nav_change",
+    "holdings_change",
+    "premium_discount"
+  ],
+  "trust_statuses": [
+    "official_source_candidate",
+    "licensed_source_candidate",
+    "coverage_validated_candidate",
+    "cross_validated_candidate",
+    "trusted_candidate",
+    "needs_review"
+  ],
+  "source_priority": {
+    "china_official_list": 1,
+    "exchange_disclosure": 1,
+    "issuer_official": 1,
+    "morningstar_direct": 2,
+    "third_party_candidate": 3
+  },
+  "flow_proxy_warning": "Flow proxy is not actual net flow unless source field explicitly represents flow."
+}

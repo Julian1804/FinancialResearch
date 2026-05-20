@@ -33,6 +33,7 @@ BLS_RESILIENT_ROOT = MACRO_ASSET_ROOT / "bls_resilient_ingestion"
 FOUNDATION_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_catalog"
 MARKET_DATA_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_phase2"
 AUTHORITATIVE_SOURCE_ROOT = PROJECT_ROOT / "runtime" / "authoritative_crawler_framework"
+FUND_ETF_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -826,6 +827,10 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     foundation_catalog = read_json(FOUNDATION_ROOT / "foundation_catalog.json")
     commodity_taxonomy = read_json(CONFIG_ROOT / "commodity_taxonomy.json")
     authoritative_source_status = read_json(AUTHORITATIVE_SOURCE_ROOT / "dashboard_source_status.json")
+    fund_etf_summary = read_json(FUND_ETF_ROOT / "fund_etf_capital_flow_summary.json")
+    fund_etf_shortlist = read_json(FUND_ETF_ROOT / "morningstar_priority_dataset_shortlist.json") or {"items": []}
+    fund_etf_coverage = read_json(FUND_ETF_ROOT / "fund_coverage_validation_results.json")
+    fund_etf_trust_queue = read_json(FUND_ETF_ROOT / "trust_upgrade_queue.json") or {"queue": []}
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -849,6 +854,12 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "foundation_catalog_items": foundation_catalog.get("items", []),
         "market_data_phase2_summary": read_json(MARKET_DATA_PHASE2_ROOT / "phase2_summary.json"),
         "authoritative_source_status": authoritative_source_status,
+        "fund_etf_capital_flow": {
+            "summary": fund_etf_summary,
+            "priority_datasets": fund_etf_shortlist.get("items", []),
+            "coverage_validation": fund_etf_coverage,
+            "trust_upgrade_queue": fund_etf_trust_queue.get("queue", []),
+        },
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
@@ -891,6 +902,10 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "China Fund Coverage Validation",
         "Fund Flow Proxy Readiness",
         "Trusted Candidate Status",
+        "Fund / ETF Data Readiness",
+        "Global Fund Flow Candidate Panel",
+        "Upload Official Fund List",
+        "Flow Proxy Explanation",
         "line",
         "bar",
         "pie",
@@ -1262,9 +1277,37 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
             <div id="fundFlowProxyPanel"></div>
           </div>
         </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Fund / ETF Data Readiness</h3>
+            <div id="fundEtfReadinessPanel"></div>
+          </div>
+          <div class="panel">
+            <h3>Global Fund Flow Candidate Panel</h3>
+            <div id="globalFundFlowCandidatePanel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>China Fund Coverage Validation Panel</h3>
+            <div id="chinaFundCoveragePanel"></div>
+          </div>
+          <div class="panel">
+            <h3>Upload Official Fund List</h3>
+            <p>Use the manual CSV templates for AMAC, issuer official lists, exchange ETF lists, and holdings disclosures. Upload validation is available through the local CLI/action layer; UI upload wiring is reserved for the next pass.</p>
+            <div id="officialFundImportPanel"></div>
+          </div>
+        </div>
         <div class="panel">
           <span class="tag warn">candidate / validation in progress</span>
+          <h3>Flow Proxy Explanation</h3>
           <p>ETF flow, fund holdings, northbound flow, margin financing and block trades remain candidate or planned data types. Morningstar is treated as a licensed source candidate and no capital-flow data is fabricated.</p>
+          <ul>
+            <li>ETF amount and volume are trading activity, not net inflow.</li>
+            <li>AUM change mixes market movement and flow.</li>
+            <li>Shares outstanding change is closer to creation/redemption but still needs source confirmation.</li>
+            <li>Holdings change shows allocation drift with disclosure lag.</li>
+          </ul>
         </div>
       </section>
       <section id="upload">
@@ -1296,6 +1339,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     const FOUNDATION_ITEMS = DASHBOARD_DATA.foundation_catalog_items || [];
     const PHASE2 = DASHBOARD_DATA.market_data_phase2_summary || {{}};
     const AUTHORITATIVE_STATUS = DASHBOARD_DATA.authoritative_source_status || {{}};
+    const FUND_ETF = DASHBOARD_DATA.fund_etf_capital_flow || {{}};
     const COMMODITY_TAXONOMY = DASHBOARD_DATA.commodity_taxonomy || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
@@ -1512,6 +1556,26 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         `<p><strong>Fund Flow Proxy Readiness</strong></p>` +
         `<p>Global ETF holdings, fund holdings, sector/country exposure and AUM/NAV/performance can support proxy analysis only when entitlement and cross-source checks pass.</p>` +
         `<div><span class="tag warn">proxy_only_not_true_flow</span><span class="tag warn">manual_review_required</span><span class="tag">no_large_download</span></div>`;
+      renderFundEtfCapitalFlow();
+    }}
+    function renderFundEtfCapitalFlow() {{
+      const summary = FUND_ETF.summary || {{}};
+      const coverage = FUND_ETF.coverage_validation || {{}};
+      const priority = FUND_ETF.priority_datasets || [];
+      const queue = FUND_ETF.trust_upgrade_queue || [];
+      document.getElementById('fundEtfReadinessPanel').innerHTML =
+        `<div><span class="tag ${{summary.manual_import_framework_completed ? 'good' : 'warn'}}">manual import framework: ${{summary.manual_import_framework_completed ? 'ready' : 'missing'}}</span>` +
+        `<span class="tag ${{summary.morningstar_matching_framework_completed ? 'good' : 'warn'}}">matching framework: ${{summary.morningstar_matching_framework_completed ? 'ready' : 'missing'}}</span>` +
+        `<span class="tag warn">trusted_candidate: ${{summary.trusted_candidate_count || 0}}</span></div>` +
+        `<p class="small">Templates: ${{(summary.import_templates || []).map(escapeHtml).join(', ') || 'not generated'}}</p>`;
+      document.getElementById('globalFundFlowCandidatePanel').innerHTML =
+        `<table><thead><tr><th>Dataset</th><th>Use case</th><th>Risk</th></tr></thead><tbody>${{priority.slice(0, 8).map(item => `<tr><td>${{escapeHtml(item.dataset_name)}}</td><td>${{escapeHtml(item.likely_use_case)}}</td><td>${{escapeHtml(item.download_risk)}}</td></tr>`).join('') || '<tr><td colspan="3">insufficient_evidence</td></tr>'}}</tbody></table>`;
+      document.getElementById('chinaFundCoveragePanel').innerHTML =
+        `<div><span class="tag warn">${{escapeHtml(coverage.trust_upgrade_status || 'not_run')}}</span><span class="tag">official_count: ${{coverage.official_count ?? 0}}</span><span class="tag">matched_count: ${{coverage.matched_count ?? 0}}</span></div>` +
+        `<p class="small">Coverage ratio remains unavailable until official China fund list import is loaded. Morningstar China coverage is not assumed.</p>`;
+      document.getElementById('officialFundImportPanel').innerHTML =
+        `<div><span class="tag">templates ready</span><span class="tag warn">manual import required</span><span class="tag warn">not auto trusted</span></div>` +
+        `<p class="small">Trust upgrade queue items: ${{queue.length}}. All currently blocked by official_import_missing / freshness_unknown / field_completeness_unknown.</p>`;
     }}
     function renderSeriesTable(series) {{
       if (!series.length) return '<span class="tag warn">insufficient_evidence</span>';

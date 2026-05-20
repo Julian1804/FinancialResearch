@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T15:51:10Z",
+  "generated_at": "2026-05-20T16:10:13Z",
   "snapshot_counts": {
     "included": 20,
     "excluded": 7,
@@ -579,7 +579,7 @@
       "exclusion_reason": "publish_date_later_than_window_end"
     }
   ],
-  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T15:51:10Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
+  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T16:10:13Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
   "report_upload_classification": {
     "schema_valid": true,
     "validation_errors": [],
@@ -3194,7 +3194,7 @@
     }
   },
   "authoritative_source_status": {
-    "generated_at": "2026-05-20T15:51:09Z",
+    "generated_at": "2026-05-20T16:10:12Z",
     "sources": [
       {
         "source_id": "morningstar_direct",
@@ -3209,6 +3209,429 @@
         "last_smoke_test_result": "not_run_this_phase",
         "warning": "Licensed source; validation in progress. Candidate only until coverage, freshness, field and cross-source checks pass.",
         "licensed_authorized_platform": true
+      },
+      {
+        "source_id": "fund_etf_capital_flow_foundation",
+        "display_name": "Fund & ETF Capital Flow Foundation",
+        "status": "manual_import_ready",
+        "official_import_available": false,
+        "morningstar_matching_framework_ready": true,
+        "coverage_validation_status": "not_eligible_no_official_import",
+        "priority_dataset_count": 10,
+        "trust_upgrade_queue_count": 10,
+        "trusted_candidate_count": 0,
+        "warning": "Flow proxy is not actual flow. Official China fund import is required before Morningstar coverage validation.",
+        "candidate_only": true
+      }
+    ]
+  },
+  "fund_etf_capital_flow": {
+    "summary": {
+      "generated_at": "2026-05-20T16:10:12Z",
+      "fund_etf_capital_flow_foundation_completed": true,
+      "data_model_completed": true,
+      "manual_import_framework_completed": true,
+      "import_templates": [
+        "china_public_fund_official_list_template.csv",
+        "fund_company_product_list_template.csv",
+        "exchange_etf_list_template.csv",
+        "fund_holdings_template.csv"
+      ],
+      "morningstar_matching_framework_completed": true,
+      "coverage_validation_pipeline_completed": true,
+      "morningstar_priority_dataset_count": 10,
+      "trust_upgrade_queue_count": 10,
+      "trusted_candidate_count": 0,
+      "large_download_performed": false,
+      "openai_api_called": false,
+      "parse_lab_affected": false,
+      "formal_trusted_consumption_affected": false,
+      "no_auto_login": true,
+      "no_password_saved": true,
+      "token_leaked": false,
+      "outputs": {
+        "schema_summary": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\fund_etf_schema_summary.json",
+        "manual_import_templates": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\manual_import_templates",
+        "matching_framework": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\morningstar_matching_framework.json",
+        "coverage_validation": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\fund_coverage_validation_results.json",
+        "priority_dataset_shortlist": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\morningstar_priority_dataset_shortlist.json",
+        "trust_upgrade_queue": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow\\trust_upgrade_queue.json"
+      }
+    },
+    "priority_datasets": [
+      {
+        "dataset_id": "0218-0574",
+        "dataset_name": "Portfolio Composition",
+        "likely_use_case": "Portfolio or holdings",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 2,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0261",
+        "dataset_name": "Estimated Share Class Net Flow (Month-End)",
+        "likely_use_case": "Fund / ETF master",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 3,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-1215",
+        "dataset_name": "Share Class Analysis",
+        "likely_use_case": "Fund / ETF master",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 3,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0041",
+        "dataset_name": "Post-tax Returns (Month-End)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0039",
+        "dataset_name": "Returns (Calendar Year)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0036",
+        "dataset_name": "Returns (Daily)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0037",
+        "dataset_name": "Returns (Month-End)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0038",
+        "dataset_name": "Returns (Quarter-End)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0043",
+        "dataset_name": "Risk - Total Return (Month-End)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0044",
+        "dataset_name": "Risk - Total Return (Quarter-End)",
+        "likely_use_case": "Performance / NAV / returns",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "freshness_unknown": true,
+        "priority": 4,
+        "next_test_action": "field metadata sample or user-approved tiny sample only"
+      }
+    ],
+    "coverage_validation": {
+      "generated_at": "2026-05-20T16:10:12Z",
+      "official_count": 0,
+      "morningstar_candidate_count": 40,
+      "matched_count": 0,
+      "unmatched_official_count": 0,
+      "unmatched_morningstar_count": null,
+      "coverage_ratio": null,
+      "field_completeness_score": null,
+      "freshness_gap_days": null,
+      "cross_source_match_rate": null,
+      "trust_upgrade_status": "not_eligible_no_official_import",
+      "quality_status": "needs_review",
+      "manual_import_required": true,
+      "rules": {
+        "coverage_ratio_min": 0.9,
+        "field_completeness_min": 0.95,
+        "freshness_gap_days_max": 7,
+        "cross_source_match_rate_min": 0.98
+      },
+      "candidate_only": true
+    },
+    "trust_upgrade_queue": [
+      {
+        "dataset_id": "0218-0574",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0261",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-1215",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0041",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0039",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0036",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0037",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0038",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0043",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0044",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "official_coverage_crosscheck",
+          "freshness_validation",
+          "field_completeness_validation",
+          "license_storage_boundary_confirmed",
+          "QA_quality_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "official_import_missing",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
       }
     ]
   },
