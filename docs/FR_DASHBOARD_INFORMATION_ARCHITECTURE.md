@@ -1,6 +1,6 @@
 # FR Dashboard Information Architecture
 
-Generated: 2026-05-20T07:40:33Z
+Generated: 2026-05-20T08:16:04Z
 
 Dashboard v1 is a new FinancialResearch workbench UI, not the archived Streamlit interface.
 
@@ -24,7 +24,7 @@ New UI smoke:
 - tested_url: http://127.0.0.1:5188/
 - legacy_streamlit_used: false
 - old_ui_false_positive_guard: true
-- detected markers: 25
+- detected markers: 36
 
 Config outputs:
 

@@ -1,0 +1,210 @@
+{
+  "version": "macro_taxonomy_v2",
+  "generated_at": "2026-05-20T08:17:00Z",
+  "items": [
+    {
+      "domain": "macro_fundamental",
+      "primary_domain": "macro_fundamental",
+      "secondary_domain": null,
+      "category": "inflation",
+      "subcategory": "consumer_prices",
+      "metric_id": "us_cpi",
+      "display_name": "US CPI",
+      "economic_meaning": "Consumer inflation proxy for purchasing power and policy pressure.",
+      "default_unit": "index",
+      "frequency": "monthly",
+      "source_priority": [
+        "FRED:CPIAUCSL",
+        "BLS:CUUR0000SA0"
+      ],
+      "dashboard_section": "Inflation",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "FRED",
+        "BLS"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "BLS API key"
+      ]
+    },
+    {
+      "domain": "macro_fundamental",
+      "primary_domain": "macro_fundamental",
+      "secondary_domain": null,
+      "category": "inflation",
+      "subcategory": "producer_prices",
+      "metric_id": "us_ppi",
+      "display_name": "US PPI",
+      "economic_meaning": "Producer inflation and upstream cost pressure.",
+      "default_unit": "index",
+      "frequency": "monthly",
+      "source_priority": [
+        "FRED:PPIACO",
+        "BLS:WPUFD4"
+      ],
+      "dashboard_section": "Inflation",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "FRED",
+        "BLS"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "BLS API key"
+      ]
+    },
+    {
+      "domain": "macro_fundamental",
+      "primary_domain": "macro_fundamental",
+      "secondary_domain": null,
+      "category": "employment",
+      "subcategory": "unemployment",
+      "metric_id": "us_unemployment_rate",
+      "display_name": "US unemployment rate",
+      "economic_meaning": "Labor market slack and recession risk proxy.",
+      "default_unit": "percent",
+      "frequency": "monthly",
+      "source_priority": [
+        "FRED:UNRATE",
+        "BLS:LNS14000000"
+      ],
+      "dashboard_section": "Employment",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "FRED",
+        "BLS"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "BLS API key"
+      ]
+    },
+    {
+      "domain": "macro_fundamental",
+      "primary_domain": "macro_fundamental",
+      "secondary_domain": null,
+      "category": "employment",
+      "subcategory": "payrolls",
+      "metric_id": "us_nonfarm_payrolls",
+      "display_name": "US nonfarm payrolls",
+      "economic_meaning": "Hiring momentum and household income proxy.",
+      "default_unit": "thousands_persons",
+      "frequency": "monthly",
+      "source_priority": [
+        "FRED:PAYEMS",
+        "BLS:CES0000000001"
+      ],
+      "dashboard_section": "Employment",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "FRED",
+        "BLS"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "BLS API key"
+      ]
+    },
+    {
+      "domain": "macro_policy",
+      "primary_domain": "macro_policy",
+      "secondary_domain": "rates_market",
+      "category": "central_bank_policy",
+      "subcategory": "policy_rate",
+      "metric_id": "fed_funds_effective",
+      "display_name": "Fed Funds Effective Rate",
+      "economic_meaning": "Implemented monetary policy stance.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DFF"
+      ],
+      "dashboard_section": "Central Bank Policy",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "macro_policy",
+      "primary_domain": "macro_policy",
+      "secondary_domain": null,
+      "category": "money_supply",
+      "subcategory": "broad_money",
+      "metric_id": "china_m2",
+      "display_name": "China M2",
+      "economic_meaning": "Broad money supply and domestic liquidity condition.",
+      "default_unit": "CNY",
+      "frequency": "monthly",
+      "source_priority": [],
+      "dashboard_section": "Money Supply",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [
+        "AKShare macro if provenance verified"
+      ],
+      "future_sources": [
+        "PBOC official connector"
+      ]
+    },
+    {
+      "domain": "macro_external",
+      "primary_domain": "macro_external",
+      "secondary_domain": null,
+      "category": "reserves",
+      "subcategory": "fx_reserves",
+      "metric_id": "china_fx_reserves",
+      "display_name": "China FX reserves",
+      "economic_meaning": "External buffer and currency defense capacity.",
+      "default_unit": "USD",
+      "frequency": "monthly",
+      "source_priority": [],
+      "dashboard_section": "Reserves",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "SAFE/PBOC official connector"
+      ]
+    },
+    {
+      "domain": "macro_external",
+      "primary_domain": "macro_external",
+      "secondary_domain": null,
+      "category": "reserves",
+      "subcategory": "gold_reserves",
+      "metric_id": "china_gold_reserves",
+      "display_name": "China gold reserves",
+      "economic_meaning": "Official reserve composition and de-dollarization indicator.",
+      "default_unit": "troy_ounces",
+      "frequency": "monthly",
+      "source_priority": [],
+      "dashboard_section": "Reserves",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "PBOC/World Gold Council if licensed"
+      ]
+    }
+  ]
+}

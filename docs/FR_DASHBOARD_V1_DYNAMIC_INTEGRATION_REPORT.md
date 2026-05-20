@@ -1,6 +1,6 @@
 # FR Dashboard v1 Dynamic Integration Report
 
-Generated: 2026-05-20T07:40:34Z
+Generated: 2026-05-20T08:16:05Z
 
 Operability level: semi_dynamic_local_action_layer.
 

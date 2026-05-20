@@ -1,0 +1,35 @@
+{
+  "version": "market_data_domain_taxonomy_v1",
+  "generated_at": "2026-05-20T08:17:00Z",
+  "domains": [
+    {
+      "domain": "macro_fundamental",
+      "meaning": "Country-level economic fundamentals such as inflation, employment, GDP and trade."
+    },
+    {
+      "domain": "macro_policy",
+      "meaning": "Policy rates, central bank statements and fiscal/monetary policy stance."
+    },
+    {
+      "domain": "rates_market",
+      "meaning": "Market prices of money and bonds, including yields, curves and interbank rates."
+    },
+    {
+      "domain": "fx_market",
+      "meaning": "Currency pairs, dollar index and carry-trade related FX proxies."
+    },
+    {
+      "domain": "asset_class",
+      "meaning": "Tradable asset categories and capital-flow proxies."
+    },
+    {
+      "domain": "commodity",
+      "meaning": "Commodity spot, futures, benchmark, index and settlement data."
+    },
+    {
+      "domain": "futures",
+      "meaning": "Exchange contract data; raw contracts and continuous contracts are separate."
+    }
+  ],
+  "classification_correction_policy": "Classify by economic meaning; do not merge macro indicators, policy rates, market yields, FX and commodity futures just because they share a chart."
+}

@@ -30,6 +30,7 @@ WORKSPACE_ROOT = PROJECT_ROOT / "runtime" / "research_workspace"
 MACRO_ASSET_ROOT = PROJECT_ROOT / "runtime" / "macro_asset_historical_ingestion"
 COMMODITY_DASHBOARD_ROOT = PROJECT_ROOT / "runtime" / "commodity_exchange_sample_ingestion"
 BLS_RESILIENT_ROOT = MACRO_ASSET_ROOT / "bls_resilient_ingestion"
+FOUNDATION_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_catalog"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -816,6 +817,9 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     macro_asset_summary = read_json(MACRO_ASSET_ROOT / "dashboard_macro_asset_summary.json")
     commodity_dashboard = read_json(COMMODITY_DASHBOARD_ROOT / "commodity_dashboard_v1_data.json")
     bls_resilient = read_json(BLS_RESILIENT_ROOT / "bls_resilient_ingestion_results.json")
+    foundation_summary = read_json(FOUNDATION_ROOT / "foundation_summary.json")
+    foundation_catalog = read_json(FOUNDATION_ROOT / "foundation_catalog.json")
+    commodity_taxonomy = read_json(CONFIG_ROOT / "commodity_taxonomy.json")
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -835,6 +839,9 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "macro_asset_summary": macro_asset_summary,
         "commodity_dashboard": commodity_dashboard,
         "bls_resilient_status": bls_resilient,
+        "foundation_summary": foundation_summary,
+        "foundation_catalog_items": foundation_catalog.get("items", []),
+        "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
     }
@@ -857,6 +864,17 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "FR Dashboard v1",
         "Research Workspace",
         "Commodity Dashboard",
+        "Macro Snapshot",
+        "Rates / Bond Snapshot",
+        "FX / Currency Snapshot",
+        "Commodity Snapshot",
+        "Asset Class Snapshot",
+        "Macro Overview Cards",
+        "Macro Category Sections",
+        "Asset Overview Cards",
+        "FX / Currency",
+        "Rates / Bonds",
+        "Futures Framework",
         "Category View",
         "Exchange View",
         "Custom Chart Builder",
@@ -1047,6 +1065,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
               <div id="miniCharts"></div>
               <p class="small">Sparkline preview uses real historical records when available; missing publish_date remains explicit.</p>
             </div>
+            <div class="panel">
+              <h3>Market Foundation Snapshot</h3>
+              <div class="grid cols-3" id="domainSnapshotCards"></div>
+            </div>
           </div>
           <div>
             <div class="panel">
@@ -1060,7 +1082,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
                 <button onclick="openPanel('console')">New Research Workspace</button>
                 <button onclick="showGenerated()">Generate Statistical Report</button>
                 <button onclick="openPanel('upload')">Upload GPT Report</button>
-                <button onclick="openPanel('workspace')">Open Latest Workspace</button>
+                <button onclick="openPanel('console'); loadWorkspace()">Open Latest Workspace</button>
               </div>
             </div>
           </div>
@@ -1123,14 +1145,76 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         </div>
       </section>
 
-      <section id="macro"><h2>Macro Dashboard</h2><div class="panel" id="macroPanel"></div></section>
-      <section id="asset"><h2>Asset Class Dashboard</h2><div class="panel" id="assetPanel"></div></section>
+      <section id="macro">
+        <h2>Macro Dashboard</h2>
+        <h3>Macro Overview Cards</h3>
+        <div class="grid cols-3" id="macroOverviewCards"></div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Macro Category Sections</h3>
+            <div id="macroCategorySections"></div>
+          </div>
+          <div class="panel">
+            <h3>Country Tabs</h3>
+            <div class="actions">
+              <button>United States</button><button>China</button><button>Japan</button><button>Euro Area</button><button>UK</button>
+            </div>
+            <div id="macroCountryPanel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Macro Trend Area</h3>
+            <div class="row">
+              <div><label>Select macro series</label><select id="macroSeriesSelect"></select></div>
+              <div><label>Chart Type</label><select id="macroChartType"><option>line</option><option>bar</option></select></div>
+              <div><label>Transform</label><select><option>raw</option><option>indexed to 100</option></select></div>
+              <div><label>Date Range</label><select><option>full_history</option><option>10y</option><option>5y</option></select></div>
+            </div>
+            <div id="macroTrendPreview"></div>
+          </div>
+          <div class="panel">
+            <h3>Data Quality / Vintage Panel</h3>
+            <div id="macroQualityPanel"></div>
+          </div>
+        </div>
+        <div class="panel"><h3>Macro Data Table</h3><div id="macroPanel"></div></div>
+      </section>
+      <section id="asset">
+        <h2>Asset Class Dashboard</h2>
+        <h3>Asset Overview Cards</h3>
+        <div class="grid cols-3" id="assetOverviewCards"></div>
+        <div class="grid cols-2">
+          <div class="panel"><h3>FX / Currency</h3><div id="fxAssetSection"></div></div>
+          <div class="panel"><h3>Rates / Bonds</h3><div id="ratesAssetSection"></div></div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel"><h3>Precious Metals / Commodity Assets</h3><div id="commodityAssetSection"></div></div>
+          <div class="panel"><h3>Money Flow Proxy Panel</h3><div id="moneyFlowProxyPanel"></div></div>
+        </div>
+        <div class="panel">
+          <h3>Custom Chart Builder</h3>
+          <div class="row">
+            <div><label>Asset Category</label><select><option>FX / Currency</option><option>Rates / Bonds</option><option>Precious Metals</option><option>Energy</option><option>Base Metals</option><option>Agriculture</option></select></div>
+            <div><label>Select Series</label><select id="assetSeriesSelect"></select></div>
+            <div><label>Chart Type</label><select id="assetChartType"><option>line</option><option>bar</option><option>pie</option></select></div>
+            <div><label>Transform</label><select><option>raw</option><option>indexed 100</option><option>pct change</option></select></div>
+          </div>
+          <div id="assetChartPreview"></div>
+        </div>
+        <div class="panel"><h3>Asset Data Table</h3><div id="assetPanel"></div></div>
+      </section>
       <section id="commodity">
         <h2>Commodity Dashboard</h2>
         <div class="grid cols-3" id="commodityOverviewCards"></div>
         <div class="grid cols-2">
           <div class="panel"><h3>Category View</h3><div id="commodityCategoryView"></div></div>
           <div class="panel"><h3>Exchange View</h3><div id="commodityExchangeView"></div></div>
+        </div>
+        <div class="panel">
+          <h3>Futures Framework</h3>
+          <div id="futuresFrameworkPanel"></div>
+          <p class="small">Raw single-contract futures, continuous contracts, benchmark prices and spot/index series are kept separate. Missing exchange data is shown as deferred rather than fabricated.</p>
         </div>
         <div class="panel">
           <h3>Custom Chart Builder</h3>
@@ -1179,19 +1263,23 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     const MACRO_ASSET = DASHBOARD_DATA.macro_asset_summary || {{}};
     const COMMODITY = DASHBOARD_DATA.commodity_dashboard || {{}};
     const BLS_STATUS = DASHBOARD_DATA.bls_resilient_status || {{}};
+    const FOUNDATION = DASHBOARD_DATA.foundation_summary || {{}};
+    const FOUNDATION_ITEMS = DASHBOARD_DATA.foundation_catalog_items || [];
+    const COMMODITY_TAXONOMY = DASHBOARD_DATA.commodity_taxonomy || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
     document.getElementById('missingCount').textContent = DASHBOARD_DATA.snapshot_counts.missing_publish_date_review;
     document.getElementById('futureCount').textContent = DASHBOARD_DATA.snapshot_counts.excluded_due_to_future_publish_date;
     document.getElementById('statusTags').innerHTML = Object.entries(DASHBOARD_DATA.source_status_counts).map(([k,v]) => `<span class="tag">${{k}}: ${{v}}</span>`).join('');
     document.getElementById('topSummaryCards').innerHTML = renderTopSummaryCards();
+    document.getElementById('domainSnapshotCards').innerHTML = renderDomainSnapshots();
     document.getElementById('miniCharts').innerHTML = renderSeriesTable([...(MACRO_ASSET.macro_series || []).slice(0, 6), ...(MACRO_ASSET.asset_series || []).slice(0, 4)]);
     document.getElementById('eventTicker').innerHTML = (MACRO_ASSET.recent_events || []).map(event => `<div class="event-line"><strong>${{escapeHtml(event.title || '')}}</strong><br><span class="small">${{escapeHtml(event.event_date || '')}} · ${{escapeHtml(event.source || '')}}</span></div>`).join('') || '<div class="event-line">No verified headline/event source connected yet.</div>';
     renderCategoryCheckboxes();
     bindAdvancedTimePanel();
     updateDownloadLinks(DASHBOARD_DATA.report_paths || {{}});
-    document.getElementById('macroPanel').innerHTML = '<h3>Historical Macro Data</h3>' + renderSeriesTable(MACRO_ASSET.macro_series || []);
-    document.getElementById('assetPanel').innerHTML = '<h3>Historical Asset Class / Commodity Data</h3>' + renderSeriesTable(MACRO_ASSET.asset_series || []);
+    renderMacroDashboardV2();
+    renderAssetDashboardV2();
     renderCommodityDashboard();
     document.getElementById('companyPanel').innerHTML = summaryPanel('market_daily') + '<p class="small">A-share market data remains candidate/staging and is not formal trusted consumption.</p>';
     document.getElementById('workspacePaths').textContent = JSON.stringify(DASHBOARD_DATA.report_paths, null, 2);
@@ -1222,6 +1310,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       document.getElementById('commodityOverviewCards').innerHTML = cardItems.map(([title, value]) => `<div class="panel summary-card"><strong>${{title}}</strong><div class="metric">${{value}}</div><div class="sub">${{escapeHtml(cards.source_coverage_warning || '')}}</div></div>`).join('');
       document.getElementById('commodityCategoryView').innerHTML = renderGroupTable(COMMODITY.category_view || []);
       document.getElementById('commodityExchangeView').innerHTML = renderGroupTable(COMMODITY.exchange_view || []);
+      document.getElementById('futuresFrameworkPanel').innerHTML = renderFuturesFramework();
       const available = COMMODITY.chart_builder?.available_series || [];
       document.getElementById('commoditySeriesSelect').innerHTML = available.map(item => `<option value="${{escapeHtml(item.dataset_id)}}">${{escapeHtml(item.instrument_name)}} · ${{escapeHtml(item.exchange)}} · ${{escapeHtml(item.price_type)}}</option>`).join('');
       document.getElementById('commodityDataTable').innerHTML = renderCommodityTable(available);
@@ -1249,6 +1338,108 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     }}
     function escapeHtml(value) {{
       return String(value).replace(/[&<>"']/g, char => ({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}}[char]));
+    }}
+    function foundationItems(domain) {{
+      return FOUNDATION_ITEMS.filter(item => item.domain === domain || item.primary_domain === domain || item.secondary_domain === domain);
+    }}
+    function latestBySeries(seriesId) {{
+      const all = [...(MACRO_ASSET.macro_series || []), ...(MACRO_ASSET.asset_series || []), ...(COMMODITY.chart_builder?.available_series || [])];
+      return all.find(item => item.series_id === seriesId || item.metric_id === seriesId || item.dataset_id === seriesId || item.instrument_name === seriesId) || null;
+    }}
+    function renderDomainSnapshots() {{
+      const domainCounts = FOUNDATION.domain_counts || {{}};
+      const cards = [
+        ['Macro Snapshot', domainCounts.macro || domainCounts.macro_fundamental || 0, 'CPI, employment, policy and fiscal foundation catalog'],
+        ['Rates / Bond Snapshot', domainCounts.rates_bonds || domainCounts.rates_bond || domainCounts.rates_market || 0, 'Policy rates, market rates and sovereign yield curves separated'],
+        ['FX / Currency Snapshot', domainCounts.fx || domainCounts.fx_currency || domainCounts.fx_market || 0, 'Currency pairs, dollar index and reserve data framework'],
+        ['Commodity Snapshot', domainCounts.commodity || 0, 'Spot, futures, benchmark and exchange coverage are distinct'],
+        ['Asset Class Snapshot', domainCounts.asset_class || 0, 'Cross-asset proxy data, not direct flow claims']
+      ];
+      return cards.map(([title, value, sub]) => `<div class="panel summary-card"><strong>${{title}}</strong><div class="metric">${{escapeHtml(value)}}</div><div class="sub">${{escapeHtml(sub)}}</div></div>`).join('');
+    }}
+    function renderMacroDashboardV2() {{
+      const macro = MACRO_ASSET.macro_series || [];
+      const cpi = macro.find(item => String(item.series_id || '').includes('CPI')) || null;
+      const ppi = macro.find(item => String(item.series_id || '').includes('PPI')) || null;
+      const unrate = macro.find(item => String(item.series_id || '').includes('UNRATE')) || null;
+      const dff = macro.find(item => String(item.series_id || '').includes('DFF')) || null;
+      const cards = [
+        ['Inflation latest', cpi?.latest_value ?? ppi?.latest_value ?? 'insufficient_evidence', cpi?.series_id || ppi?.series_id || 'CPI/PPI gap'],
+        ['Unemployment latest', unrate?.latest_value ?? 'insufficient_evidence', unrate?.series_id || 'employment gap'],
+        ['Policy / rates latest', dff?.latest_value ?? 'insufficient_evidence', dff?.series_id || 'policy rate gap'],
+        ['Macro data coverage', macro.length, 'series loaded into historical foundation'],
+        ['Revision / vintage warning', 'vintage tracked', 'vintage support remains source-dependent'],
+        ['BLS status', BLS_STATUS.final_status || 'deferred_retry', 'resilient retry/fallback plan']
+      ];
+      document.getElementById('macroOverviewCards').innerHTML = cards.map(([title, value, sub]) => `<div class="panel summary-card"><strong>${{escapeHtml(title)}}</strong><div class="metric">${{escapeHtml(value)}}</div><div class="sub">${{escapeHtml(sub)}}</div></div>`).join('');
+      const categories = {{
+        Inflation: macro.filter(item => /CPI|PPI|inflation/i.test(`${{item.series_id}} ${{item.metric_name}}`)),
+        Employment: macro.filter(item => /UNRATE|PAYEMS|employment|payroll/i.test(`${{item.series_id}} ${{item.metric_name}}`)),
+        'Money Supply': foundationItems('macro').filter(item => /M0|M1|M2|money/i.test(`${{item.metric_id}} ${{item.display_name}}`)),
+        'Central Bank Policy': macro.filter(item => /DFF|Fed Funds|policy/i.test(`${{item.series_id}} ${{item.metric_name}}`)),
+        'External Balance': foundationItems('macro').filter(item => /reserve|trade|current/i.test(`${{item.metric_id}} ${{item.display_name}}`)),
+        'Fiscal / Debt': foundationItems('macro').filter(item => /fiscal|debt/i.test(`${{item.metric_id}} ${{item.display_name}}`))
+      }};
+      document.getElementById('macroCategorySections').innerHTML = Object.entries(categories).map(([name, rows]) => `<div class="event-line"><strong>${{escapeHtml(name)}}</strong><br><span class="small">${{rows.length ? rows.length + ' item(s)' : 'insufficient_evidence / future connector'}}</span></div>`).join('');
+      document.getElementById('macroCountryPanel').innerHTML = '<span class="tag good">United States: partial real data</span><span class="tag warn">China: foundation catalog ready</span><span class="tag warn">Japan: future connector</span><span class="tag warn">Euro Area: future connector</span><span class="tag warn">UK: future connector</span>';
+      document.getElementById('macroSeriesSelect').innerHTML = macro.map(item => `<option>${{escapeHtml(item.series_id || item.metric_name || '')}}</option>`).join('');
+      document.getElementById('macroTrendPreview').innerHTML = renderMiniSvg(macro.slice(0, 8), 'Macro trend area');
+      document.getElementById('macroQualityPanel').innerHTML = renderQualityPanel(macro);
+      document.getElementById('macroPanel').innerHTML = renderSeriesTable(macro);
+    }}
+    function renderAssetDashboardV2() {{
+      const asset = MACRO_ASSET.asset_series || [];
+      const macro = MACRO_ASSET.macro_series || [];
+      const usd = macro.find(item => /DTWEX|DXY|USD/i.test(`${{item.series_id}} ${{item.metric_name}}`));
+      const dgs2 = macro.find(item => String(item.series_id || '').includes('DGS2'));
+      const dgs10 = macro.find(item => String(item.series_id || '').includes('DGS10'));
+      const gold = asset.find(item => /gold/i.test(`${{item.series_id}} ${{item.metric_name}} ${{item.instrument_name}}`));
+      const oil = asset.find(item => /oil|WTI|Brent/i.test(`${{item.series_id}} ${{item.metric_name}} ${{item.instrument_name}}`));
+      const copper = asset.find(item => /copper/i.test(`${{item.series_id}} ${{item.metric_name}} ${{item.instrument_name}}`));
+      const spread = dgs10 && dgs2 ? (Number(dgs10.latest_value) - Number(dgs2.latest_value)).toFixed(2) : 'insufficient_evidence';
+      const cards = [
+        ['USD index latest', usd?.latest_value ?? 'insufficient_evidence', usd?.series_id || 'FX data gap'],
+        ['2Y / 10Y yield latest', `${{dgs2?.latest_value ?? 'na'}} / ${{dgs10?.latest_value ?? 'na'}}`, 'sovereign yield samples'],
+        ['Yield spread', spread, '10Y minus 2Y when both are available'],
+        ['Gold latest', gold?.latest_value ?? 'insufficient_evidence', gold?.series_id || 'gold source gap'],
+        ['Oil latest', oil?.latest_value ?? 'insufficient_evidence', oil?.series_id || 'oil source gap'],
+        ['Major commodity latest', copper?.latest_value ?? 'insufficient_evidence', copper?.series_id || 'base metals gap']
+      ];
+      document.getElementById('assetOverviewCards').innerHTML = cards.map(([title, value, sub]) => `<div class="panel summary-card"><strong>${{escapeHtml(title)}}</strong><div class="metric">${{escapeHtml(value)}}</div><div class="sub">${{escapeHtml(sub)}}</div></div>`).join('');
+      document.getElementById('fxAssetSection').innerHTML = renderFoundationList(['fx', 'fx_currency', 'fx_market']);
+      document.getElementById('ratesAssetSection').innerHTML = renderFoundationList(['rates_bonds', 'rates_bond', 'rates_market']);
+      document.getElementById('commodityAssetSection').innerHTML = renderSeriesTable(asset.slice(0, 12));
+      document.getElementById('moneyFlowProxyPanel').innerHTML = '<span class="tag warn">proxy only</span><p>Rates direction, USD strength and gold/oil/copper movement can proxy risk appetite, but no direct capital-flow data is connected. insufficient_evidence is preserved for actual flow claims.</p>';
+      document.getElementById('assetSeriesSelect').innerHTML = [...macro, ...asset].map(item => `<option>${{escapeHtml(item.series_id || item.metric_name || item.instrument_name || '')}}</option>`).join('');
+      document.getElementById('assetChartPreview').innerHTML = renderMiniSvg([...macro.slice(0, 4), ...asset.slice(0, 4)], 'Asset class trend');
+      document.getElementById('assetPanel').innerHTML = renderSeriesTable(asset);
+    }}
+    function renderFoundationList(domains) {{
+      const rows = FOUNDATION_ITEMS.filter(item => domains.includes(item.domain) || domains.includes(item.primary_domain) || domains.includes(item.secondary_domain));
+      if (!rows.length) return '<span class="tag warn">future_connector</span>';
+      return `<table><thead><tr><th>Metric</th><th>Status</th><th>Preferred source</th></tr></thead><tbody>${{rows.slice(0, 12).map(row => `<tr><td>${{escapeHtml(row.display_name || row.metric_id)}}</td><td><span class="tag">${{escapeHtml(row.current_status || '')}}</span></td><td>${{escapeHtml(row.preferred_source || '')}}</td></tr>`).join('')}}</tbody></table>`;
+    }}
+    function renderFuturesFramework() {{
+      const framework = COMMODITY_TAXONOMY.futures_framework || {{}};
+      const exchanges = framework.supported_future_exchanges || ['COMEX','NYMEX','LME','SHFE','INE','DCE','CZCE'];
+      const statuses = framework.status_by_exchange || {{}};
+      const rows = exchanges.map(exchange => {{
+        const status = statuses[exchange] || 'future_connector';
+        return `<tr><td>${{escapeHtml(exchange)}}</td><td><span class="tag warn">${{escapeHtml(status)}}</span></td><td>schema_ready / no fabricated prices</td></tr>`;
+      }}).join('');
+      return `<table><thead><tr><th>Exchange</th><th>Current Status</th><th>Framework Note</th></tr></thead><tbody>${{rows}}</tbody></table>`;
+    }}
+    function renderQualityPanel(series) {{
+      const counts = series.reduce((acc, item) => {{ acc[item.quality_status || 'unknown'] = (acc[item.quality_status || 'unknown'] || 0) + 1; return acc; }}, {{}});
+      const publishUnavailable = series.filter(item => (item.publish_date_source || '').includes('unavailable')).length;
+      return `<div>${{Object.entries(counts).map(([k,v]) => `<span class="tag">${{escapeHtml(k)}}: ${{v}}</span>`).join('')}}</div><p class="small">publish_date unavailable/review items: ${{publishUnavailable}}. Revision-sensitive series keep retrieval_snapshot_id/vintage fields when available.</p>`;
+    }}
+    function renderMiniSvg(rows, label) {{
+      const top = rows.slice(0, 8);
+      if (!top.length) return '<span class="tag warn">insufficient_evidence</span>';
+      const max = Math.max(...top.map(row => Math.abs(Number(row.latest_value) || 0)), 1);
+      const points = top.map((row, idx) => `${{idx * 68 + 22}},${{145 - (Math.abs(Number(row.latest_value) || 0) / max) * 110}}`).join(' ');
+      return `<svg viewBox="0 0 560 165" width="100%" height="175" role="img" aria-label="${{escapeHtml(label)}}"><polyline points="${{points}}" fill="none" stroke="var(--green)" stroke-width="3"/><text x="10" y="158" fill="var(--muted)">${{escapeHtml(label)}} preview from latest available observations</text></svg>`;
     }}
     function renderTopSummaryCards() {{
       const cards = MACRO_ASSET.top_summary_cards || [];

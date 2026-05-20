@@ -1,0 +1,161 @@
+{
+  "version": "asset_class_taxonomy_v2",
+  "generated_at": "2026-05-20T08:17:00Z",
+  "items": [
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "fx_market",
+      "category": "currency",
+      "subcategory": "dollar_index",
+      "metric_id": "trade_weighted_usd",
+      "display_name": "Trade-weighted USD",
+      "economic_meaning": "USD strength and global liquidity pressure proxy.",
+      "default_unit": "index",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DTWEXBGS"
+      ],
+      "dashboard_section": "FX / Currency",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "DXY licensed source"
+      ]
+    },
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "rates_market",
+      "category": "rates_bonds",
+      "subcategory": "sovereign_yield",
+      "metric_id": "us_10y_yield",
+      "display_name": "US 10Y Treasury Yield",
+      "economic_meaning": "Discount rate and global duration anchor.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DGS10"
+      ],
+      "dashboard_section": "Rates / Bonds",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "rates_market",
+      "category": "rates_bonds",
+      "subcategory": "sovereign_yield",
+      "metric_id": "us_2y_yield",
+      "display_name": "US 2Y Treasury Yield",
+      "economic_meaning": "Front-end policy expectation proxy.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DGS2"
+      ],
+      "dashboard_section": "Rates / Bonds",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "commodity",
+      "category": "precious_metals",
+      "subcategory": "gold",
+      "metric_id": "gold_benchmark",
+      "display_name": "Gold benchmark",
+      "economic_meaning": "Safe-haven, real-rate and reserve asset proxy.",
+      "default_unit": "USD_per_troy_oz",
+      "frequency": "monthly",
+      "source_priority": [
+        "WorldBank:GOLD"
+      ],
+      "dashboard_section": "Precious Metals",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "World Bank"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "COMEX futures",
+        "LBMA if licensed"
+      ]
+    },
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "commodity",
+      "category": "energy",
+      "subcategory": "crude_oil",
+      "metric_id": "wti_oil",
+      "display_name": "WTI crude oil",
+      "economic_meaning": "Energy inflation and growth/war risk proxy.",
+      "default_unit": "USD_per_barrel",
+      "frequency": "daily/monthly",
+      "source_priority": [
+        "FRED:DCOILWTICO",
+        "WorldBank:CRUDE_WTI"
+      ],
+      "dashboard_section": "Energy",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "FRED",
+        "World Bank"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "NYMEX futures"
+      ]
+    },
+    {
+      "domain": "asset_class",
+      "primary_domain": "asset_class",
+      "secondary_domain": "commodity",
+      "category": "base_metals",
+      "subcategory": "copper",
+      "metric_id": "copper_benchmark",
+      "display_name": "Copper benchmark",
+      "economic_meaning": "Industrial cycle and China demand proxy.",
+      "default_unit": "USD_per_mt",
+      "frequency": "monthly",
+      "source_priority": [
+        "WorldBank:COPPER"
+      ],
+      "dashboard_section": "Base Metals",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": true,
+      "vintage_required_if_available": true,
+      "trusted_candidate_sources": [
+        "World Bank"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "LME/SHFE futures"
+      ]
+    }
+  ]
+}

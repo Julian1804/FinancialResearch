@@ -1,0 +1,146 @@
+{
+  "version": "rates_bond_taxonomy_v2",
+  "generated_at": "2026-05-20T08:17:00Z",
+  "items": [
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": "macro_condition",
+      "category": "sovereign_yield",
+      "subcategory": "us_treasury",
+      "metric_id": "us_2y_yield",
+      "display_name": "US 2Y Yield",
+      "economic_meaning": "Policy expectation tenor.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DGS2"
+      ],
+      "dashboard_section": "Yield Curve",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": "macro_condition",
+      "category": "sovereign_yield",
+      "subcategory": "us_treasury",
+      "metric_id": "us_10y_yield",
+      "display_name": "US 10Y Yield",
+      "economic_meaning": "Global risk-free discount rate proxy.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DGS10"
+      ],
+      "dashboard_section": "Yield Curve",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": "macro_policy",
+      "category": "market_rate",
+      "subcategory": "overnight",
+      "metric_id": "fed_funds_effective",
+      "display_name": "Fed Funds Effective Rate",
+      "economic_meaning": "Overnight money-market rate.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DFF"
+      ],
+      "dashboard_section": "Overnight Rates",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": []
+    },
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": null,
+      "category": "interbank_rate",
+      "subcategory": "china_interbank",
+      "metric_id": "shibor_overnight",
+      "display_name": "SHIBOR O/N",
+      "economic_meaning": "China interbank liquidity proxy.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Interbank Rates",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [
+        "AKShare if provenance verified"
+      ],
+      "future_sources": [
+        "SHIBOR official"
+      ]
+    },
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": null,
+      "category": "interbank_rate",
+      "subcategory": "china_interbank",
+      "metric_id": "dr007",
+      "display_name": "DR007",
+      "economic_meaning": "China pledged repo policy corridor proxy.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Interbank Rates",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "CFETS/PBOC source"
+      ]
+    },
+    {
+      "domain": "rates_market",
+      "primary_domain": "rates_market",
+      "secondary_domain": null,
+      "category": "real_yield",
+      "subcategory": "inflation_linked",
+      "metric_id": "us_real_yield_10y",
+      "display_name": "US 10Y real yield",
+      "economic_meaning": "Real discount rate and gold valuation pressure.",
+      "default_unit": "percent",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Real Yields",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "FRED TIPS series"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
-  "version": "commodity_data_model_v1",
-  "generated_at": "2026-05-20T07:36:53Z",
+  "version": "commodity_taxonomy_v2",
+  "generated_at": "2026-05-20T08:17:00Z",
   "price_types": [
     "spot",
     "futures",
@@ -58,5 +58,27 @@
     "trust_status",
     "candidate_only"
   ],
-  "world_bank_policy": "World Bank Pink Sheet is benchmark/average-price evidence, not exchange futures."
+  "world_bank_policy": "World Bank Pink Sheet is benchmark/average-price evidence, not exchange futures.",
+  "futures_framework": {
+    "schema_ready": true,
+    "supported_future_exchanges": [
+      "COMEX",
+      "NYMEX",
+      "LME",
+      "SHFE",
+      "INE",
+      "DCE",
+      "CZCE"
+    ],
+    "status_by_exchange": {
+      "COMEX": "needs_authorization_or_future_connector",
+      "NYMEX": "needs_authorization_or_future_connector",
+      "LME": "needs_authorization_or_future_connector",
+      "SHFE": "future_connector",
+      "INE": "future_connector",
+      "DCE": "future_connector",
+      "CZCE": "future_connector"
+    },
+    "continuous_contract_policy": "Continuous futures are derived data and must not overwrite raw single-contract data."
+  }
 }

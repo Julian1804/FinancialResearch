@@ -1,0 +1,122 @@
+{
+  "version": "fx_currency_taxonomy_v2",
+  "generated_at": "2026-05-20T08:17:00Z",
+  "items": [
+    {
+      "domain": "fx_market",
+      "primary_domain": "fx_market",
+      "secondary_domain": "capital_flow_proxy",
+      "category": "dollar_index",
+      "subcategory": "trade_weighted",
+      "metric_id": "trade_weighted_usd",
+      "display_name": "Trade-weighted USD",
+      "economic_meaning": "Broad USD strength proxy.",
+      "default_unit": "index",
+      "frequency": "daily",
+      "source_priority": [
+        "FRED:DTWEXBGS"
+      ],
+      "dashboard_section": "Dollar Index",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [
+        "FRED"
+      ],
+      "candidate_sources": [],
+      "future_sources": [
+        "ICE DXY licensed"
+      ]
+    },
+    {
+      "domain": "fx_market",
+      "primary_domain": "fx_market",
+      "secondary_domain": null,
+      "category": "currency_pair",
+      "subcategory": "spot_fx",
+      "metric_id": "usd_cny",
+      "display_name": "USD/CNY",
+      "economic_meaning": "Onshore RMB exchange rate.",
+      "default_unit": "CNY_per_USD",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Currency Pairs",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [
+        "AKShare if provenance verified"
+      ],
+      "future_sources": [
+        "PBOC/SAFE/official FX"
+      ]
+    },
+    {
+      "domain": "fx_market",
+      "primary_domain": "fx_market",
+      "secondary_domain": null,
+      "category": "currency_pair",
+      "subcategory": "spot_fx",
+      "metric_id": "usd_jpy",
+      "display_name": "USD/JPY",
+      "economic_meaning": "JPY funding/carry trade pressure.",
+      "default_unit": "JPY_per_USD",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Currency Pairs",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "FRED/ECB/official source"
+      ]
+    },
+    {
+      "domain": "fx_market",
+      "primary_domain": "fx_market",
+      "secondary_domain": null,
+      "category": "currency_pair",
+      "subcategory": "spot_fx",
+      "metric_id": "eur_usd",
+      "display_name": "EUR/USD",
+      "economic_meaning": "Euro-dollar cross and dollar strength proxy.",
+      "default_unit": "USD_per_EUR",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Currency Pairs",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "FRED/ECB"
+      ]
+    },
+    {
+      "domain": "fx_market",
+      "primary_domain": "fx_market",
+      "secondary_domain": null,
+      "category": "currency_pair",
+      "subcategory": "spot_fx",
+      "metric_id": "usd_cnh",
+      "display_name": "USD/CNH",
+      "economic_meaning": "Offshore RMB stress/carry proxy.",
+      "default_unit": "CNH_per_USD",
+      "frequency": "daily",
+      "source_priority": [],
+      "dashboard_section": "Currency Pairs",
+      "asof_time_field": "publish_date",
+      "revision_sensitive": false,
+      "vintage_required_if_available": false,
+      "trusted_candidate_sources": [],
+      "candidate_sources": [],
+      "future_sources": [
+        "authorized FX source"
+      ]
+    }
+  ]
+}

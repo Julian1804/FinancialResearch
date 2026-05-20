@@ -1,6 +1,6 @@
 # FR Dashboard v1 Acceptance Checklist
 
-Generated: 2026-05-20T07:40:34Z
+Generated: 2026-05-20T08:16:05Z
 
 | Step | Expected result |
 | --- | --- |
