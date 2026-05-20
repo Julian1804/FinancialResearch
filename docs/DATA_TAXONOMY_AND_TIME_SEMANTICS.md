@@ -1,6 +1,6 @@
 # Data Taxonomy and Time Semantics
 
-Generated: 2026-05-20T06:18:11Z
+Generated: 2026-05-20T07:20:20Z
 
 Default time mode is `publish_date`; `as_of_check_enabled` defaults to true.
 
@@ -26,9 +26,9 @@ Sample snapshot counts:
 
 ```json
 {
-  "included": 4,
-  "excluded": 1,
-  "missing_publish_date_review": 25,
+  "included": 20,
+  "excluded": 7,
+  "missing_publish_date_review": 44,
   "excluded_due_to_future_publish_date": 4
 }
 ```

@@ -208,18 +208,23 @@ def test_ui_smoke_markers_and_http_serving() -> None:
 
     for marker in [
         "FR Dashboard v1",
-        "Research Console",
+        "Research Workspace",
+        "Macro & Asset Mini Charts",
+        "Recent Event Ticker",
         "Research Object Type",
         "Time Mode",
         "publish_date",
         "as_of_check_enabled",
         "Generate Statistical Report",
+        "Download Markdown Report",
+        "Download GPT Prompt",
         "Report Upload",
         "Analysis Zone",
         "Forecast Zone",
         "Evidence Zone",
     ]:
         assert marker in html
+    assert "category-checkbox" in html
     assert "legacy_streamlit_used = false" in html
 
 

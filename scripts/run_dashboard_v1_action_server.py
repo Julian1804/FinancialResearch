@@ -7,7 +7,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +40,9 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/dashboard/report_paths":
             self.send_json(read_json(RUNTIME_ROOT / "dashboard_v1_summary.json").get("outputs", {}))
+            return
+        if parsed.path == "/api/dashboard/download":
+            self.serve_download(parsed.query)
             return
         self.serve_static(parsed.path)
 
@@ -104,6 +107,29 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
         mime, _ = mimetypes.guess_type(path.name)
         self.send_response(200)
         self.send_header("Content-Type", mime or "application/octet-stream")
+        self.send_header("Content-Length", str(len(content)))
+        self.end_headers()
+        self.wfile.write(content)
+
+    def serve_download(self, query: str) -> None:
+        raw_path = parse_qs(query).get("path", [""])[0]
+        path = Path(unquote(raw_path)).resolve()
+        allowed_roots = [
+            PROJECT_ROOT.resolve(),
+            RUNTIME_ROOT.resolve(),
+            Path("Z:/data_lake_master").resolve(),
+        ]
+        if not any(path == root or root in path.parents for root in allowed_roots):
+            self.send_error(403)
+            return
+        if not path.exists() or not path.is_file():
+            self.send_error(404)
+            return
+        content = path.read_bytes()
+        mime, _ = mimetypes.guess_type(path.name)
+        self.send_response(200)
+        self.send_header("Content-Type", mime or "application/octet-stream")
+        self.send_header("Content-Disposition", f'attachment; filename="{path.name}"')
         self.send_header("Content-Length", str(len(content)))
         self.end_headers()
         self.wfile.write(content)

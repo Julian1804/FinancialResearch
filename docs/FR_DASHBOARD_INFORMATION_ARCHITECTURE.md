@@ -1,13 +1,13 @@
 # FR Dashboard Information Architecture
 
-Generated: 2026-05-20T06:18:11Z
+Generated: 2026-05-20T07:20:20Z
 
 Dashboard v1 is a new FinancialResearch workbench UI, not the archived Streamlit interface.
 
 Core pages:
 
 - Overview: data source status, recent snapshots, reports, pending review and missing publish_date.
-- Research Console: research object/theme selection, data categories, time mode and report generation.
+- Research Workspace: research object/theme selection, data categories, time mode and report generation.
 - Macro Dashboard: current official/candidate macro samples and evidence gaps.
 - Asset Class Dashboard: commodity/rate/asset-class sample coverage and gaps.
 - Sector Dashboard: schema and insufficient_evidence until sector connectors exist.
@@ -24,7 +24,7 @@ New UI smoke:
 - tested_url: http://127.0.0.1:5188/
 - legacy_streamlit_used: false
 - old_ui_false_positive_guard: true
-- detected markers: 12
+- detected markers: 16
 
 Config outputs:
 

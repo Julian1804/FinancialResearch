@@ -1,6 +1,6 @@
 # As-of Snapshot Engine v1
 
-Generated: 2026-05-20T06:18:11Z
+Generated: 2026-05-20T07:20:20Z
 
 The engine accepts research object fields, selected data categories, time_mode, date window,
 fiscal_year/reporting_period and `as_of_check_enabled`.
@@ -12,9 +12,9 @@ Sample counts:
 
 ```json
 {
-  "included": 4,
-  "excluded": 1,
-  "missing_publish_date_review": 25,
+  "included": 20,
+  "excluded": 7,
+  "missing_publish_date_review": 44,
   "excluded_due_to_future_publish_date": 4
 }
 ```

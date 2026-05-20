@@ -9,6 +9,7 @@ from functools import partial
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -68,9 +69,9 @@ def run_acceptance() -> dict[str, Any]:
 def build_dynamic_function_audit() -> dict[str, Any]:
     items = [
         audit_item("Overview", "dashboard_v1_summary.json + action server GET /summary", "semi_dynamic", [], True, "Reads generated runtime summary; refresh requires action server.", "Add richer live connector status later."),
-        audit_item("Research Console", "FRDataConnectors runtime evidence", "dynamic_action", ["Generate Statistical Report", "Copy Prompt", "Open ChatGPT Web"], True, "POST /api/dashboard/generate_asof_snapshot creates new snapshot/report files.", "Front-end form currently maps a fixed compact request; richer form binding is next."),
-        audit_item("Macro Dashboard", "dashboard_v1_sample_data.json and generated report summaries", "semi_dynamic", [], True, "Shows available evidence or insufficient_evidence from runtime categories.", "Needs broader macro connector coverage later."),
-        audit_item("Asset Class Dashboard", "dashboard_v1_sample_data.json and generated report summaries", "semi_dynamic", [], True, "Shows commodity/asset-class availability and gaps.", "Needs broader asset connector coverage later."),
+        audit_item("Research Workspace", "FRDataConnectors runtime evidence", "dynamic_action", ["Generate Statistical Report", "Copy Prompt", "Open ChatGPT Web", "Download Markdown Report"], True, "POST /api/dashboard/generate_asof_snapshot creates new snapshot/report files.", "Richer symbol/entity pickers can be added later."),
+        audit_item("Macro Dashboard", "macro_asset_historical_ingestion dashboard summary", "semi_dynamic", [], True, "Shows real FRED/Treasury historical macro data and quality status.", "BLS API quota failures are recorded and can be retried later."),
+        audit_item("Asset Class Dashboard", "macro_asset_historical_ingestion dashboard summary", "semi_dynamic", [], True, "Shows real World Bank Pink Sheet commodity history and quality status.", "Broader asset sources can be added later."),
         audit_item("Sector Dashboard", "taxonomy/schema", "static_gap_disclosure", [], False, "Explicitly displays insufficient_evidence; no sector data fabricated.", "Connect sector-level sources in a future phase."),
         audit_item("Company Dashboard", "market_daily candidate/staging runtime", "semi_dynamic", [], True, "Reads real market_daily evidence counts and candidate-only status.", "Add symbol detail drilldown later."),
         audit_item("Capital Flow Dashboard", "taxonomy/schema", "static_gap_disclosure", [], False, "Explicitly displays insufficient_evidence; no capital flow data fabricated.", "Connect ETF/fund/flow data later."),
@@ -254,12 +255,16 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
         page_html = http_get_text(tested_url)
         markers = [
             "FR Dashboard v1",
-            "Research Console",
+            "Research Workspace",
+            "Macro & Asset Mini Charts",
+            "Recent Event Ticker",
             "Research Object Type",
             "Time Mode",
             "publish_date",
             "as_of_check_enabled",
             "Generate Statistical Report",
+            "Download Markdown Report",
+            "Download GPT Prompt",
             "Report Upload",
             "Analysis Zone",
             "Forecast Zone",
@@ -282,6 +287,8 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
             },
         }
         generated = http_post_json(f"{tested_url}api/dashboard/generate_asof_snapshot", generate_payload)
+        download_path = generated["outputs"]["statistical_report_md"]
+        download_payload = http_get_bytes(f"{tested_url}api/dashboard/download?path={quote(download_path)}")
         classified = http_post_json(
             f"{tested_url}api/dashboard/classify_uploaded_report",
             {
@@ -305,6 +312,12 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
                     "status": generated.get("status"),
                     "output_created": Path(generated["outputs"]["statistical_report_json"]).exists(),
                     "output_path": generated["outputs"]["statistical_report_json"],
+                },
+                {
+                    "action": "download_markdown_report",
+                    "status": "ok" if download_payload else "failed",
+                    "output_created": bool(download_payload),
+                    "output_path": download_path,
                 },
                 {
                     "action": "classify_uploaded_report",
@@ -345,6 +358,11 @@ def http_get_text(url: str) -> str:
         return response.read().decode("utf-8")
 
 
+def http_get_bytes(url: str) -> bytes:
+    with urllib.request.urlopen(url, timeout=10) as response:
+        return response.read()
+
+
 def http_post_json(url: str, payload: dict[str, Any]) -> dict[str, Any]:
     body = json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"}, method="POST")
@@ -376,13 +394,14 @@ def render_acceptance_checklist() -> str:
         ("Start new UI", "Run the action server command and open http://127.0.0.1:5188/."),
         ("Confirm not Streamlit", "Page title shows FR Dashboard v1 and legacy_streamlit_used=false."),
         ("Open Overview", "Data status, missing publish date and future exclusion counts are visible."),
-        ("Open Research Console", "Research Object Type, Time Mode and as_of_check_enabled controls are visible."),
+        ("Open Research Workspace", "Research Object Type, Time Mode and as_of_check_enabled controls are visible."),
         ("Select research_object_type = company", "Company is available in the dropdown."),
         ("Select symbol = 600519", "600519 can be generated through the local action request."),
         ("Set time_mode = publish_date", "publish_date remains the default as-of-safe axis."),
         ("Set window_start / window_end", "Window fields are visible and action smoke uses 2026-04-01 to 2026-05-19."),
         ("Generate statistical report", "Action creates snapshot_manifest.json and statistical_report files."),
         ("View output paths", "Generated result panel shows paths for snapshot, report, prompt and evidence boundary."),
+        ("Use download buttons", "Markdown, JSON, GPT prompt and evidence boundary download buttons point to generated files."),
         ("Copy copy_to_gpt prompt", "Prompt textarea is available and Copy Prompt button is visible."),
         ("Open Report Upload", "Report Upload page contains markdown paste area."),
         ("Paste/upload markdown report", "Classify Report parses FINAL_REPORT_JSON without OpenAI API."),
@@ -447,6 +466,7 @@ Generated: {utc_now()}
 Dashboard v1 acceptance hardening completed.
 
 - UI implementation: new `frontend_web/src/dashboard_v1`, not Streamlit.
+- UX refinement: dark financial research dashboard cards, real macro/asset summaries and report download controls.
 - UI operability: semi_dynamic_local_action_layer.
 - Action server: `scripts/run_dashboard_v1_action_server.py`.
 - 600519 E2E smoke: {e2e_600519['status']}.

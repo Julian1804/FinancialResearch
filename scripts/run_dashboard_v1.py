@@ -27,6 +27,7 @@ ANALYSIS_PACKET_ROOT = PROJECT_ROOT / "runtime" / "analysis_packet_builder_v2"
 ANALYSIS_REPORT_ROOT = PROJECT_ROOT / "runtime" / "analysis_reports"
 BACKTEST_ROOT = PROJECT_ROOT / "runtime" / "backtest_execution_v1"
 WORKSPACE_ROOT = PROJECT_ROOT / "runtime" / "research_workspace"
+MACRO_ASSET_ROOT = PROJECT_ROOT / "runtime" / "macro_asset_historical_ingestion"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -39,6 +40,7 @@ DOC_CHATGPT = PROJECT_ROOT / "docs" / "CHATGPT_WEB_WORKFLOW_FEASIBILITY.md"
 DOC_STREAMLIT = PROJECT_ROOT / "docs" / "LEGACY_STREAMLIT_ARCHIVE_NOTE.md"
 DOC_ACCEPTANCE = PROJECT_ROOT / "docs" / "FR_DASHBOARD_V1_ACCEPTANCE_CHECKLIST.md"
 DOC_DYNAMIC = PROJECT_ROOT / "docs" / "FR_DASHBOARD_V1_DYNAMIC_INTEGRATION_REPORT.md"
+DOC_UX_REFINEMENT = PROJECT_ROOT / "docs" / "FR_DASHBOARD_V1_UX_REFINEMENT_REPORT.md"
 
 
 def run_dashboard_v1() -> dict[str, Any]:
@@ -247,8 +249,53 @@ def collect_evidence_items() -> list[dict[str, Any]]:
 
     items.extend(collect_market_daily_items("baostock_daily", PHASE6_ROOT / "baostock_watchlist_controlled_30d.jsonl", "market_daily_candidate_staging"))
     items.extend(collect_market_daily_items("akshare_tencent_daily", PHASE6_ROOT / "akshare_tencent_watchlist_controlled_30d.jsonl", "market_daily_secondary_candidate_staging"))
+    items.extend(collect_macro_asset_history_items())
     items.extend(collect_normalized_file_items())
     items.extend(collect_report_workspace_items())
+    return items
+
+
+def collect_macro_asset_history_items() -> list[dict[str, Any]]:
+    catalog = read_json(MACRO_ASSET_ROOT / "dataset_catalog.json")
+    catalog_items = catalog.get("items", [])
+    items: list[dict[str, Any]] = []
+    for dataset in catalog_items:
+        schema_type = dataset.get("schema_type")
+        category = "macro" if schema_type == "macro" else "commodity" if schema_type == "commodity" else "asset_class"
+        latest_date = dataset.get("latest_observation_date")
+        publish_date_source = dataset.get("publish_date_source") or "unavailable"
+        publish_date = latest_date if publish_date_source == "source_confirmed_record_date" else None
+        items.append(
+            evidence_item(
+                item_id=f"macro_asset_history:{dataset.get('dataset_id')}",
+                category=category,
+                title=f"{dataset.get('provider_name')} {dataset.get('metric_name') or dataset.get('series_id')}",
+                source_id=dataset.get("source_id") or "macro_asset_history",
+                source_name=dataset.get("provider_name") or dataset.get("source_id") or "macro_asset_history",
+                status="historical_candidate_staging",
+                quality_status=dataset.get("quality_status") or "unknown",
+                trust_status=dataset.get("trust_status") or "trusted_by_real_external_candidate",
+                publish_date=publish_date,
+                data_period=latest_date,
+                ingestion_time=date_part(catalog.get("generated_at")),
+                source_ref=str(MACRO_ASSET_ROOT / "dataset_catalog.json"),
+                limitation=(
+                    "Historical macro/asset data is official-source candidate evidence. "
+                    f"publish_date_source={publish_date_source}; not formal trusted consumption."
+                ),
+                payload={
+                    "dataset_id": dataset.get("dataset_id"),
+                    "series_id": dataset.get("series_id"),
+                    "record_count": dataset.get("record_count"),
+                    "latest_value": dataset.get("latest_value"),
+                    "unit": dataset.get("unit"),
+                    "currency": dataset.get("currency"),
+                    "latest_observation_date": latest_date,
+                    "publish_date_source": publish_date_source,
+                    "revision_status": dataset.get("revision_status"),
+                },
+            )
+        )
     return items
 
 
@@ -764,6 +811,7 @@ def classify_report_text(raw_text: str) -> dict[str, Any]:
 
 
 def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, Any], upload_stub: dict[str, Any], evidence_items: list[dict[str, Any]]) -> dict[str, Any]:
+    macro_asset_summary = read_json(MACRO_ASSET_ROOT / "dashboard_macro_asset_summary.json")
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -780,6 +828,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "future_publish_date_preview": snapshot["excluded_due_to_future_publish_date"][:6],
         "copy_prompt": statistical_report["prompt_text"],
         "report_upload_classification": upload_stub["classification"],
+        "macro_asset_summary": macro_asset_summary,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
     }
@@ -800,12 +849,16 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
     html_text = Path(ui_result["frontend_entry"]).read_text(encoding="utf-8")
     expected_markers = [
         "FR Dashboard v1",
-        "Research Console",
+        "Research Workspace",
         "Research Object Type",
+        "Macro & Asset Mini Charts",
+        "Recent Event Ticker",
         "Time Mode",
         "publish_date",
         "as_of_check_enabled",
         "Generate Statistical Report",
+        "Download Markdown Report",
+        "Download GPT Prompt",
         "Report Upload",
         "Analysis Zone",
         "Forecast Zone",
@@ -844,6 +897,7 @@ def write_docs(
         DOC_UPLOAD: render_upload_doc(upload_stub),
         DOC_CHATGPT: render_chatgpt_doc(),
         DOC_STREAMLIT: render_streamlit_doc(),
+        DOC_UX_REFINEMENT: render_ux_refinement_doc(),
     }
     for path, text in docs.items():
         path.write_text(text, encoding="utf-8")
@@ -881,28 +935,30 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
   <title>FR Dashboard v1</title>
   <style>
     :root {{
-      --ink: #1f2933;
-      --muted: #667085;
-      --line: #d7dee8;
-      --blue: #2f6fed;
-      --green: #1b7f5a;
-      --amber: #a35f00;
-      --red: #b42318;
-      --bg: #ffffff;
-      --soft: #f7f9fc;
+      --ink: #edf2f7;
+      --muted: #9aa7b5;
+      --line: #273241;
+      --accent: #6ea8fe;
+      --green: #6fcf97;
+      --amber: #f2c76b;
+      --red: #ff8a7a;
+      --bg: #0c1117;
+      --soft: #111821;
+      --panel: #151e29;
+      --panel-2: #101720;
     }}
     * {{ box-sizing: border-box; }}
-    body {{ margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: var(--bg); }}
-    header {{ padding: 18px 24px 10px; border-bottom: 1px solid var(--line); }}
-    h1 {{ margin: 0 0 6px; font-size: 24px; font-weight: 700; }}
+    body {{ margin: 0; font-family: Inter, Arial, Helvetica, sans-serif; color: var(--ink); background: radial-gradient(circle at top left, #18202b 0, var(--bg) 38%); }}
+    header {{ padding: 22px 28px 14px; border-bottom: 1px solid var(--line); background: rgba(12,17,23,.92); position: sticky; top: 0; z-index: 2; }}
+    h1 {{ margin: 0 0 6px; font-size: 26px; font-weight: 750; letter-spacing: 0; }}
     h2 {{ margin: 0 0 12px; font-size: 18px; }}
     h3 {{ margin: 12px 0 8px; font-size: 14px; }}
     p {{ margin: 0 0 10px; color: var(--muted); line-height: 1.45; }}
     .layout {{ display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 72px); }}
-    nav {{ border-right: 1px solid var(--line); padding: 14px; background: var(--soft); }}
+    nav {{ border-right: 1px solid var(--line); padding: 14px; background: rgba(17,24,33,.96); }}
     nav button, .btn {{
-      width: 100%; text-align: left; background: #fff; color: var(--ink); border: 1px solid var(--line);
-      border-left: 4px solid var(--blue); border-radius: 6px; padding: 9px 10px; margin-bottom: 8px; cursor: pointer;
+      width: 100%; text-align: left; background: var(--panel); color: var(--ink); border: 1px solid var(--line);
+      border-left: 4px solid var(--accent); border-radius: 6px; padding: 9px 10px; margin-bottom: 8px; cursor: pointer;
     }}
     nav button.active {{ border-left-color: var(--green); font-weight: 700; }}
     main {{ padding: 18px 22px 48px; }}
@@ -911,25 +967,34 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     .grid {{ display: grid; gap: 12px; }}
     .grid.cols-3 {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
     .grid.cols-2 {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-    .panel {{ border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: #fff; }}
-    .metric {{ font-size: 22px; font-weight: 700; }}
-    .tag {{ display: inline-block; padding: 3px 7px; border: 1px solid var(--line); border-radius: 999px; margin: 2px; font-size: 12px; background: #fff; }}
+    .panel {{ border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: rgba(21,30,41,.98); box-shadow: 0 10px 28px rgba(0,0,0,.18); }}
+    .metric {{ font-size: 24px; font-weight: 750; }}
+    .tag {{ display: inline-block; padding: 3px 7px; border: 1px solid var(--line); border-radius: 999px; margin: 2px; font-size: 12px; background: var(--panel-2); color: var(--ink); }}
     .tag.warn {{ border-color: var(--amber); color: var(--amber); }}
     .tag.good {{ border-color: var(--green); color: var(--green); }}
     .tag.bad {{ border-color: var(--red); color: var(--red); }}
     label {{ display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }}
     input, select, textarea {{
-      width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 8px; background: #fff; color: var(--ink);
+      width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 8px; background: #0f1620; color: var(--ink);
     }}
     textarea {{ min-height: 150px; font-family: Consolas, monospace; font-size: 12px; }}
     .row {{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }}
     .actions {{ display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }}
-    .actions button {{ background: #fff; border: 1px solid var(--blue); color: var(--blue); border-radius: 6px; padding: 8px 10px; cursor: pointer; }}
+    .actions button, .download-link {{ background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 6px; padding: 8px 10px; cursor: pointer; text-decoration: none; font-size: 13px; }}
     .actions button.green {{ border-color: var(--green); color: var(--green); }}
     .actions button.amber {{ border-color: var(--amber); color: var(--amber); }}
     table {{ width: 100%; border-collapse: collapse; font-size: 12px; }}
     th, td {{ border-bottom: 1px solid var(--line); padding: 7px; text-align: left; vertical-align: top; }}
     code {{ background: var(--soft); padding: 2px 4px; border-radius: 4px; }}
+    .hero-grid {{ display: grid; grid-template-columns: 1.4fr .9fr; gap: 12px; }}
+    .summary-card {{ min-height: 104px; }}
+    .summary-card strong {{ display:block; font-size: 13px; color: var(--muted); margin-bottom: 8px; }}
+    .summary-card .sub {{ color: var(--muted); font-size: 12px; margin-top: 6px; }}
+    .event-line {{ border-left: 3px solid var(--amber); padding: 7px 10px; margin: 8px 0; background: #111821; border-radius: 4px; }}
+    .checkbox-grid {{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin: 6px 0 12px; }}
+    .check-card {{ border:1px solid var(--line); border-radius:6px; padding:8px; background:#0f1620; font-size:12px; }}
+    .check-card input {{ width:auto; margin-right:6px; }}
+    .hidden {{ display:none; }}
     .small {{ font-size: 12px; color: var(--muted); }}
     @media (max-width: 900px) {{
       .layout {{ grid-template-columns: 1fr; }}
@@ -942,12 +1007,12 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
 <body>
   <header>
     <h1>FR Dashboard v1</h1>
-    <p>Research Console + As-of Snapshot Report Generator v1. New dashboard architecture. legacy_streamlit_used = false.</p>
+    <p>Research Workspace + As-of Snapshot Report Generator v1 + Macro & Asset Historical Data Foundation. New dashboard architecture. legacy_streamlit_used = false.</p>
   </header>
   <div class="layout">
     <nav id="nav">
       <button data-target="overview" class="active">Overview</button>
-      <button data-target="console">Research Console</button>
+      <button data-target="console">Research Workspace</button>
       <button data-target="macro">Macro Dashboard</button>
       <button data-target="asset">Asset Class Dashboard</button>
       <button data-target="sector">Sector Dashboard</button>
@@ -959,41 +1024,79 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     <main>
       <section id="overview" class="active">
         <h2>Overview</h2>
-        <div class="grid cols-3">
-          <div class="panel"><p>Included Items</p><div class="metric" id="includedCount"></div></div>
-          <div class="panel"><p>Missing Publish Date</p><div class="metric" id="missingCount"></div></div>
-          <div class="panel"><p>Future Published Exclusions</p><div class="metric" id="futureCount"></div></div>
+        <div class="hero-grid">
+          <div>
+            <div class="grid cols-3" id="topSummaryCards"></div>
+            <div class="panel">
+              <h3>Macro & Asset Mini Charts</h3>
+              <div id="miniCharts"></div>
+              <p class="small">Sparkline preview uses real historical records when available; missing publish_date remains explicit.</p>
+            </div>
+          </div>
+          <div>
+            <div class="panel">
+              <h3>Today / Recent Event Ticker</h3>
+              <div id="eventTicker"></div>
+              <p class="small">No verified news connector is fabricated. This ticker currently uses connector/data events only.</p>
+            </div>
+            <div class="panel">
+              <h3>Research Shortcuts</h3>
+              <div class="actions">
+                <button onclick="openPanel('console')">New Research Workspace</button>
+                <button onclick="showGenerated()">Generate Statistical Report</button>
+                <button onclick="openPanel('upload')">Upload GPT Report</button>
+                <button onclick="openPanel('workspace')">Open Latest Workspace</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="panel">
           <h3>Data Status</h3>
+          <div class="grid cols-3">
+            <div><p>Included Items</p><div class="metric" id="includedCount"></div></div>
+            <div><p>Missing Publish Date</p><div class="metric" id="missingCount"></div></div>
+            <div><p>Future Published Exclusions</p><div class="metric" id="futureCount"></div></div>
+          </div>
           <div id="statusTags"></div>
           <p class="small">candidate / staging / trusted_candidate / insufficient_evidence / missing_publish_date are shown explicitly. No candidate data is displayed as trusted.</p>
         </div>
       </section>
 
       <section id="console">
-        <h2>Research Console</h2>
+        <h2>Research Workspace</h2>
         <div class="panel">
           <div class="row">
-            <div><label>Research Object Type</label><select><option>black_swan_event</option><option>company</option><option>sector</option><option>asset_class</option><option>macro_theme</option><option>capital_flow_theme</option><option>policy_event</option><option>geopolitical_event</option><option>custom_topic</option></select></div>
-            <div><label>Research Object ID</label><input value="custom_ukraine_energy_shock_2022" /></div>
-            <div><label>Time Mode</label><select><option>publish_date</option><option>data_period</option><option>fiscal_year</option><option>reporting_period</option><option>announcement_date</option><option>event_date</option><option>analysis_time</option><option>ingestion_time</option></select></div>
-            <div><label>as_of_check_enabled</label><select><option>true</option><option>false</option></select></div>
+            <div><label>Research Object Type</label><select id="researchObjectType"><option>company</option><option>sector</option><option>asset_class</option><option>macro_theme</option><option>capital_flow_theme</option><option>policy_event</option><option>geopolitical_event</option><option>black_swan_event</option><option>custom_topic</option></select></div>
+            <div><label>Research Object ID</label><input id="researchObjectId" value="600519" /></div>
+            <div><label>Time Mode</label><select id="timeMode"><option>publish_date</option><option>data_period</option><option>event_date</option><option>announcement_date</option><option>analysis_time</option><option>ingestion_time</option><option>fiscal_year</option><option>reporting_period</option></select></div>
+            <div><label>as_of_check_enabled</label><select id="asofEnabled"><option>true</option><option>false</option></select></div>
           </div>
           <div class="row">
-            <div><label>Window Start</label><input value="2026-04-01" /></div>
-            <div><label>Window End</label><input value="2026-05-18" /></div>
-            <div><label>Fiscal Year</label><input value="2025" /></div>
-            <div><label>Reporting Period</label><input placeholder="2025FY / 2026Q1" /></div>
+            <div><label>Window Start</label><input id="windowStart" value="2026-04-01" /></div>
+            <div><label>Window End</label><input id="windowEnd" value="2026-05-19" /></div>
+            <div><label>Selected Symbols</label><input id="selectedSymbols" value="600519" /></div>
+            <div><label>Topic Title</label><input id="topicTitle" value="600519 research workspace" /></div>
+          </div>
+          <div id="advancedTimePanel" class="row hidden">
+            <div><label>Fiscal Year</label><input id="fiscalYear" value="2025" /></div>
+            <div><label>Reporting Period</label><input id="reportingPeriod" placeholder="2025FY / 2026Q1" /></div>
+            <div><label>Report Type</label><select id="reportType"><option></option><option>annual_report</option><option>semi_annual_report</option><option>quarterly_report</option></select></div>
+            <div><label>As-of Warning</label><input readonly value="Financial reports keep publish_date checks." /></div>
           </div>
           <label>Selected Data Categories</label>
-          <input value="macro, asset_class, commodity, market_daily, financial_report, research_report, forecast, backtest" />
+          <div class="checkbox-grid" id="categoryCheckboxes"></div>
           <div class="actions">
             <button class="green" onclick="showGenerated()">Generate Statistical Report</button>
             <button onclick="copyPrompt()">Copy Prompt</button>
             <button onclick="window.open('https://chatgpt.com/', '_blank')">Open ChatGPT Web</button>
           </div>
           <div id="generatedResult" class="small"></div>
+          <div class="actions" id="downloadButtons">
+            <a class="download-link" id="downloadMd" href="#" download>Download Markdown Report</a>
+            <a class="download-link" id="downloadJson" href="#" download>Download JSON Report</a>
+            <a class="download-link" id="downloadPrompt" href="#" download>Download GPT Prompt</a>
+            <a class="download-link" id="downloadEvidence" href="#" download>Download Evidence Boundary</a>
+          </div>
           <label>copy_to_gpt_research_prompt.md</label>
           <textarea id="promptBox" readonly>{html.escape(prompt)}</textarea>
         </div>
@@ -1010,8 +1113,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         <div class="grid cols-2">
           <div class="panel">
             <label>Paste Markdown report with FINAL_REPORT_JSON</label>
+            <input id="reportFile" type="file" accept=".md,.markdown,.txt" />
             <textarea id="reportInput" placeholder="Paste GPT Web final report here"></textarea>
             <div class="actions"><button class="green" onclick="classifyReport()">Classify Report</button></div>
+            <div class="small" id="uploadValidation"></div>
             <p class="small">No OpenAI API is called. GPT report content is analysis_report / forecast / interpretation, not trusted fact.</p>
           </div>
           <div class="panel">
@@ -1025,12 +1130,20 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
   </div>
   <script>
     const DASHBOARD_DATA = {ui_json};
+    const MACRO_ASSET = DASHBOARD_DATA.macro_asset_summary || {{}};
+    const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
     document.getElementById('missingCount').textContent = DASHBOARD_DATA.snapshot_counts.missing_publish_date_review;
     document.getElementById('futureCount').textContent = DASHBOARD_DATA.snapshot_counts.excluded_due_to_future_publish_date;
     document.getElementById('statusTags').innerHTML = Object.entries(DASHBOARD_DATA.source_status_counts).map(([k,v]) => `<span class="tag">${{k}}: ${{v}}</span>`).join('');
-    document.getElementById('macroPanel').innerHTML = summaryPanel('macro');
-    document.getElementById('assetPanel').innerHTML = summaryPanel('asset_class') + summaryPanel('commodity');
+    document.getElementById('topSummaryCards').innerHTML = renderTopSummaryCards();
+    document.getElementById('miniCharts').innerHTML = renderSeriesTable([...(MACRO_ASSET.macro_series || []).slice(0, 6), ...(MACRO_ASSET.asset_series || []).slice(0, 4)]);
+    document.getElementById('eventTicker').innerHTML = (MACRO_ASSET.recent_events || []).map(event => `<div class="event-line"><strong>${{escapeHtml(event.title || '')}}</strong><br><span class="small">${{escapeHtml(event.event_date || '')}} · ${{escapeHtml(event.source || '')}}</span></div>`).join('') || '<div class="event-line">No verified headline/event source connected yet.</div>';
+    renderCategoryCheckboxes();
+    bindAdvancedTimePanel();
+    updateDownloadLinks(DASHBOARD_DATA.report_paths || {{}});
+    document.getElementById('macroPanel').innerHTML = '<h3>Historical Macro Data</h3>' + renderSeriesTable(MACRO_ASSET.macro_series || []);
+    document.getElementById('assetPanel').innerHTML = '<h3>Historical Asset Class / Commodity Data</h3>' + renderSeriesTable(MACRO_ASSET.asset_series || []);
     document.getElementById('companyPanel').innerHTML = summaryPanel('market_daily') + '<p class="small">A-share market data remains candidate/staging and is not formal trusted consumption.</p>';
     document.getElementById('workspacePaths').textContent = JSON.stringify(DASHBOARD_DATA.report_paths, null, 2);
     document.getElementById('reportInput').value = {sample_upload_js};
@@ -1047,23 +1160,78 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const tag = count ? 'good' : 'warn';
       return `<span class="tag ${{tag}}">${{category}}: ${{count ? count + ' evidence items' : 'insufficient_evidence'}}</span>`;
     }}
+    function escapeHtml(value) {{
+      return String(value).replace(/[&<>"']/g, char => ({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}}[char]));
+    }}
+    function renderTopSummaryCards() {{
+      const cards = MACRO_ASSET.top_summary_cards || [];
+      const countCards = [
+        {{title:'Macro series', value: MACRO_ASSET.macro_series_count || 0, sub:'official-source candidate datasets'}},
+        {{title:'Asset/commodity series', value: MACRO_ASSET.asset_commodity_series_count || 0, sub:'World Bank/FRED commodity coverage'}},
+        {{title:'Records loaded', value: MACRO_ASSET.record_count || 0, sub:'raw + normalized + QA catalogued'}}
+      ];
+      return [...countCards, ...cards.slice(0, 6).map(card => ({{
+        title: card.title || card.series_id,
+        value: card.latest_value ?? 'insufficient_evidence',
+        sub: `${{card.series_id || ''}} · ${{card.latest_observation_date || ''}} · ${{card.quality_status || ''}}`
+      }}))].map(card => `<div class="panel summary-card"><strong>${{escapeHtml(card.title)}}</strong><div class="metric">${{escapeHtml(card.value)}}</div><div class="sub">${{escapeHtml(card.sub || '')}}</div></div>`).join('');
+    }}
+    function renderSeriesTable(series) {{
+      if (!series.length) return '<span class="tag warn">insufficient_evidence</span>';
+      const rows = series.map(item => `<tr><td>${{escapeHtml(item.series_id || '')}}</td><td>${{escapeHtml(item.metric_name || '')}}</td><td>${{escapeHtml(item.latest_value ?? '')}}</td><td>${{escapeHtml(item.latest_observation_date || '')}}</td><td><span class="tag">${{escapeHtml(item.quality_status || '')}}</span></td><td>${{escapeHtml(item.publish_date_source || '')}}</td></tr>`).join('');
+      return `<table><thead><tr><th>Series</th><th>Metric</th><th>Latest</th><th>Observation</th><th>Quality</th><th>Publish date</th></tr></thead><tbody>${{rows}}</tbody></table>`;
+    }}
+    function renderCategoryCheckboxes() {{
+      const defaults = new Set(['market_daily','macro','asset_class','commodity','financial_report']);
+      document.getElementById('categoryCheckboxes').innerHTML = DATA_CATEGORIES.map(category => `<label class="check-card"><input class="category-checkbox" type="checkbox" value="${{category}}" ${{defaults.has(category) ? 'checked' : ''}}> ${{category}}</label>`).join('');
+      document.querySelectorAll('.category-checkbox').forEach(input => input.addEventListener('change', bindAdvancedTimePanel));
+    }}
+    function selectedCategories() {{
+      return Array.from(document.querySelectorAll('.category-checkbox:checked')).map(input => input.value);
+    }}
+    function bindAdvancedTimePanel() {{
+      const cats = new Set(selectedCategories());
+      const show = cats.has('financial_report') || cats.has('statistical_yearbook');
+      document.getElementById('advancedTimePanel').classList.toggle('hidden', !show);
+    }}
+    function openPanel(target) {{
+      const button = document.querySelector(`nav button[data-target="${{target}}"]`);
+      if (button) button.click();
+    }}
+    function updateDownloadLinks(paths) {{
+      const mapping = [
+        ['downloadMd', paths.statistical_report_md],
+        ['downloadJson', paths.statistical_report_json],
+        ['downloadPrompt', paths.copy_to_gpt_research_prompt],
+        ['downloadEvidence', paths.evidence_boundary]
+      ];
+      mapping.forEach(([id, path]) => {{
+        const link = document.getElementById(id);
+        if (path) {{
+          link.href = `/api/dashboard/download?path=${{encodeURIComponent(path)}}`;
+          link.classList.remove('hidden');
+        }} else {{
+          link.href = '#';
+        }}
+      }});
+    }}
     async function showGenerated() {{
       const request = {{
-        research_object_type: document.querySelector('#console select').value,
-        research_object_id: '600519',
-        custom_topic_title: 'Dashboard generated company snapshot',
+        research_object_type: document.getElementById('researchObjectType').value,
+        research_object_id: document.getElementById('researchObjectId').value,
+        custom_topic_title: document.getElementById('topicTitle').value,
         custom_topic_description: 'Generated from FR Dashboard v1 action layer.',
-        selected_data_categories: ['market_daily', 'macro', 'asset_class', 'financial_report'],
-        selected_symbols: ['600519'],
+        selected_data_categories: selectedCategories(),
+        selected_symbols: document.getElementById('selectedSymbols').value.split(',').map(v => v.trim()).filter(Boolean),
         selected_sectors: [],
         selected_asset_classes: [],
         selected_events: [],
-        window_start: '2026-04-01',
-        window_end: '2026-05-19',
-        time_mode: 'publish_date',
-        fiscal_year: '2025',
-        reporting_period: '',
-        as_of_check_enabled: true,
+        window_start: document.getElementById('windowStart').value,
+        window_end: document.getElementById('windowEnd').value,
+        time_mode: document.getElementById('timeMode').value,
+        fiscal_year: document.getElementById('fiscalYear').value,
+        reporting_period: document.getElementById('reportingPeriod').value,
+        as_of_check_enabled: document.getElementById('asofEnabled').value === 'true',
         include_candidate_data: true,
         include_insufficient_evidence: true
       }};
@@ -1074,9 +1242,12 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           body: JSON.stringify({{request, artifact_name: 'ui_generated_600519'}})
         }});
         const payload = await response.json();
+        updateDownloadLinks(payload.outputs || {{}});
         document.getElementById('generatedResult').innerHTML =
-          '<p><strong>Action connected: generated new as-of snapshot and statistical report.</strong></p><pre>' +
-          JSON.stringify(payload.outputs || payload, null, 2) + '</pre>';
+          '<div class="panel"><h3>Generated Report Summary</h3>' +
+          `<p><strong>report_id:</strong> ${{payload.outputs?.statistical_report_json || 'created'}}</p>` +
+          `<p><strong>included:</strong> ${{payload.counts?.included || 0}} · <strong>missing publish_date:</strong> ${{payload.counts?.missing_publish_date_review || 0}} · <strong>future exclusions:</strong> ${{payload.counts?.excluded_due_to_future_publish_date || 0}}</p>` +
+          '<pre>' + JSON.stringify(payload.outputs || payload, null, 2) + '</pre></div>';
       }} catch (error) {{
         document.getElementById('generatedResult').innerHTML =
           '<p><strong>Static fallback:</strong> action server unavailable, showing latest generated paths.</p><pre>' +
@@ -1095,6 +1266,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           body: JSON.stringify({{raw_report: text, output_name: 'ui_report_upload_action'}})
         }});
         const result = await response.json();
+        document.getElementById('uploadValidation').textContent = `schema valid: ${{result.classification?.schema_valid}} · raw saved: ${{result.classification?.raw_report_preserved_path || ''}}`;
         renderClassification(result.classification || result);
         return;
       }} catch (error) {{
@@ -1139,6 +1311,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       document.getElementById('forecastZone').textContent = JSON.stringify(result.forecast_zone || {{}}, null, 2);
       document.getElementById('evidenceZone').textContent = JSON.stringify(result.evidence_zone || {{}}, null, 2);
     }}
+    document.getElementById('reportFile').addEventListener('change', async (event) => {{
+      const file = event.target.files?.[0];
+      if (file) document.getElementById('reportInput').value = await file.text();
+    }});
     async function loadWorkspace() {{
       try {{
         const response = await fetch('/api/dashboard/research_workspace');
@@ -1172,6 +1348,38 @@ D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\ru
 Open: http://127.0.0.1:5188/
 
 `legacy_streamlit_used = false`.
+"""
+
+
+def render_ux_refinement_doc() -> str:
+    summary = read_json(MACRO_ASSET_ROOT / "dashboard_macro_asset_summary.json")
+    return f"""# FR Dashboard v1 UX Refinement Report
+
+Generated: {utc_now()}
+
+Dashboard v1 has been refined from a form-first engineering prototype into a darker financial
+research workspace:
+
+- Overview now presents dashboard-style summary cards, macro/asset mini tables and a verified event ticker.
+- Research Console has been renamed to Research Workspace.
+- Selected Data Categories are rendered as checkbox/multi-select controls instead of free-text input.
+- Fiscal/reporting period controls are hidden unless report/yearbook style categories are selected.
+- Generated reports expose download controls for Markdown, JSON, GPT prompt and evidence boundary.
+- Report Upload supports paste and Markdown file loading, then classifies Analysis Zone, Forecast Zone and Evidence Zone.
+- Macro and Asset dashboards read real `macro_asset_historical_ingestion` outputs.
+
+Historical data currently visible in the dashboard:
+
+- Macro series: {summary.get('macro_series_count', 0)}
+- Asset/commodity series: {summary.get('asset_commodity_series_count', 0)}
+- Records: {summary.get('record_count', 0)}
+- Quality counts: {json.dumps(summary.get('quality_counts', {}), ensure_ascii=False)}
+
+The UI remains a new Dashboard architecture and does not use Streamlit.
+
+legacy_streamlit_used = false
+no_openai_api_called = true
+trusted_consumption_affected = false
 """
 
 
@@ -1278,7 +1486,7 @@ Dashboard v1 is a new FinancialResearch workbench UI, not the archived Streamlit
 Core pages:
 
 - Overview: data source status, recent snapshots, reports, pending review and missing publish_date.
-- Research Console: research object/theme selection, data categories, time mode and report generation.
+- Research Workspace: research object/theme selection, data categories, time mode and report generation.
 - Macro Dashboard: current official/candidate macro samples and evidence gaps.
 - Asset Class Dashboard: commodity/rate/asset-class sample coverage and gaps.
 - Sector Dashboard: schema and insufficient_evidence until sector connectors exist.
