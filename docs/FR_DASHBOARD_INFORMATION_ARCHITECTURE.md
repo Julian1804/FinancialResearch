@@ -1,6 +1,6 @@
 # FR Dashboard Information Architecture
 
-Generated: 2026-05-20T04:59:09Z
+Generated: 2026-05-20T06:18:11Z
 
 Dashboard v1 is a new FinancialResearch workbench UI, not the archived Streamlit interface.
 

@@ -1,31 +1,25 @@
 # FR Dashboard v1 Report
 
-Generated: 2026-05-20T04:59:09Z
+Generated: 2026-05-20T06:18:12Z
 
-Dashboard v1 deliverables completed:
+Dashboard v1 acceptance hardening completed.
 
-- Dashboard IA: yes
-- Research object/theme abstraction: yes
-- Time semantics: yes
-- As-of Snapshot Engine v1: yes
-- Statistical Report Generator v1: yes
-- Report Upload classification stub: yes
-- UI prototype: yes
-- legacy_streamlit_used: false
-- OpenAI API called: false
-- parse_lab affected: false
-- trusted consumption affected: false
+- UI implementation: new `frontend_web/src/dashboard_v1`, not Streamlit.
+- UI operability: semi_dynamic_local_action_layer.
+- Action server: `scripts/run_dashboard_v1_action_server.py`.
+- 600519 E2E smoke: success.
+- Custom topic E2E smoke: success.
+- Report upload smoke: success.
+- Strengthened UI smoke: passed.
+- legacy_streamlit_used: false.
+- no_openai_api_called: true.
+- trusted_consumption_affected: false.
 
-UI startup:
+Start:
 
 ```powershell
-cd D:\workspace\FinancialResearch\frontend_web\src\dashboard_v1; python -m http.server 5188 --bind 127.0.0.1
+cd D:\workspace\FinancialResearch
+D:\workspace\envs\financial_research_backend\Scripts\python.exe scripts\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188
 ```
 
 Open: http://127.0.0.1:5188/
-
-Runtime outputs:
-
-- Snapshot: D:\workspace\FinancialResearch\runtime\dashboard_v1\asof_snapshot\snapshot_sample_research_snapshot_b31725fff052\snapshot_manifest.json
-- Statistical report: D:\workspace\FinancialResearch\runtime\dashboard_v1\statistical_reports\statistical_report_snapshot_sample_research_snapshot_b31725fff052\statistical_report.md
-- GPT prompt: D:\workspace\FinancialResearch\runtime\dashboard_v1\statistical_reports\statistical_report_snapshot_sample_research_snapshot_b31725fff052\copy_to_gpt_research_prompt.md

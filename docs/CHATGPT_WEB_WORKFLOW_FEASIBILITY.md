@@ -1,16 +1,14 @@
 # ChatGPT Web Workflow Feasibility
 
-Generated: 2026-05-20T04:59:09Z
+Generated: 2026-05-20T06:18:12Z
 
-Dashboard v1 uses a semi-embedded human-in-the-loop workflow:
+Dashboard v1 keeps the semi-embedded human-in-the-loop workflow:
 
-1. FR generates a statistical report and `copy_to_gpt_research_prompt.md`.
-2. User copies the prompt to ChatGPT Web.
-3. User discusses and asks ChatGPT Web to emit a `FINAL_REPORT_JSON` block.
-4. User pastes/uploads the final report back to FR.
-5. FR parses, classifies and stores report artifacts.
+1. Generate a statistical report and copy-to-GPT prompt in FR.
+2. Open ChatGPT Web manually.
+3. Paste the prompt and conduct analysis there.
+4. Paste/upload the final Markdown report with `FINAL_REPORT_JSON` back into FR.
+5. FR classifies Analysis Zone, Forecast Zone and Evidence Zone locally.
 
-No OpenAI API is called. ChatGPT Web is opened as a separate page, not embedded in an iframe.
-
-An iframe-based ChatGPT Web embed is not the v1 direction because it is less reliable, may violate
-browser/security constraints, and is not needed for the manual workflow.
+No OpenAI API is called. ChatGPT Web is not embedded in an iframe. GPT report content remains
+analysis/forecast/interpretation, not trusted facts.

@@ -1,6 +1,6 @@
 {
   "version": "dashboard_v1",
-  "generated_at": "2026-05-20T04:59:09Z",
+  "generated_at": "2026-05-20T06:18:11Z",
   "principles": {
     "candidate_data_not_trusted": true,
     "gpt_report_not_trusted_fact": true,

@@ -22,6 +22,7 @@ from scripts.run_dashboard_v1 import (  # noqa: E402
     generate_asof_snapshot,
     run_dashboard_v1,
 )
+from scripts.run_dashboard_v1_acceptance import run_acceptance  # noqa: E402
 
 
 def load_json(path: Path) -> dict:
@@ -222,6 +223,26 @@ def test_ui_smoke_markers_and_http_serving() -> None:
     assert "legacy_streamlit_used = false" in html
 
 
+def test_acceptance_dynamic_action_outputs() -> None:
+    summary = run_acceptance()
+    assert summary["dashboard_dynamic_hardening_completed"] is True
+    assert summary["ui_operability_level"] == "semi_dynamic_local_action_layer"
+    assert summary["backend_local_action_layer_completed"] is True
+    assert summary["e2e_600519"]["status"] == "success"
+    assert summary["e2e_custom_topic"]["status"] == "success"
+    assert summary["report_upload_smoke"]["status"] == "success"
+    assert summary["ui_smoke"]["status"] == "passed"
+    assert summary["legacy_streamlit_used"] is False
+    assert summary["no_openai_api_called"] is True
+    assert summary["trusted_consumption_affected"] is False
+    for output_path in summary["e2e_600519"]["outputs"].values():
+        assert Path(output_path).exists()
+    for output_path in summary["e2e_custom_topic"]["outputs"].values():
+        assert Path(output_path).exists()
+    assert Path(summary["report_upload_smoke"]["classification_path"]).exists()
+    assert not summary["ui_smoke"]["missing_actions"]
+
+
 if __name__ == "__main__":
     run_dashboard_v1()
     test_config_loads_and_contracts()
@@ -229,4 +250,5 @@ if __name__ == "__main__":
     test_fiscal_year_and_reporting_period_modes()
     test_report_upload_classification_stub()
     test_ui_smoke_markers_and_http_serving()
+    test_acceptance_dynamic_action_outputs()
     print("dashboard v1 tests passed")

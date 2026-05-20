@@ -5,8 +5,8 @@ This is the new FinancialResearch dashboard prototype, not the archived Streamli
 Start:
 
 ```powershell
-cd D:\workspace\FinancialResearch\frontend_web\src\dashboard_v1
-python -m http.server 5188 --bind 127.0.0.1
+cd D:\workspace\FinancialResearch
+D:\workspace\envs\financial_research_backend\Scripts\python.exe scripts\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188
 ```
 
 Open: http://127.0.0.1:5188/

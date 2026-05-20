@@ -20,6 +20,7 @@ RUNTIME_ROOT = PROJECT_ROOT / "runtime" / "dashboard_v1"
 SNAPSHOT_ROOT = RUNTIME_ROOT / "asof_snapshot"
 REPORT_ROOT = RUNTIME_ROOT / "statistical_reports"
 UPLOAD_ROOT = RUNTIME_ROOT / "report_upload_stub"
+ACCEPTANCE_ROOT = RUNTIME_ROOT / "acceptance"
 FRONTEND_ROOT = PROJECT_ROOT / "frontend_web" / "src" / "dashboard_v1"
 PHASE6_ROOT = PROJECT_ROOT / "runtime" / "frdata_connectors_phase6"
 ANALYSIS_PACKET_ROOT = PROJECT_ROOT / "runtime" / "analysis_packet_builder_v2"
@@ -36,6 +37,8 @@ DOC_STAT_REPORT = PROJECT_ROOT / "docs" / "STATISTICAL_REPORT_GENERATOR_V1.md"
 DOC_UPLOAD = PROJECT_ROOT / "docs" / "REPORT_UPLOAD_DASHBOARD_CLASSIFICATION.md"
 DOC_CHATGPT = PROJECT_ROOT / "docs" / "CHATGPT_WEB_WORKFLOW_FEASIBILITY.md"
 DOC_STREAMLIT = PROJECT_ROOT / "docs" / "LEGACY_STREAMLIT_ARCHIVE_NOTE.md"
+DOC_ACCEPTANCE = PROJECT_ROOT / "docs" / "FR_DASHBOARD_V1_ACCEPTANCE_CHECKLIST.md"
+DOC_DYNAMIC = PROJECT_ROOT / "docs" / "FR_DASHBOARD_V1_DYNAMIC_INTEGRATION_REPORT.md"
 
 
 def run_dashboard_v1() -> dict[str, Any]:
@@ -82,7 +85,7 @@ def run_dashboard_v1() -> dict[str, Any]:
 
 
 def ensure_dirs() -> None:
-    for path in [CONFIG_ROOT, RUNTIME_ROOT, SNAPSHOT_ROOT, REPORT_ROOT, UPLOAD_ROOT, FRONTEND_ROOT]:
+    for path in [CONFIG_ROOT, RUNTIME_ROOT, SNAPSHOT_ROOT, REPORT_ROOT, UPLOAD_ROOT, ACCEPTANCE_ROOT, FRONTEND_ROOT]:
         path.mkdir(parents=True, exist_ok=True)
 
 
@@ -531,6 +534,75 @@ def generate_asof_snapshot(request: dict[str, Any], evidence_items: list[dict[st
     return snapshot
 
 
+def generate_dashboard_artifacts(request: dict[str, Any], artifact_name: str) -> dict[str, Any]:
+    ensure_dirs()
+    evidence_items = collect_evidence_items()
+    snapshot = generate_asof_snapshot(request, evidence_items, artifact_name)
+    report = generate_statistical_report(snapshot)
+    return {
+        "artifact_name": artifact_name,
+        "snapshot": snapshot,
+        "statistical_report": {
+            "report_id": report["report_id"],
+            "report_dir": report["report_dir"],
+            "statistical_report_json": report["statistical_report_json"],
+            "statistical_report_md": report["statistical_report_md"],
+            "copy_to_gpt_research_prompt": report["copy_to_gpt_research_prompt"],
+            "evidence_boundary": report["evidence_boundary"],
+            "report_json": report["report_json"],
+        },
+        "candidate_only": True,
+        "formal_trusted_consumption": False,
+        "no_openai_api_called": True,
+    }
+
+
+def dashboard_summary() -> dict[str, Any]:
+    summary_path = RUNTIME_ROOT / "dashboard_v1_summary.json"
+    if not summary_path.exists():
+        run_dashboard_v1()
+    summary = read_json(summary_path)
+    return {
+        "generated_at": utc_now(),
+        "dashboard_summary": summary,
+        "latest_snapshot_manifest": read_json(SNAPSHOT_ROOT / "latest_snapshot_manifest.json"),
+        "latest_statistical_report_manifest": read_json(REPORT_ROOT / "latest_statistical_report_manifest.json"),
+        "ui_smoke": read_json(RUNTIME_ROOT / "ui_smoke_results.json"),
+        "legacy_streamlit_used": False,
+        "no_openai_api_called": True,
+    }
+
+
+def research_workspace_summary() -> dict[str, Any]:
+    index_path = WORKSPACE_ROOT / "research_workspace_index.json"
+    if not index_path.exists():
+        return {
+            "status": "insufficient_evidence",
+            "reason": "research_workspace_index.json not found",
+            "path": str(index_path),
+            "legacy_streamlit_used": False,
+        }
+    return {
+        "status": "available",
+        "path": str(index_path),
+        "workspace": read_json(index_path),
+        "legacy_streamlit_used": False,
+    }
+
+
+def classify_and_save_uploaded_report(raw_text: str, output_name: str = "classification_action_result") -> dict[str, Any]:
+    UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
+    result = classify_report_text(raw_text)
+    result["generated_at"] = utc_now()
+    result["raw_report_preserved_path"] = str(UPLOAD_ROOT / f"{output_name}.md")
+    result["classification_path"] = str(UPLOAD_ROOT / f"{output_name}.json")
+    result["no_openai_api_called"] = True
+    result["formal_trusted_consumption"] = False
+    (UPLOAD_ROOT / f"{output_name}.md").write_text(raw_text, encoding="utf-8")
+    write_json(UPLOAD_ROOT / f"{output_name}.json", result)
+    return result
+
+
 def generate_statistical_report(snapshot: dict[str, Any]) -> dict[str, Any]:
     manifest = snapshot["snapshot_manifest"]
     request = manifest["request"]
@@ -718,7 +790,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     return {
         "frontend_entry": str(FRONTEND_ROOT / "index.html"),
         "sample_data_path": str(FRONTEND_ROOT / "dashboard_v1_sample_data.json"),
-        "start_command": f"cd {FRONTEND_ROOT}; python -m http.server 5188 --bind 127.0.0.1",
+        "start_command": f"cd {PROJECT_ROOT}; D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188",
         "url": "http://127.0.0.1:5188/",
         "legacy_streamlit_used": False,
     }
@@ -932,7 +1004,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       <section id="sector"><h2>Sector Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>Sector-level connectors are not connected in v1. Schema and future connector slots are visible, but no sector data is fabricated.</p></div></section>
       <section id="company"><h2>Company Dashboard</h2><div class="panel" id="companyPanel"></div></section>
       <section id="capital"><h2>Capital Flow Dashboard</h2><div class="panel"><span class="tag warn">insufficient_evidence</span><p>ETF flow, fund holdings, northbound flow, margin financing and block trades are planned data types. No current capital-flow data is fabricated.</p></div></section>
-      <section id="workspace"><h2>Research Workspace</h2><div class="panel"><p>Packets, reports, report versions, forecast items, backtest results and revision candidates are linked through runtime research workspace indexes.</p><pre id="workspacePaths"></pre></div></section>
+      <section id="workspace"><h2>Research Workspace</h2><div class="panel"><p>Packets, reports, report versions, forecast items, backtest results and revision candidates are linked through runtime research workspace indexes.</p><div class="actions"><button onclick="loadWorkspace()">Load Research Workspace</button></div><pre id="workspacePaths"></pre></div></section>
       <section id="upload">
         <h2>Report Upload</h2>
         <div class="grid cols-2">
@@ -975,16 +1047,59 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const tag = count ? 'good' : 'warn';
       return `<span class="tag ${{tag}}">${{category}}: ${{count ? count + ' evidence items' : 'insufficient_evidence'}}</span>`;
     }}
-    function showGenerated() {{
-      document.getElementById('generatedResult').innerHTML =
-        '<p><strong>As-of snapshot and statistical report generated.</strong></p><pre>' +
-        JSON.stringify(DASHBOARD_DATA.report_paths, null, 2) + '</pre>';
+    async function showGenerated() {{
+      const request = {{
+        research_object_type: document.querySelector('#console select').value,
+        research_object_id: '600519',
+        custom_topic_title: 'Dashboard generated company snapshot',
+        custom_topic_description: 'Generated from FR Dashboard v1 action layer.',
+        selected_data_categories: ['market_daily', 'macro', 'asset_class', 'financial_report'],
+        selected_symbols: ['600519'],
+        selected_sectors: [],
+        selected_asset_classes: [],
+        selected_events: [],
+        window_start: '2026-04-01',
+        window_end: '2026-05-19',
+        time_mode: 'publish_date',
+        fiscal_year: '2025',
+        reporting_period: '',
+        as_of_check_enabled: true,
+        include_candidate_data: true,
+        include_insufficient_evidence: true
+      }};
+      try {{
+        const response = await fetch('/api/dashboard/generate_asof_snapshot', {{
+          method: 'POST',
+          headers: {{'Content-Type': 'application/json'}},
+          body: JSON.stringify({{request, artifact_name: 'ui_generated_600519'}})
+        }});
+        const payload = await response.json();
+        document.getElementById('generatedResult').innerHTML =
+          '<p><strong>Action connected: generated new as-of snapshot and statistical report.</strong></p><pre>' +
+          JSON.stringify(payload.outputs || payload, null, 2) + '</pre>';
+      }} catch (error) {{
+        document.getElementById('generatedResult').innerHTML =
+          '<p><strong>Static fallback:</strong> action server unavailable, showing latest generated paths.</p><pre>' +
+          JSON.stringify(DASHBOARD_DATA.report_paths, null, 2) + '</pre>';
+      }}
     }}
     function copyPrompt() {{
       navigator.clipboard?.writeText(document.getElementById('promptBox').value);
     }}
-    function classifyReport() {{
+    async function classifyReport() {{
       const text = document.getElementById('reportInput').value;
+      try {{
+        const response = await fetch('/api/dashboard/classify_uploaded_report', {{
+          method: 'POST',
+          headers: {{'Content-Type': 'application/json'}},
+          body: JSON.stringify({{raw_report: text, output_name: 'ui_report_upload_action'}})
+        }});
+        const result = await response.json();
+        renderClassification(result.classification || result);
+        return;
+      }} catch (error) {{
+        // Static fallback keeps the page usable when opened without the local action server.
+      }}
       const match = text.match(/FINAL_REPORT_JSON\\s*```json\\s*([\\s\\S]*?)\\s*```/);
       if (!match) {{
         document.getElementById('analysisZone').textContent = 'FINAL_REPORT_JSON not found';
@@ -994,27 +1109,46 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       }}
       try {{
         const payload = JSON.parse(match[1]);
-        document.getElementById('analysisZone').textContent = JSON.stringify({{
+        renderClassification({{
+          analysis_zone: {{
           investment_view: payload.investment_view,
           key_assumptions: payload.key_assumptions || [],
           risk_items: payload.risk_items || []
-        }}, null, 2);
-        document.getElementById('forecastZone').textContent = JSON.stringify({{
+          }},
+          forecast_zone: {{
           forecast_items: payload.forecast_items || [],
           watchlist_signals: payload.watchlist_signals || [],
           confidence: payload.confidence,
           next_review_date: payload.next_review_date
-        }}, null, 2);
-        document.getElementById('evidenceZone').textContent = JSON.stringify({{
+          }},
+          evidence_zone: {{
           packet_id: payload.packet_id,
           data_snapshot_id: payload.data_snapshot_id,
           as_of_date: payload.as_of_date,
           candidate_data_usage_note: payload.candidate_data_usage_note,
           insufficient_evidence_items: payload.insufficient_evidence_items || [],
           gpt_report_not_trusted_fact: true
-        }}, null, 2);
+          }}
+        }});
       }} catch (error) {{
         document.getElementById('analysisZone').textContent = 'Invalid FINAL_REPORT_JSON: ' + error;
+      }}
+    }}
+    function renderClassification(result) {{
+      document.getElementById('analysisZone').textContent = JSON.stringify(result.analysis_zone || {{}}, null, 2);
+      document.getElementById('forecastZone').textContent = JSON.stringify(result.forecast_zone || {{}}, null, 2);
+      document.getElementById('evidenceZone').textContent = JSON.stringify(result.evidence_zone || {{}}, null, 2);
+    }}
+    async function loadWorkspace() {{
+      try {{
+        const response = await fetch('/api/dashboard/research_workspace');
+        const payload = await response.json();
+        document.getElementById('workspacePaths').textContent = JSON.stringify(payload, null, 2);
+      }} catch (error) {{
+        document.getElementById('workspacePaths').textContent = JSON.stringify({{
+          static_fallback_paths: DASHBOARD_DATA.report_paths,
+          action_server_required_for_live_workspace: true
+        }}, null, 2);
       }}
     }}
   </script>
@@ -1031,8 +1165,8 @@ This is the new FinancialResearch dashboard prototype, not the archived Streamli
 Start:
 
 ```powershell
-cd D:\\workspace\\FinancialResearch\\frontend_web\\src\\dashboard_v1
-python -m http.server 5188 --bind 127.0.0.1
+cd D:\\workspace\\FinancialResearch
+D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188
 ```
 
 Open: http://127.0.0.1:5188/
