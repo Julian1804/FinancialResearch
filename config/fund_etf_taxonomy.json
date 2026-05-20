@@ -1,5 +1,5 @@
 {
-  "version": "fund_etf_taxonomy_v1",
+  "version": "fund_etf_taxonomy_v2",
   "generated_at": "2026-05-20T16:10:12Z",
   "domains": [
     "fund_market",
@@ -18,13 +18,18 @@
     "unknown"
   ],
   "flow_proxy_types": [
-    "volume",
     "amount",
-    "shares_outstanding_change",
     "aum_change",
-    "nav_change",
+    "country_exposure_change",
+    "currency_exposure_change",
+    "estimated_net_flow",
     "holdings_change",
-    "premium_discount"
+    "nav_change",
+    "premium_discount",
+    "price_momentum",
+    "sector_exposure_change",
+    "shares_outstanding_change",
+    "volume"
   ],
   "trust_statuses": [
     "official_source_candidate",
@@ -41,5 +46,13 @@
     "morningstar_direct": 2,
     "third_party_candidate": 3
   },
-  "flow_proxy_warning": "Flow proxy is not actual net flow unless source field explicitly represents flow."
+  "flow_proxy_warning": "Flow proxy is not actual net flow unless source field explicitly represents flow.",
+  "fund_flow_signal_domains": [
+    "fund_master",
+    "nav_performance",
+    "aum_size",
+    "holdings_portfolio",
+    "exposure_allocation",
+    "flow_proxy"
+  ]
 }

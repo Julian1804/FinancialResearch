@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T16:10:13Z",
+  "generated_at": "2026-05-20T16:32:32Z",
   "snapshot_counts": {
     "included": 20,
     "excluded": 7,
@@ -579,7 +579,7 @@
       "exclusion_reason": "publish_date_later_than_window_end"
     }
   ],
-  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T16:10:13Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
+  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-20T16:32:32Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
   "report_upload_classification": {
     "schema_valid": true,
     "validation_errors": [],
@@ -3194,7 +3194,7 @@
     }
   },
   "authoritative_source_status": {
-    "generated_at": "2026-05-20T16:10:12Z",
+    "generated_at": "2026-05-20T16:32:31Z",
     "sources": [
       {
         "source_id": "morningstar_direct",
@@ -3222,6 +3222,22 @@
         "trusted_candidate_count": 0,
         "warning": "Flow proxy is not actual flow. Official China fund import is required before Morningstar coverage validation.",
         "candidate_only": true
+      },
+      {
+        "source_id": "fund_etf_capital_flow_phase2",
+        "display_name": "Fund & ETF Capital Flow Phase2",
+        "status": "validation_framework_ready",
+        "official_universe_status": "manual_fallback_ready",
+        "morningstar_dataset_classification_count": 43,
+        "fund_regions_validated": [
+          "US",
+          "China",
+          "Europe"
+        ],
+        "equity_stock_market_count": 4,
+        "trusted_candidate_count": 0,
+        "candidate_only": true,
+        "warning": "Flow proxy is not actual flow. Morningstar metadata is not coverage validation."
       }
     ]
   },
@@ -3631,6 +3647,4014 @@
           "license_storage_boundary_needs_review"
         ],
         "next_action": "field metadata sample or user-approved tiny sample only",
+        "can_upgrade_to_trusted_candidate": false
+      }
+    ],
+    "phase2_summary": {
+      "generated_at": "2026-05-20T16:32:31Z",
+      "phase2_completed": true,
+      "official_source_audit_completed": true,
+      "official_connector_or_manual_fallback": "manual_fallback_ready",
+      "etf_market_data_status": "success",
+      "etf_market_records": 90,
+      "fund_flow_signal_model_v2_completed": true,
+      "morningstar_dataset_classification_count": 43,
+      "multiregion_validation_regions": [
+        "US",
+        "China",
+        "Europe"
+      ],
+      "equity_stock_validation_completed": true,
+      "other_dataset_validation_completed": true,
+      "flow_proxy_count": 120,
+      "trust_upgrade_queue_count": 43,
+      "trusted_candidate_count": 0,
+      "large_morningstar_download_performed": false,
+      "no_auto_login": true,
+      "no_password_saved": true,
+      "token_leaked": false,
+      "openai_api_called": false,
+      "parse_lab_affected": false,
+      "formal_trusted_consumption_affected": false,
+      "outputs": {
+        "official_source_audit": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\official_fund_universe_source_audit.json",
+        "official_ingestion": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\official_fund_universe_ingestion_results.json",
+        "etf_market_data": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\etf_market_data_ingestion_results.json",
+        "schema_v2": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\fund_flow_signal_schema_summary.json",
+        "classification": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\morningstar_dataset_universe_classification_v2.json",
+        "multiregion_validation": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\morningstar_multiregion_fund_coverage_validation.json",
+        "equity_validation": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\morningstar_equity_stock_validation.json",
+        "other_validation": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\morningstar_other_dataset_validation_framework.json",
+        "flow_proxy": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\flow_proxy_v2_results.json",
+        "trust_upgrade_queue": "D:\\workspace\\FinancialResearch\\runtime\\fund_etf_capital_flow_phase2\\morningstar_multi_asset_trust_upgrade_queue.json"
+      }
+    },
+    "phase2_classification": [
+      {
+        "dataset_id": "0218-0574",
+        "dataset_name": "Portfolio Composition",
+        "detected_asset_domains": [
+          "holdings_portfolio"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "holdings_portfolio",
+        "likely_fields": [
+          "holding",
+          "portfolio_date",
+          "weight"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "holdings_portfolio",
+        "priority": 3,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0292",
+        "dataset_name": "Estimated Fund-Level Net Flow (Month-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance",
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0261",
+        "dataset_name": "Estimated Share Class Net Flow (Month-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance",
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0041",
+        "dataset_name": "Post-tax Returns (Month-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0039",
+        "dataset_name": "Returns (Calendar Year)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0036",
+        "dataset_name": "Returns (Daily)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0037",
+        "dataset_name": "Returns (Month-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0038",
+        "dataset_name": "Returns (Quarter-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0043",
+        "dataset_name": "Risk - Total Return (Month-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0044",
+        "dataset_name": "Risk - Total Return (Quarter-End)",
+        "detected_asset_domains": [
+          "flow_proxy_performance"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "performance_nav_flow_proxy",
+        "likely_fields": [
+          "flow_or_proxy",
+          "nav",
+          "return"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "performance_nav_flow_proxy",
+        "priority": 4,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0593-0255",
+        "dataset_name": "Asset Allocation",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0253",
+        "dataset_name": "CAN Asset Allocation",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0300",
+        "dataset_name": "Equity Country (MSCI)",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0053",
+        "dataset_name": "Equity Country Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0353",
+        "dataset_name": "Equity Industry Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0052",
+        "dataset_name": "Equity Regional Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0047",
+        "dataset_name": "Equity Sector Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0048",
+        "dataset_name": "Equity Sectors (GICS)",
+        "detected_asset_domains": [
+          "allocation_exposure",
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "allocation_weight",
+          "company_profile",
+          "exposure",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0514",
+        "dataset_name": "Fixd-Inc Currency Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0485",
+        "dataset_name": "Fixd-Inc Geographic Exposure",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-1212",
+        "dataset_name": "Japan Asset Allocation",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0102",
+        "dataset_name": "Strategy Target Asset Allocation",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0575",
+        "dataset_name": "Vehicle Allocation",
+        "detected_asset_domains": [
+          "allocation_exposure"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "allocation_exposure",
+        "likely_fields": [
+          "allocation_weight",
+          "exposure"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "allocation_exposure",
+        "priority": 5,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0049",
+        "dataset_name": "Equity Industry (GICS)",
+        "detected_asset_domains": [
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "company_profile",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 6,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0050",
+        "dataset_name": "Equity Port Stats (Long)",
+        "detected_asset_domains": [
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "company_profile",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 6,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0051",
+        "dataset_name": "Equity Port Stats (Short)",
+        "detected_asset_domains": [
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "company_profile",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 6,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0035",
+        "dataset_name": "Equity Style Analysis",
+        "detected_asset_domains": [
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "company_profile",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 6,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0034",
+        "dataset_name": "Operations",
+        "detected_asset_domains": [
+          "equity_stock"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "equity_stock_or_company_fundamental",
+        "likely_fields": [
+          "company_profile",
+          "valuation_or_fundamental"
+        ],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "equity_stock_or_company_fundamental",
+        "priority": 6,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0422",
+        "dataset_name": "Fixd-Inc Credit Ratings",
+        "detected_asset_domains": [
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "fund_etf",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "fund_etf",
+        "priority": 10,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0576",
+        "dataset_name": "Morningstar Medalist Rating Input Data",
+        "detected_asset_domains": [
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "fund_etf",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "fund_etf",
+        "priority": 10,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0045",
+        "dataset_name": "Morningstar Ratings and Grades",
+        "detected_asset_domains": [
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "fund_etf",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "fund_etf",
+        "priority": 10,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-1215",
+        "dataset_name": "Share Class Analysis",
+        "detected_asset_domains": [
+          "fund_etf"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "fund_etf",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "fund_etf",
+        "priority": 10,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0260",
+        "dataset_name": "Dividend (Calendar Year)",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0418",
+        "dataset_name": "Fixd-Inc Core Analytics",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0420",
+        "dataset_name": "Fixd-Inc Core Attributes",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0432",
+        "dataset_name": "Fixd-Inc Coupon and Interest",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0468",
+        "dataset_name": "Fixd-Inc Interest Rate Risk",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0020",
+        "dataset_name": "Snapshot",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0472",
+        "dataset_name": "Strategy Analysis",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "0218-0480",
+        "dataset_name": "Strategy Vehicle Analysis",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available_from_dataset_list",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "method:data_point_settings",
+        "dataset_name": "data_point_settings",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "method:investment_search_spy",
+        "dataset_name": "investment_search_spy",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      },
+      {
+        "dataset_id": "method:user_investment_lists",
+        "dataset_name": "user_investment_lists",
+        "detected_asset_domains": [
+          "licensed_metadata"
+        ],
+        "detected_regions_if_any": [],
+        "likely_data_type": "other",
+        "likely_fields": [],
+        "sample_allowed": "metadata_only",
+        "entitlement_status": "available",
+        "download_risk": "do_not_download_until_entitlement_and_license_review",
+        "raw_storage_risk": "needs_user_confirmation",
+        "FR_use_case": "other",
+        "priority": 50,
+        "next_validation_action": "field metadata sample or user-approved tiny sample only"
+      }
+    ],
+    "phase2_multiregion": [
+      {
+        "region": "US",
+        "official_count": 0,
+        "morningstar_candidate_count": 6,
+        "matched_count": 0,
+        "unmatched_official_count": 0,
+        "unmatched_morningstar_count": null,
+        "coverage_ratio": null,
+        "match_accuracy_sample_rate": null,
+        "field_completeness_score": null,
+        "freshness_gap_days": null,
+        "update_frequency_status": "unknown",
+        "cross_source_match_rate": null,
+        "region_status": "official_universe_missing",
+        "validation_status": "blocked",
+        "trust_upgrade_status": "not_eligible",
+        "next_action": "official_connector_or_manual_import_required"
+      },
+      {
+        "region": "China",
+        "official_count": 0,
+        "morningstar_candidate_count": 6,
+        "matched_count": 0,
+        "unmatched_official_count": 0,
+        "unmatched_morningstar_count": null,
+        "coverage_ratio": null,
+        "match_accuracy_sample_rate": null,
+        "field_completeness_score": null,
+        "freshness_gap_days": null,
+        "update_frequency_status": "unknown",
+        "cross_source_match_rate": null,
+        "region_status": "official_universe_missing",
+        "validation_status": "blocked",
+        "trust_upgrade_status": "not_eligible",
+        "next_action": "official_connector_or_manual_import_required"
+      },
+      {
+        "region": "Europe",
+        "official_count": 0,
+        "morningstar_candidate_count": 6,
+        "matched_count": 0,
+        "unmatched_official_count": 0,
+        "unmatched_morningstar_count": null,
+        "coverage_ratio": null,
+        "match_accuracy_sample_rate": null,
+        "field_completeness_score": null,
+        "freshness_gap_days": null,
+        "update_frequency_status": "unknown",
+        "cross_source_match_rate": null,
+        "region_status": "official_universe_missing",
+        "validation_status": "blocked",
+        "trust_upgrade_status": "not_eligible",
+        "next_action": "official_connector_or_manual_import_required"
+      }
+    ],
+    "phase2_equity": [
+      {
+        "market": "A-share",
+        "metadata_candidate_count": 11,
+        "sample_data_available": false,
+        "coverage_status": "metadata_only_no_universe_sample",
+        "field_completeness_status": "unknown",
+        "freshness_status": "unknown",
+        "cross_source_validation_status": "not_run",
+        "trusted_candidate_status": "not_eligible",
+        "cross_source_candidates": [
+          "exchange_disclosure",
+          "SEC/CNINFO/HKEX/official or candidate market data source"
+        ]
+      },
+      {
+        "market": "Hong Kong",
+        "metadata_candidate_count": 11,
+        "sample_data_available": false,
+        "coverage_status": "metadata_only_no_universe_sample",
+        "field_completeness_status": "unknown",
+        "freshness_status": "unknown",
+        "cross_source_validation_status": "not_run",
+        "trusted_candidate_status": "not_eligible",
+        "cross_source_candidates": [
+          "exchange_disclosure",
+          "SEC/CNINFO/HKEX/official or candidate market data source"
+        ]
+      },
+      {
+        "market": "US",
+        "metadata_candidate_count": 11,
+        "sample_data_available": false,
+        "coverage_status": "metadata_only_no_universe_sample",
+        "field_completeness_status": "unknown",
+        "freshness_status": "unknown",
+        "cross_source_validation_status": "not_run",
+        "trusted_candidate_status": "not_eligible",
+        "cross_source_candidates": [
+          "exchange_disclosure",
+          "SEC/CNINFO/HKEX/official or candidate market data source"
+        ]
+      },
+      {
+        "market": "Europe",
+        "metadata_candidate_count": 11,
+        "sample_data_available": false,
+        "coverage_status": "metadata_only_no_universe_sample",
+        "field_completeness_status": "unknown",
+        "freshness_status": "unknown",
+        "cross_source_validation_status": "not_run",
+        "trusted_candidate_status": "not_eligible",
+        "cross_source_candidates": [
+          "exchange_disclosure",
+          "SEC/CNINFO/HKEX/official or candidate market data source"
+        ]
+      }
+    ],
+    "phase2_flow_proxy": [
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-03",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 2326714624.862,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-03",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 735319582.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-03",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.141,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-03",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4.61958,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-07",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 2361499071.31,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-07",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 749372436.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-07",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.151,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-07",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4.730452,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-08",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4785824705.834,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-08",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1456939901.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-08",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.345,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-08",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 9.317584,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-09",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 2407159486.863,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-09",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 726721415.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-09",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.32,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-09",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4.772128,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-10",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4765722093.559,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-10",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1393326433.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-10",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.437,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-10",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 9.143489,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-13",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3606546237.848,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-13",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1041762858.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-13",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.468,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-13",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 6.967169,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-14",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3744100707.304,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-14",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1063243629.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-14",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.55,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-14",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 7.131816,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-15",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4785008636.285,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-15",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1352469021.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-15",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.511,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-15",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 8.948183,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-16",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5298080774.882,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-16",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1479654181.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-16",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.624,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-16",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 9.92094,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-17",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5489998910.635,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-17",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1503305804.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-17",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.67,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-17",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 10.241581,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-20",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5444544523.628,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-20",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1485358840.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-20",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.672,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-20",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 10.534867,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-21",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5051182322.518,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-21",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1382838279.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-21",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.681,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-21",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 10.105176,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-22",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 6923895010.658,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-22",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1861500562.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-22",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.758,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-22",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 14.100723,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-23",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5446610050.463,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-23",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1458092107.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-23",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.728,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-23",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 11.654989,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-24",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 6285359225.219,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-24",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1712826513.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-24",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.674,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-24",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 13.979456,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-27",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3519636450.21,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-27",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 960411127.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-27",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.652,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-27",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 7.732496,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-28",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3998704631.168,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-28",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1106101937.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-28",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.602,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-28",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 8.778967,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-29",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3886447435.205,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-29",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1064146064.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-29",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.694,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-29",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 8.525817,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-30",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3710117031.458,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-30",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1003983995.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-30",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.689,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-04-30",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 8.114671,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-06",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 7445851677.571,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-06",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1963948718.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-06",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.786,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-06",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 15.826229,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-07",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3408781901.032,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-07",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 894995493.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-07",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.845,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-07",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 7.370188,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-08",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3704430721.104,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-08",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 969617959.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-08",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.806,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-08",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 8.035649,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-11",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5237822670.85,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-11",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1348822785.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-11",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.947,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-11",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 11.097353,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-12",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4919168159.673,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-12",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1248083142.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-12",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.94,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-12",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 10.342555,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-13",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4827427703.022,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-13",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1215009887.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-13",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4.048,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-13",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 10.149225,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-14",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5906571388.606,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-14",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1471968793.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-14",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.961,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-14",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 12.213021,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-15",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 7510651174.562,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-15",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1903600706.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-15",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.97,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-15",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 15.659176,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-18",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5450614720.997,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-18",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1387092169.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-18",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.923,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-18",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 11.565409,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-19",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 5712080576.183,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-19",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1473240345.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-19",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.922,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-19",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 12.475092,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-20",
+        "proxy_type": "amount_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 4551859988.279,
+        "unit": "CNY",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-20",
+        "proxy_type": "volume_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 1160267846.0,
+        "unit": "shares",
+        "confidence": "medium",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-20",
+        "proxy_type": "price_momentum_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 3.932,
+        "unit": "CNY",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      },
+      {
+        "fund_id_or_etf_code": "159915",
+        "observation_date": "2026-05-20",
+        "proxy_type": "turnover_proxy",
+        "evidence_source": "baostock_etf_daily_sample",
+        "proxy_value": 9.662896,
+        "unit": "percent",
+        "confidence": "low",
+        "limitation_note": "Proxy indicator; not actual fund flow.",
+        "not_actual_flow_warning": "This proxy must not be described as actual net flow.",
+        "actual_flow_available": false,
+        "quality_status": "quality_passed",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true
+      }
+    ],
+    "phase2_trust_queue": [
+      {
+        "dataset_id": "0218-0574",
+        "dataset_name": "Portfolio Composition",
+        "dataset_type": "holdings_portfolio",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0292",
+        "dataset_name": "Estimated Fund-Level Net Flow (Month-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0261",
+        "dataset_name": "Estimated Share Class Net Flow (Month-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0041",
+        "dataset_name": "Post-tax Returns (Month-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0039",
+        "dataset_name": "Returns (Calendar Year)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0036",
+        "dataset_name": "Returns (Daily)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0037",
+        "dataset_name": "Returns (Month-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0038",
+        "dataset_name": "Returns (Quarter-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0043",
+        "dataset_name": "Risk - Total Return (Month-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0044",
+        "dataset_name": "Risk - Total Return (Quarter-End)",
+        "dataset_type": "performance_nav_flow_proxy",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0593-0255",
+        "dataset_name": "Asset Allocation",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0253",
+        "dataset_name": "CAN Asset Allocation",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0300",
+        "dataset_name": "Equity Country (MSCI)",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0053",
+        "dataset_name": "Equity Country Exposure",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0353",
+        "dataset_name": "Equity Industry Exposure",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0052",
+        "dataset_name": "Equity Regional Exposure",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0047",
+        "dataset_name": "Equity Sector Exposure",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0048",
+        "dataset_name": "Equity Sectors (GICS)",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0514",
+        "dataset_name": "Fixd-Inc Currency Exposure",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0485",
+        "dataset_name": "Fixd-Inc Geographic Exposure",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-1212",
+        "dataset_name": "Japan Asset Allocation",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0102",
+        "dataset_name": "Strategy Target Asset Allocation",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0575",
+        "dataset_name": "Vehicle Allocation",
+        "dataset_type": "allocation_exposure",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0049",
+        "dataset_name": "Equity Industry (GICS)",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0050",
+        "dataset_name": "Equity Port Stats (Long)",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0051",
+        "dataset_name": "Equity Port Stats (Short)",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0035",
+        "dataset_name": "Equity Style Analysis",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0034",
+        "dataset_name": "Operations",
+        "dataset_type": "equity_stock_or_company_fundamental",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0422",
+        "dataset_name": "Fixd-Inc Credit Ratings",
+        "dataset_type": "fund_etf",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0576",
+        "dataset_name": "Morningstar Medalist Rating Input Data",
+        "dataset_type": "fund_etf",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0045",
+        "dataset_name": "Morningstar Ratings and Grades",
+        "dataset_type": "fund_etf",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-1215",
+        "dataset_name": "Share Class Analysis",
+        "dataset_type": "fund_etf",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0260",
+        "dataset_name": "Dividend (Calendar Year)",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0418",
+        "dataset_name": "Fixd-Inc Core Analytics",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0420",
+        "dataset_name": "Fixd-Inc Core Attributes",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0432",
+        "dataset_name": "Fixd-Inc Coupon and Interest",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0468",
+        "dataset_name": "Fixd-Inc Interest Rate Risk",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0020",
+        "dataset_name": "Snapshot",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0472",
+        "dataset_name": "Strategy Analysis",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "0218-0480",
+        "dataset_name": "Strategy Vehicle Analysis",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "method:data_point_settings",
+        "dataset_name": "data_point_settings",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "method:investment_search_spy",
+        "dataset_name": "investment_search_spy",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
+        "can_upgrade_to_trusted_candidate": false
+      },
+      {
+        "dataset_id": "method:user_investment_lists",
+        "dataset_name": "user_investment_lists",
+        "dataset_type": "other",
+        "source_id": "morningstar_direct",
+        "current_status": "licensed_source_candidate",
+        "required_checks": [
+          "entitlement_allowed",
+          "sample_data_available",
+          "coverage_or_universe_validated",
+          "field_completeness_validated",
+          "freshness_validated",
+          "cross_source_validation",
+          "license_storage_boundary_clear",
+          "QA_passed"
+        ],
+        "completed_checks": [
+          "metadata_visible"
+        ],
+        "blockers": [
+          "sample_data_not_loaded",
+          "coverage_not_validated",
+          "freshness_unknown",
+          "field_completeness_unknown",
+          "license_storage_boundary_needs_review"
+        ],
         "can_upgrade_to_trusted_candidate": false
       }
     ]

@@ -34,6 +34,7 @@ FOUNDATION_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_catalog"
 MARKET_DATA_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_phase2"
 AUTHORITATIVE_SOURCE_ROOT = PROJECT_ROOT / "runtime" / "authoritative_crawler_framework"
 FUND_ETF_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow"
+FUND_ETF_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase2"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -831,6 +832,12 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     fund_etf_shortlist = read_json(FUND_ETF_ROOT / "morningstar_priority_dataset_shortlist.json") or {"items": []}
     fund_etf_coverage = read_json(FUND_ETF_ROOT / "fund_coverage_validation_results.json")
     fund_etf_trust_queue = read_json(FUND_ETF_ROOT / "trust_upgrade_queue.json") or {"queue": []}
+    fund_etf_phase2_summary = read_json(FUND_ETF_PHASE2_ROOT / "phase2_summary.json")
+    fund_etf_phase2_classification = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_dataset_universe_classification_v2.json") or {"items": []}
+    fund_etf_phase2_multiregion = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_multiregion_fund_coverage_validation.json") or {"regions": []}
+    fund_etf_phase2_equity = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_equity_stock_validation.json") or {"markets": []}
+    fund_etf_phase2_flow_proxy = read_json(FUND_ETF_PHASE2_ROOT / "flow_proxy_v2_results.json") or {"items": []}
+    fund_etf_phase2_trust_queue = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_multi_asset_trust_upgrade_queue.json") or {"queue": []}
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -859,6 +866,12 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
             "priority_datasets": fund_etf_shortlist.get("items", []),
             "coverage_validation": fund_etf_coverage,
             "trust_upgrade_queue": fund_etf_trust_queue.get("queue", []),
+            "phase2_summary": fund_etf_phase2_summary,
+            "phase2_classification": fund_etf_phase2_classification.get("items", []),
+            "phase2_multiregion": fund_etf_phase2_multiregion.get("regions", []),
+            "phase2_equity": fund_etf_phase2_equity.get("markets", []),
+            "phase2_flow_proxy": fund_etf_phase2_flow_proxy.get("items", []),
+            "phase2_trust_queue": fund_etf_phase2_trust_queue.get("queue", []),
         },
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
@@ -906,6 +919,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Global Fund Flow Candidate Panel",
         "Upload Official Fund List",
         "Flow Proxy Explanation",
+        "Official Fund Universe Status",
+        "ETF / Fund Market Activity",
+        "Morningstar Multi-Asset Validation",
+        "Morningstar Equity / Stock Panel",
+        "Trust Upgrade Queue",
         "line",
         "bar",
         "pie",
@@ -1298,6 +1316,30 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
             <div id="officialFundImportPanel"></div>
           </div>
         </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Official Fund Universe Status</h3>
+            <div id="officialFundUniverseStatusPanel"></div>
+          </div>
+          <div class="panel">
+            <h3>ETF / Fund Market Activity</h3>
+            <div id="etfFundMarketActivityPanel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Morningstar Multi-Asset Validation</h3>
+            <div id="morningstarMultiAssetPanel"></div>
+          </div>
+          <div class="panel">
+            <h3>Morningstar Equity / Stock Panel</h3>
+            <div id="morningstarEquityStockPanel"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Trust Upgrade Queue</h3>
+          <div id="fundEtfTrustQueuePanel"></div>
+        </div>
         <div class="panel">
           <span class="tag warn">candidate / validation in progress</span>
           <h3>Flow Proxy Explanation</h3>
@@ -1576,6 +1618,33 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       document.getElementById('officialFundImportPanel').innerHTML =
         `<div><span class="tag">templates ready</span><span class="tag warn">manual import required</span><span class="tag warn">not auto trusted</span></div>` +
         `<p class="small">Trust upgrade queue items: ${{queue.length}}. All currently blocked by official_import_missing / freshness_unknown / field_completeness_unknown.</p>`;
+      renderFundEtfPhase2();
+    }}
+    function renderFundEtfPhase2() {{
+      const phase2 = FUND_ETF.phase2_summary || {{}};
+      const classification = FUND_ETF.phase2_classification || [];
+      const regions = FUND_ETF.phase2_multiregion || [];
+      const equity = FUND_ETF.phase2_equity || [];
+      const proxies = FUND_ETF.phase2_flow_proxy || [];
+      const trustQueue = FUND_ETF.phase2_trust_queue || [];
+      document.getElementById('officialFundUniverseStatusPanel').innerHTML =
+        `<div><span class="tag warn">${{escapeHtml(phase2.official_connector_or_manual_fallback || 'manual_fallback_ready')}}</span><span class="tag">US / China / Europe</span></div>` +
+        `<table><tbody>${{regions.map(row => `<tr><th>${{escapeHtml(row.region)}}</th><td>${{escapeHtml(row.validation_status)}} / ${{escapeHtml(row.next_action)}}</td></tr>`).join('') || '<tr><td>official universe pending</td></tr>'}}</tbody></table>`;
+      document.getElementById('etfFundMarketActivityPanel').innerHTML =
+        `<div><span class="tag ${{phase2.etf_market_data_status === 'success' ? 'good' : 'warn'}}">ETF sample: ${{escapeHtml(phase2.etf_market_data_status || 'not_run')}}</span><span class="tag">records: ${{phase2.etf_market_records || 0}}</span></div>` +
+        `<p class="small">Amount/volume/price/turnover are market-activity proxies only, not net fund flow.</p>`;
+      const domainCounts = classification.reduce((acc, item) => {{
+        (item.detected_asset_domains || []).forEach(domain => acc[domain] = (acc[domain] || 0) + 1);
+        return acc;
+      }}, {{}});
+      document.getElementById('morningstarMultiAssetPanel').innerHTML =
+        `<div>${{Object.entries(domainCounts).map(([k,v]) => `<span class="tag">${{escapeHtml(k)}}: ${{v}}</span>`).join('') || '<span class="tag warn">metadata_missing</span>'}}</div>` +
+        `<p class="small">Classification only: metadata visibility is not coverage completeness.</p>`;
+      document.getElementById('morningstarEquityStockPanel').innerHTML =
+        `<table><thead><tr><th>Market</th><th>Coverage</th><th>Trusted candidate</th></tr></thead><tbody>${{equity.map(row => `<tr><td>${{escapeHtml(row.market)}}</td><td>${{escapeHtml(row.coverage_status)}}</td><td>${{escapeHtml(row.trusted_candidate_status)}}</td></tr>`).join('') || '<tr><td colspan="3">metadata only</td></tr>'}}</tbody></table>`;
+      document.getElementById('fundEtfTrustQueuePanel').innerHTML =
+        `<div><span class="tag warn">blocked: ${{trustQueue.length}}</span><span class="tag warn">trusted_candidate: ${{phase2.trusted_candidate_count || 0}}</span><span class="tag">flow_proxy_v2: ${{proxies.length}}</span></div>` +
+        `<p class="small">Queue requires sample data, official universe coverage, field completeness, freshness, cross-source validation and license/storage clearance.</p>`;
     }}
     function renderSeriesTable(series) {{
       if (!series.length) return '<span class="tag warn">insufficient_evidence</span>';
