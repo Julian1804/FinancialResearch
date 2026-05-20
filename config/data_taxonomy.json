@@ -1,0 +1,97 @@
+{
+  "version": "dashboard_v1",
+  "generated_at": "2026-05-20T04:59:09Z",
+  "principles": {
+    "candidate_data_not_trusted": true,
+    "gpt_report_not_trusted_fact": true,
+    "no_openai_api_called": true
+  },
+  "data_categories": [
+    {
+      "id": "macro",
+      "label": "Macro",
+      "description": "Rates, inflation, employment, central bank and fiscal data."
+    },
+    {
+      "id": "asset_class",
+      "label": "Asset Class",
+      "description": "Yields, commodities, FX, broad indices and cross-asset samples."
+    },
+    {
+      "id": "sector",
+      "label": "Sector",
+      "description": "Industry and sector evidence; current phase can show schema and gaps."
+    },
+    {
+      "id": "company",
+      "label": "Company",
+      "description": "Company-level market data, reports, forecasts and workspace state."
+    },
+    {
+      "id": "financial_report",
+      "label": "Financial Report",
+      "description": "Report metadata and parser/packet evidence."
+    },
+    {
+      "id": "announcement",
+      "label": "Announcement",
+      "description": "Company announcements and disclosure metadata."
+    },
+    {
+      "id": "market_daily",
+      "label": "Market Daily",
+      "description": "Daily OHLCV and source consistency evidence."
+    },
+    {
+      "id": "capital_flow",
+      "label": "Capital Flow",
+      "description": "ETF, fund holding and flow data; mostly insufficient in v1."
+    },
+    {
+      "id": "policy_event",
+      "label": "Policy Event",
+      "description": "Policy events and public policy data."
+    },
+    {
+      "id": "geopolitical_event",
+      "label": "Geopolitical Event",
+      "description": "Geopolitical and conflict event evidence; mostly future connector work."
+    },
+    {
+      "id": "sentiment",
+      "label": "Sentiment",
+      "description": "Management commentary, sentiment and qualitative evidence."
+    },
+    {
+      "id": "research_report",
+      "label": "Research Report",
+      "description": "Human-in-the-loop GPT Web reports and versions."
+    },
+    {
+      "id": "forecast",
+      "label": "Forecast",
+      "description": "Forecast contract, validation and backtest state."
+    },
+    {
+      "id": "backtest",
+      "label": "Backtest",
+      "description": "Backtest results and revision queues."
+    },
+    {
+      "id": "commodity",
+      "label": "Commodity",
+      "description": "Commodity data such as energy, metals and agriculture samples."
+    }
+  ],
+  "data_statuses": [
+    "trusted_by_real_external_candidate",
+    "market_daily_candidate_staging",
+    "market_daily_secondary_candidate_staging",
+    "cross_validated_candidate",
+    "needs_review_candidate",
+    "blocked",
+    "not_used_in_current_pipeline",
+    "insufficient_evidence",
+    "missing_publish_date"
+  ]
+}

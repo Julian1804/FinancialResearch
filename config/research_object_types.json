@@ -1,0 +1,108 @@
+{
+  "version": "dashboard_v1",
+  "types": [
+    {
+      "id": "company",
+      "label": "Company",
+      "examples": [
+        "600519",
+        "000001",
+        "AAPL"
+      ]
+    },
+    {
+      "id": "sector",
+      "label": "Sector",
+      "examples": [
+        "A-share banks",
+        "liquor",
+        "new energy"
+      ]
+    },
+    {
+      "id": "asset_class",
+      "label": "Asset Class",
+      "examples": [
+        "gold",
+        "oil",
+        "UST10Y"
+      ]
+    },
+    {
+      "id": "macro_theme",
+      "label": "Macro Theme",
+      "examples": [
+        "Fed easing path",
+        "China credit impulse"
+      ]
+    },
+    {
+      "id": "capital_flow_theme",
+      "label": "Capital Flow Theme",
+      "examples": [
+        "A-share ETF flows",
+        "USD liquidity"
+      ]
+    },
+    {
+      "id": "event",
+      "label": "Event",
+      "examples": [
+        "tariff shock",
+        "policy meeting"
+      ]
+    },
+    {
+      "id": "geopolitical_event",
+      "label": "Geopolitical Event",
+      "examples": [
+        "regional conflict escalation"
+      ]
+    },
+    {
+      "id": "policy_event",
+      "label": "Policy Event",
+      "examples": [
+        "rate cut",
+        "fiscal package"
+      ]
+    },
+    {
+      "id": "black_swan_event",
+      "label": "Black Swan Event",
+      "examples": [
+        "2022 Russia-Ukraine energy shock"
+      ]
+    },
+    {
+      "id": "custom_topic",
+      "label": "Custom Topic",
+      "examples": [
+        "Japan carry trade and global liquidity"
+      ]
+    }
+  ],
+  "input_contract": {
+    "required": [
+      "research_object_type",
+      "selected_data_categories",
+      "window_start",
+      "window_end",
+      "time_mode"
+    ],
+    "optional": [
+      "research_object_id",
+      "custom_topic_title",
+      "custom_topic_description",
+      "selected_symbols",
+      "selected_sectors",
+      "selected_asset_classes",
+      "selected_events",
+      "fiscal_year",
+      "reporting_period",
+      "as_of_check_enabled",
+      "include_candidate_data",
+      "include_insufficient_evidence"
+    ]
+  }
+}
