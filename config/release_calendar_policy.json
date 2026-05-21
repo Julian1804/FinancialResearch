@@ -1,0 +1,24 @@
+{
+  "version": "release_calendar_policy_v1",
+  "generated_at": "2026-05-21T06:03:42Z",
+  "policies": {
+    "fred_public_api": {
+      "release_calendar_status": "limited_without_series_release_endpoint",
+      "publish_date_policy": "do_not_fabricate_publish_date_from_observation_date",
+      "publish_date_source": "unavailable",
+      "vintage_support": "source_realtime_fields_when_available"
+    },
+    "treasury_fiscaldata": {
+      "release_calendar_status": "source_record_date_available",
+      "publish_date_policy": "record_date_or_source_publish_date_when_present",
+      "publish_date_source": "source_confirmed_record_date",
+      "vintage_support": "limited"
+    },
+    "world_bank_pink_sheet": {
+      "release_calendar_status": "monthly_release_calendar_limited",
+      "publish_date_policy": "do_not_fabricate_publish_date_from_monthly_observation",
+      "publish_date_source": "unavailable",
+      "vintage_support": "limited"
+    }
+  }
+}

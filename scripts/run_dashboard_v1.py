@@ -972,6 +972,12 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Macro Rates FX Commodity Incremental",
         "Morningstar Field Depth",
         "Scheduled Run v2",
+        "Automated Ingestion v4",
+        "Trust Closure Progress",
+        "Release Calendar Closure",
+        "Publish Date Policy",
+        "Ready for Trusted Candidate",
+        "Licensed High Confidence Candidate",
         "line",
         "bar",
         "pie",
@@ -1670,6 +1676,13 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const v3Macro = v3.macro_rates_fx_commodity_incremental || {{}};
       const v3Morningstar = v3.morningstar_field_depth || {{}};
       const v3Schedule = v3.scheduled_run_v2 || {{}};
+      const v4 = AUTOMATED.v4_trust_closure || {{}};
+      const v4Trust = v4.trust_closure_progress || {{}};
+      const v4Ashare = v4.a_share_etf_controlled_expansion || {{}};
+      const v4Release = v4.release_calendar_closure || {{}};
+      const v4Freshness = v4.macro_rates_fx_commodity_freshness || {{}};
+      const v4Morningstar = v4.morningstar_field_depth || {{}};
+      const v4Entity = v4.entity_unresolved || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1694,6 +1707,17 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         </div>
         <p><strong>Candidate Promotion Summary</strong>: schema_validated ${{v3Promo.schema_validated_candidate || 0}} · cross_validated ${{v3Promo.cross_validated_candidate || 0}} · freshness_validated ${{v3Promo.freshness_validated_candidate || 0}} · ready_for_trusted ${{v3Promo.ready_for_trusted_candidate || 0}} · trusted_candidate ${{v3Promo.trusted_candidate || 0}}</p>
         <p><strong>Scheduled Run v2</strong>: executed ${{v3Schedule.executed || 0}} · on-hold ${{v3Schedule.on_hold || 0}} · failed ${{v3Schedule.failed || 0}}</p>
+        <hr>
+        <h4>Automated Ingestion v4 · Trust Closure Progress</h4>
+        <div class="grid cols-3">
+          <div><p>A-share / ETF Controlled Expansion</p><div class="metric">${{v4Ashare.common_records || 0}}</div><span class="tag">${{v4Ashare.dataset_status || 'pending'}}</span></div>
+          <div><p>Release Calendar Closure</p><div class="metric">${{v4Release.datasets_checked || 0}}</div><span class="tag warn">limited/unavailable ${{v4Release.release_calendar_limited_or_unavailable_count || 0}}</span></div>
+          <div><p>Morningstar Field Depth</p><div class="metric">${{v4Morningstar.selected_dataset_count || 0}}</div><span class="tag">Licensed High Confidence Candidate ${{v4Morningstar.licensed_high_confidence_candidate_count || 0}}</span></div>
+        </div>
+        <p><strong>Publish Date Policy</strong>: publish_date is not fabricated from observation_date; release calendar limited datasets remain blocked from as-of-safe trust closure.</p>
+        <p><strong>Ready for Trusted Candidate</strong>: ${{v4Trust.ready_for_trusted_candidate_count || 0}} · trusted_candidate ${{v4Trust.trusted_candidate_count || 0}} · blocked lines ${{(v4Trust.blocked_lines || []).length || 0}}</p>
+        <p><strong>Macro/Rates/FX/Commodity Freshness</strong>: datasets ${{v4Freshness.datasets_checked || 0}} · freshness_validated ${{v4Freshness.freshness_validated_count || 0}} · schema_validated ${{v4Freshness.schema_validated_count || 0}}</p>
+        <p><strong>Entity Master Correctness</strong>: unresolved ${{v4Entity.unresolved_before ?? 'na'}} → ${{v4Entity.unresolved_after ?? 'na'}} · fuzzy rejected ${{v4Entity.rejected_fuzzy_match_count || 0}}</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>

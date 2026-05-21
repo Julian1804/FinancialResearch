@@ -1,0 +1,189 @@
+{
+  "version": "trust_closure_rules_v4",
+  "generated_at": "2026-05-21T06:03:20Z",
+  "states": [
+    {
+      "status": "candidate",
+      "conditions": [
+        "source is reachable/cached",
+        "source role classified"
+      ],
+      "evidence_required": [
+        "source_id",
+        "retrieval timestamp"
+      ],
+      "downgrade_conditions": [
+        "unreadable schema",
+        "material source terms risk"
+      ]
+    },
+    {
+      "status": "schema_validated_candidate",
+      "conditions": [
+        "required schema fields present",
+        "dates parse",
+        "units/currency classified",
+        "checksum exists",
+        "QA is not failed"
+      ],
+      "evidence_required": [
+        "normalized schema",
+        "quality report",
+        "raw checksum"
+      ],
+      "downgrade_conditions": [
+        "required fields missing",
+        "duplicate key failure",
+        "ambiguous unit blocks use"
+      ]
+    },
+    {
+      "status": "cross_validated_candidate",
+      "conditions": [
+        "two independent non-identical sources match core fields",
+        "mismatches explainable or queued"
+      ],
+      "evidence_required": [
+        "field comparison report",
+        "mismatch queue"
+      ],
+      "downgrade_conditions": [
+        "unexplained core field mismatch",
+        "sources share same unstable upstream"
+      ]
+    },
+    {
+      "status": "freshness_validated_candidate",
+      "conditions": [
+        "latest observation fits expected cadence",
+        "retrieval cadence tracked",
+        "next expected update exists or is bounded"
+      ],
+      "evidence_required": [
+        "latest observation",
+        "latest retrieved",
+        "next expected update"
+      ],
+      "downgrade_conditions": [
+        "stale beyond expected lag",
+        "missing date fields"
+      ]
+    },
+    {
+      "status": "field_validated_candidate",
+      "conditions": [
+        "critical identifiers/date/value fields complete above threshold",
+        "field definitions clear"
+      ],
+      "evidence_required": [
+        "field completeness score",
+        "identifier fields",
+        "date fields"
+      ],
+      "downgrade_conditions": [
+        "identifier ambiguity",
+        "critical fields unavailable"
+      ]
+    },
+    {
+      "status": "licensed_high_confidence_candidate",
+      "conditions": [
+        "licensed institutional platform",
+        "entitlement allowed",
+        "sample/metadata fields support FR use",
+        "token handled manually"
+      ],
+      "evidence_required": [
+        "entitlement record",
+        "field list or sample schema",
+        "license/storage blocker record"
+      ],
+      "downgrade_conditions": [
+        "entitlement denied",
+        "license/storage boundary blocks local use"
+      ],
+      "applies_to": [
+        "morningstar_direct"
+      ]
+    },
+    {
+      "status": "historical_identifier_anchor",
+      "conditions": [
+        "strong identifier fields available even if freshness is insufficient",
+        "useful for Entity Master crosswalk"
+      ],
+      "evidence_required": [
+        "identifier field list",
+        "dataset/source id",
+        "license boundary note"
+      ],
+      "downgrade_conditions": [
+        "identifier cannot be stored or mapped under license"
+      ],
+      "applies_to": [
+        "licensed reference/master datasets"
+      ]
+    },
+    {
+      "status": "ready_for_trusted_candidate",
+      "conditions": [
+        "schema, cross-source, freshness, release calendar, coverage, entity mapping, and license/storage blockers closed"
+      ],
+      "evidence_required": [
+        "closure checklist",
+        "coverage/freshness/cross-source reports",
+        "usage boundary"
+      ],
+      "downgrade_conditions": [
+        "publish_date/release calendar unavailable for as-of use",
+        "official benchmark missing",
+        "license/storage unresolved"
+      ]
+    },
+    {
+      "status": "trusted_candidate",
+      "conditions": [
+        "ready_for_trusted evidence complete",
+        "formal trusted consumption still unchanged"
+      ],
+      "evidence_required": [
+        "audit-ready evidence bundle",
+        "QA passed"
+      ],
+      "downgrade_conditions": [
+        "quality regression",
+        "license conflict",
+        "source regression"
+      ]
+    },
+    {
+      "status": "blocked",
+      "conditions": [
+        "requires user action, entitlement, official benchmark, or safe source clarity"
+      ],
+      "evidence_required": [
+        "blocker reason",
+        "next action"
+      ],
+      "downgrade_conditions": []
+    }
+  ],
+  "morningstar_source_treatment": {
+    "platform_type": "licensed_institutional_data_platform",
+    "not_public_free_source": true,
+    "platform_not_blanket_trusted": true,
+    "eligible_intermediate_statuses": [
+      "licensed_high_confidence_candidate",
+      "historical_identifier_anchor"
+    ],
+    "trusted_candidate_requires": [
+      "coverage",
+      "freshness",
+      "field completeness",
+      "license/storage boundary",
+      "entity crosswalk",
+      "QA"
+    ]
+  },
+  "formal_trusted_consumption_unchanged": true
+}
