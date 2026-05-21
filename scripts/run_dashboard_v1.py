@@ -960,6 +960,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Latest Ingestion Runs",
         "Data Trust Pipeline",
         "Official On-hold Sources",
+        "Automated Ingestion v2",
+        "Entity Resolution v2",
+        "Cross-source Validation v2",
+        "Scheduled Run Simulation",
+        "Candidate Status Upgrade",
         "line",
         "bar",
         "pie",
@@ -1647,6 +1652,11 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const schedule = AUTOMATED.schedule || {{}};
       const trust = AUTOMATED.data_trust_pipeline || {{}};
       const runs = AUTOMATED.latest_ingestion_runs || [];
+      const v2 = AUTOMATED.v2_operational_fill || {{}};
+      const resolution = v2.entity_resolution || {{}};
+      const validation = v2.cross_source_validation || {{}};
+      const sim = v2.scheduled_run_simulation || {{}};
+      const progression = v2.trust_progression || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1654,6 +1664,14 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           <div><p>Unresolved Entity Queue</p><div class="metric">${{entity.unresolved_entity_count || 0}}</div><span class="tag warn">duplicate risk: ${{entity.duplicate_risk_count || 0}}</span></div>
           <div><p>Ingestion Schedule</p><div class="metric">${{schedule.enabled_count || 0}}</div><span class="tag warn">blocked: ${{schedule.blocked_count || 0}}</span></div>
         </div>
+        <hr>
+        <h4>Automated Ingestion v2</h4>
+        <div class="grid cols-3">
+          <div><p>Entity Resolution v2</p><div class="metric">${{resolution.unresolved_before ?? 'na'}} → ${{resolution.unresolved_after ?? 'na'}}</div><span class="tag">crosswalk +${{resolution.crosswalk_increment || 0}}</span></div>
+          <div><p>Cross-source Validation v2</p><div class="metric">${{(validation.a_share || {{}}).status || 'pending'}}</div><span class="tag">A-share / rates / commodity</span></div>
+          <div><p>Scheduled Run Simulation</p><div class="metric">${{sim.executed_count || 0}}</div><span class="tag warn">deferred/on-hold ${{sim.deferred_or_on_hold_count || 0}}</span></div>
+        </div>
+        <p><strong>Candidate Status Upgrade</strong>: schema_validated ${{progression.schema_validated || 0}} · cross_validated ${{progression.cross_validated || 0}} · freshness_validated ${{progression.freshness_validated || 0}} · ready_for_trusted ${{progression.ready_for_trusted || 0}} · trusted_candidate ${{progression.trusted_candidate || 0}}</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>
