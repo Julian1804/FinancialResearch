@@ -97,7 +97,7 @@ def run_dashboard_v1() -> dict[str, Any]:
 
 
 def ensure_dirs() -> None:
-    for path in [CONFIG_ROOT, RUNTIME_ROOT, SNAPSHOT_ROOT, REPORT_ROOT, UPLOAD_ROOT, ACCEPTANCE_ROOT, FRONTEND_ROOT]:
+    for path in [CONFIG_ROOT, RUNTIME_ROOT, SNAPSHOT_ROOT, REPORT_ROOT, UPLOAD_ROOT, ACCEPTANCE_ROOT, FRONTEND_ROOT, RUNTIME_ROOT / "dashboard_v1_frontend", RUNTIME_ROOT / "docs"]:
         path.mkdir(parents=True, exist_ok=True)
 
 
@@ -193,9 +193,6 @@ def ensure_dashboard_configs() -> dict[str, Any]:
             ],
         },
     }
-    write_json(CONFIG_ROOT / "data_taxonomy.json", data_taxonomy)
-    write_json(CONFIG_ROOT / "time_semantics.json", time_semantics)
-    write_json(CONFIG_ROOT / "research_object_types.json", research_object_types)
     return {
         "data_taxonomy_path": str(CONFIG_ROOT / "data_taxonomy.json"),
         "time_semantics_path": str(CONFIG_ROOT / "time_semantics.json"),
@@ -903,13 +900,14 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
     }
-    write_json(FRONTEND_ROOT / "dashboard_v1_sample_data.json", ui_data)
+    frontend_runtime = RUNTIME_ROOT / "dashboard_v1_frontend"
+    write_json(frontend_runtime / "dashboard_v1_sample_data.json", ui_data)
     html_text = render_dashboard_html(ui_data)
-    (FRONTEND_ROOT / "index.html").write_text(html_text, encoding="utf-8")
-    (FRONTEND_ROOT / "README.md").write_text(render_frontend_readme(), encoding="utf-8")
+    (frontend_runtime / "index.html").write_text(html_text, encoding="utf-8")
+    (frontend_runtime / "README.md").write_text(render_frontend_readme(), encoding="utf-8")
     return {
-        "frontend_entry": str(FRONTEND_ROOT / "index.html"),
-        "sample_data_path": str(FRONTEND_ROOT / "dashboard_v1_sample_data.json"),
+        "frontend_entry": str(frontend_runtime / "index.html"),
+        "sample_data_path": str(frontend_runtime / "dashboard_v1_sample_data.json"),
         "start_command": f"cd {PROJECT_ROOT}; D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188",
         "url": "http://127.0.0.1:5188/",
         "legacy_streamlit_used": False,
@@ -1045,16 +1043,17 @@ def write_docs(
     upload_stub: dict[str, Any],
     smoke: dict[str, Any],
 ) -> dict[str, str]:
+    runtime_docs = RUNTIME_ROOT / "docs"
     docs = {
-        DOC_IA: render_ia_doc(config_summary, smoke),
-        DOC_TIME: render_time_doc(config_summary, snapshot),
-        DOC_REPORT: render_dashboard_report_doc(snapshot, statistical_report, smoke),
-        DOC_SNAPSHOT: render_snapshot_doc(snapshot),
-        DOC_STAT_REPORT: render_stat_report_doc(statistical_report),
-        DOC_UPLOAD: render_upload_doc(upload_stub),
-        DOC_CHATGPT: render_chatgpt_doc(),
-        DOC_STREAMLIT: render_streamlit_doc(),
-        DOC_UX_REFINEMENT: render_ux_refinement_doc(),
+        runtime_docs / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md": render_ia_doc(config_summary, smoke),
+        runtime_docs / "DATA_TAXONOMY_AND_TIME_SEMANTICS.md": render_time_doc(config_summary, snapshot),
+        runtime_docs / "FR_DASHBOARD_V1_REPORT.md": render_dashboard_report_doc(snapshot, statistical_report, smoke),
+        runtime_docs / "AS_OF_SNAPSHOT_ENGINE_V1.md": render_snapshot_doc(snapshot),
+        runtime_docs / "STATISTICAL_REPORT_GENERATOR_V1.md": render_stat_report_doc(statistical_report),
+        runtime_docs / "REPORT_UPLOAD_DASHBOARD_CLASSIFICATION.md": render_upload_doc(upload_stub),
+        runtime_docs / "CHATGPT_WEB_WORKFLOW_FEASIBILITY.md": render_chatgpt_doc(),
+        runtime_docs / "LEGACY_STREAMLIT_ARCHIVE_NOTE.md": render_streamlit_doc(),
+        runtime_docs / "FR_DASHBOARD_V1_UX_REFINEMENT_REPORT.md": render_ux_refinement_doc(),
     }
     for path, text in docs.items():
         path.write_text(text, encoding="utf-8")

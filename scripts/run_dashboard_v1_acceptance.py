@@ -407,15 +407,16 @@ def write_acceptance_docs(
     upload_smoke: dict[str, Any],
     ui_smoke: dict[str, Any],
 ) -> dict[str, str]:
-    DOC_ACCEPTANCE.write_text(render_acceptance_checklist(), encoding="utf-8")
-    DOC_DYNAMIC.write_text(render_dynamic_report(audit, e2e_600519, e2e_custom, upload_smoke, ui_smoke), encoding="utf-8")
-    DOC_REPORT.write_text(render_dashboard_report_update(e2e_600519, e2e_custom, upload_smoke, ui_smoke), encoding="utf-8")
-    DOC_CHATGPT.write_text(render_chatgpt_update(), encoding="utf-8")
+    runtime_docs = RUNTIME_ROOT / "docs"
+    (runtime_docs / "FR_DASHBOARD_V1_ACCEPTANCE_CHECKLIST.md").write_text(render_acceptance_checklist(), encoding="utf-8")
+    (runtime_docs / "FR_DASHBOARD_V1_DYNAMIC_INTEGRATION_REPORT.md").write_text(render_dynamic_report(audit, e2e_600519, e2e_custom, upload_smoke, ui_smoke), encoding="utf-8")
+    (runtime_docs / "FR_DASHBOARD_V1_REPORT.md").write_text(render_dashboard_report_update(e2e_600519, e2e_custom, upload_smoke, ui_smoke), encoding="utf-8")
+    (runtime_docs / "CHATGPT_WEB_WORKFLOW_FEASIBILITY.md").write_text(render_chatgpt_update(), encoding="utf-8")
     return {
-        "acceptance_checklist": str(DOC_ACCEPTANCE),
-        "dynamic_integration_report": str(DOC_DYNAMIC),
-        "dashboard_report": str(DOC_REPORT),
-        "chatgpt_workflow_feasibility": str(DOC_CHATGPT),
+        "acceptance_checklist": str(runtime_docs / "FR_DASHBOARD_V1_ACCEPTANCE_CHECKLIST.md"),
+        "dynamic_integration_report": str(runtime_docs / "FR_DASHBOARD_V1_DYNAMIC_INTEGRATION_REPORT.md"),
+        "dashboard_report": str(runtime_docs / "FR_DASHBOARD_V1_REPORT.md"),
+        "chatgpt_workflow_feasibility": str(runtime_docs / "CHATGPT_WEB_WORKFLOW_FEASIBILITY.md"),
     }
 
 

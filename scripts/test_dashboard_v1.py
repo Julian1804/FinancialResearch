@@ -195,7 +195,8 @@ def test_ui_smoke_markers_and_http_serving() -> None:
     assert smoke["old_ui_false_positive_guard"] is True
     assert not smoke["missing_new_ui_markers"]
 
-    handler = partial(SimpleHTTPRequestHandler, directory=str(FRONTEND_ROOT))
+    frontend_dir = RUNTIME_ROOT / "dashboard_v1_frontend" if (RUNTIME_ROOT / "dashboard_v1_frontend" / "index.html").exists() else FRONTEND_ROOT
+    handler = partial(SimpleHTTPRequestHandler, directory=str(frontend_dir))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()

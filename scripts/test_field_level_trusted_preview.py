@@ -10,6 +10,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_ROOT = PROJECT_ROOT / "runtime" / "field_level_trusted_preview"
 DASHBOARD_ROOT = PROJECT_ROOT / "frontend_web" / "src" / "dashboard_v1"
+RUNTIME_DASHBOARD_ROOT = PROJECT_ROOT / "runtime" / "dashboard_v1" / "dashboard_v1_frontend"
 
 
 def main() -> None:
@@ -19,8 +20,9 @@ def main() -> None:
     packet_input = read_json(RUNTIME_ROOT / "analysis_packet_trusted_preview_input.json")
     statistical_input = read_json(RUNTIME_ROOT / "statistical_report_trusted_preview_input.json")
     dashboard_summary = read_json(RUNTIME_ROOT / "dashboard_field_trust_summary.json")
-    dashboard_data = read_json(DASHBOARD_ROOT / "dashboard_v1_sample_data.json")
-    html = (DASHBOARD_ROOT / "index.html").read_text(encoding="utf-8")
+    dashboard_dir = RUNTIME_DASHBOARD_ROOT if (RUNTIME_DASHBOARD_ROOT / "index.html").exists() else DASHBOARD_ROOT
+    dashboard_data = read_json(dashboard_dir / "dashboard_v1_sample_data.json")
+    html = (dashboard_dir / "index.html").read_text(encoding="utf-8")
     packet_600519 = read_json(PROJECT_ROOT / "runtime" / "analysis_packet_builder_v2" / "600519" / "analysis_packet.json")
     latest_report_manifest = read_json(PROJECT_ROOT / "runtime" / "dashboard_v1" / "statistical_reports" / "latest_statistical_report_manifest.json")
     report_json = read_json(Path(latest_report_manifest["paths"]["statistical_report_json"]))
