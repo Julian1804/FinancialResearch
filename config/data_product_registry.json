@@ -1,6 +1,5 @@
 {
   "version": "data_product_registry_v1",
-  "generated_at": "2026-05-21T11:23:47Z",
   "registry_id": "fr_data_product_registry_v1",
   "data_products": [
     {
@@ -34,15 +33,11 @@
       "formal_trusted_consumption_enabled": false,
       "status": "active_preview_only",
       "qa_status": "passed",
-      "last_refresh_time": "2026-05-21T11:23:47Z",
-      "version_count": 8,
-      "latest_version_id": "v20260521_112347",
       "registered_at": "2026-05-21T11:05:00Z",
-      "registry_notes": [
-        "This data product is registered as a controlled refresh target.",
-        "Each refresh appends a new version; old versions are preserved.",
-        "Limited fields remain blocked from trusted preview.",
-        "Formal trusted consumption is OFF.",
+      "limitations": [
+        "Only OHLC fields are consumable as trusted_candidate preview.",
+        "amount, turnover_rate, pct_change, preclose are limited fields blocked from trusted preview.",
+        "Formal trusted consumption is NOT enabled.",
         "Refresh does not trigger OpenAI API calls."
       ]
     }
