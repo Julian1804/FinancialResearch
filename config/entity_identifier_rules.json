@@ -1,6 +1,6 @@
 {
-  "version": "entity_identifier_rules_v1",
-  "generated_at": "2026-05-21T04:25:06Z",
+  "version": "entity_identifier_rules_v2_institutional_policy",
+  "generated_at": "2026-05-21T07:18:45Z",
   "matching_rules": [
     {
       "entity_type": "equity",
@@ -56,6 +56,26 @@
     "Do not merge same ticker across different exchanges without ISIN or official identifier confirmation.",
     "Do not merge commodity benchmark, spot, and futures instruments.",
     "Do not auto-merge fuzzy fund names.",
-    "Unmapped identifiers enter unresolved_entity_queue."
-  ]
+    "Unmapped identifiers enter unresolved_entity_queue.",
+    "Institutional identifier anchors can update crosswalk when exact source identifiers are present."
+  ],
+  "institutional_identifier_anchor_policy": {
+    "allowed_anchor_sources": [
+      "morningstar_direct",
+      "wind_terminal",
+      "authorized_exchange_data"
+    ],
+    "priority_fields": [
+      "morningstar_sec_id",
+      "isin",
+      "ticker",
+      "exchange",
+      "currency",
+      "region",
+      "fund_code",
+      "sec_cik"
+    ],
+    "freshness_limitation_not_disqualifying_for_identifier_anchor": true,
+    "fuzzy_match_remains_review_only": true
+  }
 }

@@ -1,6 +1,6 @@
 {
-  "version": "candidate_promotion_rules_v1",
-  "generated_at": "2026-05-21T05:44:22Z",
+  "version": "candidate_promotion_rules_v2_institutional_policy",
+  "generated_at": "2026-05-21T07:18:45Z",
   "states": [
     {
       "status": "candidate",
@@ -127,7 +127,136 @@
         "next action"
       ],
       "downgrade_conditions": []
+    },
+    {
+      "status": "institutional_high_confidence_candidate",
+      "conditions": [
+        "institutional database QA passes schema/date/unit/entity checks; coverage limitations are labeled rather than treated as source failure"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "licensed_high_confidence_candidate",
+      "conditions": [
+        "licensed institutional source is entitlement-visible and safely handled; license/storage boundary remains explicit"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "production_candidate",
+      "conditions": [
+        "automated low-frequency pipeline can backfill/increment and store as candidate/staging after QA"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "coverage_limited_but_usable",
+      "conditions": [
+        "coverage does not reach full universe but is usable for labeled subset analysis"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "freshness_limited_but_usable",
+      "conditions": [
+        "freshness is limited but historical/entity-anchor use remains valid"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "media_event_candidate",
+      "conditions": [
+        "media or news item candidate only for events/sentiment/clues"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "needs_cross_source_fact_check",
+      "conditions": [
+        "ordinary media/community fact requires cross-source validation"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
+    },
+    {
+      "status": "anomaly_flagged_candidate",
+      "conditions": [
+        "format/logic QA mostly passes but anomaly flags require review"
+      ],
+      "evidence_required": [
+        "automated QA result",
+        "source type",
+        "candidate status reason"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "license/storage boundary blocks use",
+        "source misclassified"
+      ]
     }
   ],
-  "formal_trusted_consumption_unchanged": true
+  "formal_trusted_consumption_unchanged": true,
+  "institutional_policy_note": "Institutional databases do not need ordinary-media-style fact-by-fact skepticism before candidate storage; QA focuses on automated format/logic/anomaly checks and license/storage/entity boundaries."
 }

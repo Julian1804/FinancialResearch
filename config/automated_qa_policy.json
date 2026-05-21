@@ -1,0 +1,27 @@
+{
+  "version": "automated_qa_policy_v1",
+  "generated_at": "2026-05-21T07:18:45Z",
+  "scope": "raw -> normalized -> entity mapping -> automated QA -> anomaly flag -> candidate status -> dashboard summary",
+  "checks": [
+    "required_fields_present",
+    "date_parseable",
+    "numeric_fields_parseable",
+    "unit_currency_present_or_warning",
+    "duplicate_entity_date_source",
+    "non_negative_price_volume_aum_nav",
+    "ohlc_rule_check",
+    "pct_change_reasonable_range",
+    "source_identifier_present",
+    "entity_mapping_attempted",
+    "revision_vintage_or_retrieval_snapshot_present",
+    "license_storage_boundary_classified"
+  ],
+  "status_policy": {
+    "quality_passed": "no failed checks and no material warning",
+    "quality_warning": "non-blocking missing fields or limited release/freshness/license details",
+    "anomaly_flagged_candidate": "value retained with anomaly/review flag",
+    "quality_failed": "required schema or core value/date checks fail"
+  },
+  "anomaly_retention_policy": "Keep raw and normalized value with anomaly_flag/review_flag; do not silently delete.",
+  "formal_trusted_consumption_unchanged": true
+}

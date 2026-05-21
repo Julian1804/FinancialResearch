@@ -1,6 +1,6 @@
 {
-  "version": "automated_source_strategy_v1",
-  "generated_at": "2026-05-21T04:25:06Z",
+  "version": "automated_source_strategy_v2_institutional_policy",
+  "generated_at": "2026-05-21T07:18:45Z",
   "principles": [
     "Automation is the long-term mainline; manual import is validation fallback only.",
     "Official automated sources are preferred when stable and compliant.",
@@ -10,7 +10,7 @@
   "sources": [
     {
       "source_id": "fred",
-      "source_type": "official_automated",
+      "source_type": "official_source",
       "domains_supported": [
         "macro",
         "rates_bond",
@@ -30,7 +30,7 @@
     },
     {
       "source_id": "us_treasury_fiscaldata",
-      "source_type": "official_automated",
+      "source_type": "official_source",
       "domains_supported": [
         "rates_bond",
         "fiscal"
@@ -48,7 +48,7 @@
     },
     {
       "source_id": "world_bank_pink_sheet",
-      "source_type": "official_automated",
+      "source_type": "official_source",
       "domains_supported": [
         "commodity",
         "asset_class"
@@ -66,7 +66,7 @@
     },
     {
       "source_id": "nasdaq_trader_symbol_directory",
-      "source_type": "official_automated",
+      "source_type": "official_source",
       "domains_supported": [
         "fund_etf",
         "equity"
@@ -84,7 +84,7 @@
     },
     {
       "source_id": "amac_aggregate_pdf",
-      "source_type": "official_automated",
+      "source_type": "official_source",
       "domains_supported": [
         "fund_etf"
       ],
@@ -153,7 +153,7 @@
     },
     {
       "source_id": "baostock",
-      "source_type": "open_source_api_wrapper_candidate",
+      "source_type": "open_source_api_wrapper",
       "domains_supported": [
         "market_daily",
         "fund_etf"
@@ -164,14 +164,14 @@
       "rate_limit_policy": "low_frequency",
       "blocker": null,
       "fallback_source": "AKShare Tencent",
-      "trust_role": "candidate_external_data",
+      "trust_role": "production_candidate_after_QA_and_cross_source_validation",
       "next_action": "operational fallback",
       "candidate_only": true,
       "formal_trusted_consumption": false
     },
     {
       "source_id": "akshare_tencent",
-      "source_type": "open_source_api_wrapper_candidate",
+      "source_type": "open_source_api_wrapper",
       "domains_supported": [
         "market_daily",
         "index",
@@ -183,14 +183,14 @@
       "rate_limit_policy": "low_frequency",
       "blocker": null,
       "fallback_source": "Baostock",
-      "trust_role": "candidate_external_data",
+      "trust_role": "production_candidate_after_QA_and_cross_source_validation",
       "next_action": "controlled incremental",
       "candidate_only": true,
       "formal_trusted_consumption": false
     },
     {
       "source_id": "akshare_eastmoney",
-      "source_type": "open_source_api_wrapper_candidate",
+      "source_type": "open_source_api_wrapper",
       "domains_supported": [
         "market_daily",
         "fund_etf"
@@ -208,28 +208,29 @@
     },
     {
       "source_id": "morningstar_direct",
-      "source_type": "licensed_authorized_source",
+      "source_type": "licensed_institutional_source",
       "domains_supported": [
         "fund_etf",
         "holdings",
         "equity",
         "index",
-        "performance"
+        "performance",
+        "entity_master"
       ],
       "access_method": "manual token + morningstar_data",
-      "automation_status": "controlled_candidate",
+      "automation_status": "controlled_production_candidate",
       "update_frequency": "daily/weekly/monthly by dataset",
       "rate_limit_policy": "manual_token_low_frequency",
-      "blocker": "license/storage/coverage/freshness boundaries not cleared",
+      "blocker": "license/storage boundary and dataset-specific coverage/freshness still need review before trusted_candidate",
       "fallback_source": "official universe + SEC/exchange",
-      "trust_role": "licensed_source_candidate",
-      "next_action": "controlled pilot with token",
+      "trust_role": "licensed_high_confidence_candidate",
+      "next_action": "controlled candidate backfill for high-value identifier and fund/ETF datasets when token and entitlement allow",
       "candidate_only": true,
       "formal_trusted_consumption": false
     },
     {
       "source_id": "eastmoney_public",
-      "source_type": "authoritative_third_party_candidate",
+      "source_type": "authoritative_third_party",
       "domains_supported": [
         "market_daily",
         "fund_etf"
@@ -240,19 +241,94 @@
       "rate_limit_policy": "do_not_force",
       "blocker": "remote disconnect/TLS instability and terms risk",
       "fallback_source": "Baostock / AKShare Tencent",
-      "trust_role": "candidate_external_data",
+      "trust_role": "candidate_only_until_endpoint_and_terms_stable",
       "next_action": "deferred",
+      "candidate_only": true,
+      "formal_trusted_consumption": false
+    },
+    {
+      "source_id": "wind_terminal",
+      "source_type": "licensed_institutional_source",
+      "domains_supported": [
+        "macro",
+        "equity",
+        "fund_etf",
+        "rates_bond",
+        "fx_currency",
+        "commodity"
+      ],
+      "access_method": "licensed terminal/API",
+      "automation_status": "needs_license",
+      "update_frequency": "dataset_specific",
+      "rate_limit_policy": "not_configured",
+      "blocker": "no current Wind license/API configured",
+      "fallback_source": "official/FRED/Treasury/Morningstar/AKShare candidates",
+      "trust_role": "licensed_high_confidence_candidate_after_entitlement",
+      "next_action": "user license/API confirmation",
+      "candidate_only": true,
+      "formal_trusted_consumption": false
+    },
+    {
+      "source_id": "eastmoney_institutional_database",
+      "source_type": "institutional_database",
+      "domains_supported": [
+        "equity",
+        "fund_etf",
+        "market_daily",
+        "capital_flow"
+      ],
+      "access_method": "authorized platform or stable public wrapper where allowed",
+      "automation_status": "candidate_when_endpoint_stable",
+      "update_frequency": "daily",
+      "rate_limit_policy": "low_frequency_no_captcha_bypass",
+      "blocker": "public Eastmoney push2his unstable; authorized boundary not configured",
+      "fallback_source": "AKShare Tencent / Baostock / Morningstar",
+      "trust_role": "institutional_high_confidence_candidate_after_endpoint_validation",
+      "next_action": "use only verified stable endpoints or authorized access",
+      "candidate_only": true,
+      "formal_trusted_consumption": false
+    },
+    {
+      "source_id": "tonghuashun_institutional_database",
+      "source_type": "institutional_database",
+      "domains_supported": [
+        "equity",
+        "fund_etf",
+        "market_daily",
+        "capital_flow"
+      ],
+      "access_method": "authorized platform or legal API/wrapper where allowed",
+      "automation_status": "needs_license_or_endpoint_review",
+      "update_frequency": "daily",
+      "rate_limit_policy": "low_frequency_no_captcha_bypass",
+      "blocker": "no current authorized API configured",
+      "fallback_source": "official/Morningstar/AKShare candidates",
+      "trust_role": "institutional_high_confidence_candidate_after_endpoint_validation",
+      "next_action": "source-specific feasibility and license review",
       "candidate_only": true,
       "formal_trusted_consumption": false
     }
   ],
   "status_counts": {
     "enabled": 3,
-    "controlled_candidate": 2,
+    "controlled_candidate": 1,
     "aggregate_only": 1,
     "on_hold": 2,
     "deferred_retry_needs_key_or_later_retry": 1,
     "enabled_candidate": 2,
-    "deferred": 2
-  }
+    "deferred": 2,
+    "controlled_production_candidate": 1,
+    "needs_license": 1,
+    "candidate_when_endpoint_stable": 1,
+    "needs_license_or_endpoint_review": 1
+  },
+  "source_type_taxonomy": [
+    "institutional_database",
+    "official_source",
+    "licensed_institutional_source",
+    "open_source_api_wrapper",
+    "authoritative_third_party",
+    "media_or_news_source",
+    "community_or_unverified_source"
+  ]
 }

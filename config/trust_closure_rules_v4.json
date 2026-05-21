@@ -1,6 +1,6 @@
 {
-  "version": "trust_closure_rules_v4",
-  "generated_at": "2026-05-21T06:03:20Z",
+  "version": "trust_closure_rules_v5_institutional_policy",
+  "generated_at": "2026-05-21T07:18:45Z",
   "states": [
     {
       "status": "candidate",
@@ -166,6 +166,125 @@
         "next action"
       ],
       "downgrade_conditions": []
+    },
+    {
+      "status": "institutional_high_confidence_candidate",
+      "conditions": [
+        "Institutional database source with QA-passing schema/logic and clear source identifiers; coverage/freshness/license may still be limited."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "production_candidate",
+      "conditions": [
+        "Automated pipeline can store and update data as candidate/staging evidence after QA; not formal trusted consumption."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "coverage_limited_but_usable",
+      "conditions": [
+        "Dataset may not cover all entities, but observed coverage is still usable and should be labeled."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "freshness_limited_but_usable",
+      "conditions": [
+        "Dataset has useful historical or identifier value even if latest updates lag or freshness cadence is limited."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "media_event_candidate",
+      "conditions": [
+        "Media/news event or sentiment item, never an institutional data fact by itself."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "needs_cross_source_fact_check",
+      "conditions": [
+        "Ordinary media/community source fact needs validation before research factual use."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
+    },
+    {
+      "status": "anomaly_flagged_candidate",
+      "conditions": [
+        "Data kept with anomaly flags and review notes."
+      ],
+      "evidence_required": [
+        "source classification",
+        "automated QA",
+        "license/storage note",
+        "entity mapping where applicable"
+      ],
+      "downgrade_conditions": [
+        "QA failed",
+        "source role invalid",
+        "blocked license/storage boundary"
+      ]
     }
   ],
   "morningstar_source_treatment": {
@@ -185,5 +304,65 @@
       "QA"
     ]
   },
-  "formal_trusted_consumption_unchanged": true
+  "formal_trusted_consumption_unchanged": true,
+  "institutional_source_treatment": {
+    "version": "institutional_data_source_trust_policy_v1",
+    "generated_at": "2026-05-21T07:18:45Z",
+    "source_type_taxonomy": [
+      "institutional_database",
+      "official_source",
+      "licensed_institutional_source",
+      "open_source_api_wrapper",
+      "authoritative_third_party",
+      "media_or_news_source",
+      "community_or_unverified_source"
+    ],
+    "principles": [
+      "Institutional financial databases are not treated like ordinary media or web pages.",
+      "Institutional database QA emphasizes schema, dates, units, entity identifiers, logic checks, anomaly flags, license/storage boundary, coverage and freshness.",
+      "Coverage limitations are normal and do not make an institutional database untrusted as a platform.",
+      "Media/news/community sources can provide event, sentiment, or clue candidates, but key facts require cross-source fact checks.",
+      "Anomalies are retained with flags rather than silently deleted.",
+      "Formal trusted consumption remains unchanged until a separate production switch exists."
+    ],
+    "institutional_database_examples": [
+      "Morningstar Direct",
+      "Wind",
+      "Eastmoney data terminal",
+      "Tonghuashun data terminal",
+      "authorized exchange data"
+    ],
+    "media_or_news_examples": [
+      "financial media",
+      "news reports",
+      "self-media",
+      "social platforms",
+      "ordinary web pages"
+    ],
+    "candidate_state_policy": {
+      "institutional_high_confidence_candidate": "Institutional database source with QA-passing schema/logic and clear source identifiers; coverage/freshness/license may still be limited.",
+      "licensed_high_confidence_candidate": "Licensed institutional source such as Morningstar with entitlement/manual token control and no automatic login.",
+      "production_candidate": "Automated pipeline can store and update data as candidate/staging evidence after QA; not formal trusted consumption.",
+      "coverage_limited_but_usable": "Dataset may not cover all entities, but observed coverage is still usable and should be labeled.",
+      "freshness_limited_but_usable": "Dataset has useful historical or identifier value even if latest updates lag or freshness cadence is limited.",
+      "media_event_candidate": "Media/news event or sentiment item, never an institutional data fact by itself.",
+      "needs_cross_source_fact_check": "Ordinary media/community source fact needs validation before research factual use.",
+      "anomaly_flagged_candidate": "Data kept with anomaly flags and review notes."
+    },
+    "morningstar_treatment": {
+      "source_type": "licensed_institutional_source",
+      "default_status": "licensed_high_confidence_candidate",
+      "identifier_anchor_allowed": true,
+      "full_trusted_requires": [
+        "license/storage boundary",
+        "field completeness",
+        "freshness",
+        "coverage",
+        "entity crosswalk",
+        "automated QA"
+      ],
+      "not_public_free_source": true
+    },
+    "formal_trusted_consumption_unchanged": true
+  }
 }

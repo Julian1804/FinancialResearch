@@ -978,6 +978,12 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Publish Date Policy",
         "Ready for Trusted Candidate",
         "Licensed High Confidence Candidate",
+        "Institutional Data Source Trust Policy",
+        "Automated QA Pipeline",
+        "Production Candidate Backfill",
+        "Institutional High Confidence Candidate",
+        "Media Event Candidate",
+        "Anomaly Flagged Candidate",
         "line",
         "bar",
         "pie",
@@ -1683,6 +1689,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const v4Freshness = v4.macro_rates_fx_commodity_freshness || {{}};
       const v4Morningstar = v4.morningstar_field_depth || {{}};
       const v4Entity = v4.entity_unresolved || {{}};
+      const institutional = AUTOMATED.institutional_trust_qa_pipeline || {{}};
+      const institutionalQA = institutional.qa_summary || {{}};
+      const institutionalCandidates = institutional.candidate_status_summary || {{}};
+      const institutionalEntity = institutional.entity_crosswalk_update || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1718,6 +1728,15 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         <p><strong>Ready for Trusted Candidate</strong>: ${{v4Trust.ready_for_trusted_candidate_count || 0}} · trusted_candidate ${{v4Trust.trusted_candidate_count || 0}} · blocked lines ${{(v4Trust.blocked_lines || []).length || 0}}</p>
         <p><strong>Macro/Rates/FX/Commodity Freshness</strong>: datasets ${{v4Freshness.datasets_checked || 0}} · freshness_validated ${{v4Freshness.freshness_validated_count || 0}} · schema_validated ${{v4Freshness.schema_validated_count || 0}}</p>
         <p><strong>Entity Master Correctness</strong>: unresolved ${{v4Entity.unresolved_before ?? 'na'}} → ${{v4Entity.unresolved_after ?? 'na'}} · fuzzy rejected ${{v4Entity.rejected_fuzzy_match_count || 0}}</p>
+        <hr>
+        <h4>Institutional Data Source Trust Policy · Automated QA Pipeline</h4>
+        <div class="grid cols-3">
+          <div><p>Production Candidate Backfill</p><div class="metric">${{institutionalQA.records_checked || 0}}</div><span class="tag">QA records checked</span></div>
+          <div><p>Institutional High Confidence Candidate</p><div class="metric">${{institutionalCandidates.licensed_high_confidence_candidate || institutionalCandidates.institutional_high_confidence_candidate || 0}}</div><span class="tag">Morningstar / licensed source path</span></div>
+          <div><p>Anomaly Flagged Candidate</p><div class="metric">${{institutionalQA.anomaly_flag_count || 0}}</div><span class="tag warn">review flags retained</span></div>
+        </div>
+        <p><strong>Media Event Candidate</strong>: media/news/community sources are separated from institutional databases and require cross-source fact checks for key facts.</p>
+        <p><strong>Entity Crosswalk QA</strong>: crosswalk +${{institutionalEntity.crosswalk_increment || 0}} · unresolved ${{institutionalEntity.unresolved_count || 0}} · fuzzy auto-merge ${{institutionalEntity.fuzzy_auto_merge_count || 0}}</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>
