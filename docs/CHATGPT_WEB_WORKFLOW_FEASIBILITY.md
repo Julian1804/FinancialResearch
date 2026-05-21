@@ -1,6 +1,6 @@
 # ChatGPT Web Workflow Feasibility
 
-Generated: 2026-05-20T08:16:05Z
+Generated: 2026-05-21T10:28:19Z
 
 Dashboard v1 keeps the semi-embedded human-in-the-loop workflow:
 

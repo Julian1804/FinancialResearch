@@ -1,6 +1,6 @@
 # Report Upload Dashboard Classification
 
-Generated: 2026-05-20T08:16:04Z
+Generated: 2026-05-21T10:28:19Z
 
 Report Upload v1 parses a pasted Markdown report containing `FINAL_REPORT_JSON`, validates the
 minimum schema, preserves raw text, and classifies output into:

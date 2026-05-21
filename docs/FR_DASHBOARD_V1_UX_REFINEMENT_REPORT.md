@@ -1,6 +1,6 @@
 # FR Dashboard v1 UX Refinement Report
 
-Generated: 2026-05-20T08:16:04Z
+Generated: 2026-05-21T10:28:19Z
 
 Dashboard v1 has been refined from a form-first engineering prototype into a darker financial
 research workspace:

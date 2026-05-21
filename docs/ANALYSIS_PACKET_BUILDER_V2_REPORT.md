@@ -1,6 +1,6 @@
 # Analysis Packet Builder v2 Report
 
-Generated: 2026-05-19T13:46:54Z
+Generated: 2026-05-21T10:27:15Z
 
 ## Result
 
@@ -20,13 +20,13 @@ Generated: 2026-05-19T13:46:54Z
 ```json
 [
   {
-    "packet_id": "packet_554b196c683dca80",
-    "data_snapshot_id": "snapshot_dc8a920ca2a06b8d",
+    "packet_id": "packet_12b20fdf57b82635",
+    "data_snapshot_id": "snapshot_db9d302d474c4acf",
     "target_symbol": "600519",
     "market": "A_SHARE",
-    "as_of_date": "2026-05-19",
+    "as_of_date": "2026-05-21",
     "analysis_scope": "daily_update",
-    "created_at": "2026-05-19T13:46:54Z",
+    "created_at": "2026-05-21T10:27:15Z",
     "paths": {
       "analysis_packet_json": "D:\\workspace\\FinancialResearch\\runtime\\analysis_packet_builder_v2\\600519\\analysis_packet.json",
       "analysis_packet_md": "D:\\workspace\\FinancialResearch\\runtime\\analysis_packet_builder_v2\\600519\\analysis_packet.md",
@@ -35,19 +35,19 @@ Generated: 2026-05-19T13:46:54Z
     },
     "source_counts": {
       "source_layers": 11,
-      "insufficient_evidence": 3
+      "insufficient_evidence": 2
     },
     "no_openai_api_called": true,
     "formal_trusted_consumption": false
   },
   {
-    "packet_id": "packet_037d933cc0a51671",
-    "data_snapshot_id": "snapshot_32b10f87daaca8fb",
+    "packet_id": "packet_21cfe43832b723d4",
+    "data_snapshot_id": "snapshot_517f0c545b686dba",
     "target_symbol": "000001",
     "market": "A_SHARE",
-    "as_of_date": "2026-05-19",
+    "as_of_date": "2026-05-21",
     "analysis_scope": "daily_update",
-    "created_at": "2026-05-19T13:46:54Z",
+    "created_at": "2026-05-21T10:27:15Z",
     "paths": {
       "analysis_packet_json": "D:\\workspace\\FinancialResearch\\runtime\\analysis_packet_builder_v2\\000001\\analysis_packet.json",
       "analysis_packet_md": "D:\\workspace\\FinancialResearch\\runtime\\analysis_packet_builder_v2\\000001\\analysis_packet.md",
@@ -56,7 +56,7 @@ Generated: 2026-05-19T13:46:54Z
     },
     "source_counts": {
       "source_layers": 11,
-      "insufficient_evidence": 2
+      "insufficient_evidence": 1
     },
     "no_openai_api_called": true,
     "formal_trusted_consumption": false

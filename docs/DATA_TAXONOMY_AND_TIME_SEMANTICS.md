@@ -1,6 +1,6 @@
 # Data Taxonomy and Time Semantics
 
-Generated: 2026-05-20T08:16:04Z
+Generated: 2026-05-21T10:28:19Z
 
 Default time mode is `publish_date`; `as_of_check_enabled` defaults to true.
 
