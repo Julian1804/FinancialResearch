@@ -984,6 +984,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Institutional High Confidence Candidate",
         "Media Event Candidate",
         "Anomaly Flagged Candidate",
+        "Trust Threshold Recalibration",
+        "Institutional Proxy Source",
+        "Institutional Proxy High Confidence Candidate",
+        "AKShare Tencent Trusted Candidate",
+        "Eastmoney-backed Deferred",
         "line",
         "bar",
         "pie",
@@ -1693,6 +1698,9 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const institutionalQA = institutional.qa_summary || {{}};
       const institutionalCandidates = institutional.candidate_status_summary || {{}};
       const institutionalEntity = institutional.entity_crosswalk_update || {{}};
+      const recalibration = AUTOMATED.trust_threshold_recalibration || {{}};
+      const recalAshare = recalibration.a_share_etf || {{}};
+      const recalInterfaces = recalibration.akshare_interface_classification || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1737,6 +1745,14 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         </div>
         <p><strong>Media Event Candidate</strong>: media/news/community sources are separated from institutional databases and require cross-source fact checks for key facts.</p>
         <p><strong>Entity Crosswalk QA</strong>: crosswalk +${{institutionalEntity.crosswalk_increment || 0}} · unresolved ${{institutionalEntity.unresolved_count || 0}} · fuzzy auto-merge ${{institutionalEntity.fuzzy_auto_merge_count || 0}}</p>
+        <hr>
+        <h4>Trust Threshold Recalibration · Institutional Proxy Source</h4>
+        <div class="grid cols-3">
+          <div><p>Institutional Proxy High Confidence Candidate</p><div class="metric">${{recalibration.institutional_proxy_high_confidence_candidate ? 'yes' : 'pending'}}</div><span class="tag">interface-level provenance</span></div>
+          <div><p>AKShare Tencent Trusted Candidate</p><div class="metric">${{recalAshare.trusted_candidate_assigned ? 'yes' : 'no'}}</div><span class="tag">OHLC field scope</span></div>
+          <div><p>Eastmoney-backed Deferred</p><div class="metric">${{recalibration.eastmoney_backed_deferred_preserved ? 'yes' : 'no'}}</div><span class="tag warn">${{escapeHtml(recalInterfaces.akshare_eastmoney_stock_zh_a_hist || 'deferred')}}</span></div>
+        </div>
+        <p><strong>Trusted scope</strong>: ${{(recalAshare.trusted_candidate_scope || []).map(escapeHtml).join('; ') || 'none yet'}}. Formal trusted consumption remains off.</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>

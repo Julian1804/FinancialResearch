@@ -1,10 +1,11 @@
 {
-  "version": "institutional_data_source_trust_policy_v1",
-  "generated_at": "2026-05-21T07:18:45Z",
+  "version": "institutional_data_source_trust_policy_v2_proxy_recalibration",
+  "generated_at": "2026-05-21T07:55:35Z",
   "source_type_taxonomy": [
     "institutional_database",
     "official_source",
     "licensed_institutional_source",
+    "institutional_proxy_source",
     "open_source_api_wrapper",
     "authoritative_third_party",
     "media_or_news_source",
@@ -40,7 +41,9 @@
     "freshness_limited_but_usable": "Dataset has useful historical or identifier value even if latest updates lag or freshness cadence is limited.",
     "media_event_candidate": "Media/news event or sentiment item, never an institutional data fact by itself.",
     "needs_cross_source_fact_check": "Ordinary media/community source fact needs validation before research factual use.",
-    "anomaly_flagged_candidate": "Data kept with anomaly flags and review notes."
+    "anomaly_flagged_candidate": "Data kept with anomaly flags and review notes.",
+    "institutional_proxy_high_confidence_candidate": "Interface-level wrapper/proxy data whose upstream provenance is a mature institutional market data, exchange, or official source; requires stable endpoint, QA pass, clear entity mapping, and field-level provenance.",
+    "trusted_candidate": "For official, institutional, licensed institutional, or institutional proxy source lines, trusted_candidate can be assigned at dataset/field level when provenance is explicit, QA passes, entity mapping is clear, and logic checks pass. Coverage need not be 100%."
   },
   "morningstar_treatment": {
     "source_type": "licensed_institutional_source",
@@ -56,5 +59,26 @@
     ],
     "not_public_free_source": true
   },
-  "formal_trusted_consumption_unchanged": true
+  "formal_trusted_consumption_unchanged": true,
+  "institutional_proxy_source_policy": {
+    "not_blanket_wrapper_trust": true,
+    "trust_inherited_from_upstream": true,
+    "requires_interface_level_classification": true,
+    "can_reach_trusted_candidate_without_coverage_100_percent": true,
+    "required_evidence": [
+      "upstream_provenance",
+      "endpoint_stability",
+      "QA passed",
+      "entity mapping clear",
+      "field-level completeness or explicit field limitation",
+      "no deferred/unstable endpoint"
+    ],
+    "blocked_when": [
+      "upstream_unknown",
+      "endpoint_unstable",
+      "QA failed",
+      "entity unresolved",
+      "fields abnormal or severe warning"
+    ]
+  }
 }

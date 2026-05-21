@@ -1,6 +1,6 @@
 {
-  "version": "candidate_promotion_rules_v2_institutional_policy",
-  "generated_at": "2026-05-21T07:18:45Z",
+  "version": "candidate_promotion_rules_v3_proxy_recalibration",
+  "generated_at": "2026-05-21T07:55:35Z",
   "states": [
     {
       "status": "candidate",
@@ -103,13 +103,17 @@
     {
       "status": "trusted_candidate",
       "conditions": [
-        "ready_for_trusted evidence complete",
-        "still not formal trusted consumption"
+        "official/institutional/licensed/institutional-proxy source line has explicit provenance",
+        "QA passes and entity mapping is clear",
+        "field-level logic checks pass",
+        "coverage limitations are labeled and do not block dataset/field-level trust",
+        "formal trusted consumption remains off"
       ],
       "evidence_required": [
-        "approval-ready audit trail",
-        "QA passed",
-        "source usage boundary"
+        "source or upstream provenance",
+        "automated QA report",
+        "entity crosswalk result",
+        "field-level upgrade scope"
       ],
       "downgrade_conditions": [
         "license conflict",
@@ -255,8 +259,39 @@
         "license/storage boundary blocks use",
         "source misclassified"
       ]
+    },
+    {
+      "status": "institutional_proxy_high_confidence_candidate",
+      "conditions": [
+        "interface-level upstream provenance points to institutional/official/exchange market data",
+        "endpoint stable for controlled runs",
+        "QA and entity mapping pass",
+        "field limitations explicitly labeled"
+      ],
+      "evidence_required": [
+        "interface trust classification",
+        "QA report",
+        "entity mapping",
+        "field coverage matrix"
+      ],
+      "downgrade_conditions": [
+        "upstream provenance unknown",
+        "endpoint deferred or unstable",
+        "QA failed",
+        "severe field warning"
+      ]
     }
   ],
   "formal_trusted_consumption_unchanged": true,
-  "institutional_policy_note": "Institutional databases do not need ordinary-media-style fact-by-fact skepticism before candidate storage; QA focuses on automated format/logic/anomaly checks and license/storage/entity boundaries."
+  "institutional_policy_note": "Institutional databases do not need ordinary-media-style fact-by-fact skepticism before candidate storage; QA focuses on automated format/logic/anomaly checks and license/storage/entity boundaries.",
+  "trusted_threshold_recalibration": {
+    "coverage_100_percent_not_required": true,
+    "applies_to": [
+      "official_source",
+      "institutional_database",
+      "licensed_institutional_source",
+      "institutional_proxy_source"
+    ],
+    "formal_trusted_consumption_unchanged": true
+  }
 }

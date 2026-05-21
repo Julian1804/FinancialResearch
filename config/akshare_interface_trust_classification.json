@@ -1,0 +1,64 @@
+{
+  "version": "akshare_interface_trust_classification_v1",
+  "generated_at": "2026-05-21T07:55:35Z",
+  "principle": "AKShare is a wrapper; trust is assigned at interface level from explicit upstream provenance, not to the whole package.",
+  "interfaces": [
+    {
+      "interface_id": "akshare_tencent_daily",
+      "wrapper": "AKShare",
+      "upstream": "Tencent market data endpoint",
+      "source_type": "institutional_proxy_source",
+      "upstream_role": "mature_institutional_market_data_provider",
+      "endpoint_status": "stable_in_controlled_v4_run",
+      "qa_status": "quality_passed_for_price_fields",
+      "field_limitations": [
+        "amount_missing",
+        "turnover_rate_missing",
+        "some derived fields unavailable"
+      ],
+      "trust_status": "institutional_proxy_high_confidence_candidate",
+      "trusted_scope": "A-share/ETF OHLC price fields when cross-validated with Baostock"
+    },
+    {
+      "interface_id": "baostock_daily",
+      "wrapper": "Baostock",
+      "upstream": "Baostock A-share historical data service",
+      "source_type": "open_source_api_wrapper",
+      "upstream_role": "operational_market_data_service",
+      "endpoint_status": "stable_in_controlled_v4_run",
+      "qa_status": "quality_passed",
+      "field_limitations": [],
+      "trust_status": "production_candidate_and_cross_validation_partner",
+      "trusted_scope": "A-share/ETF OHLCV fields after cross-source validation; not a blanket official source"
+    },
+    {
+      "interface_id": "akshare_eastmoney_stock_zh_a_hist",
+      "wrapper": "AKShare",
+      "upstream": "Eastmoney push2his",
+      "source_type": "institutional_proxy_source",
+      "upstream_role": "institutional_database_public_endpoint",
+      "endpoint_status": "deferred_unstable",
+      "qa_status": "not_currently_usable",
+      "field_limitations": [
+        "TLS/upstream disconnect",
+        "empty response risk"
+      ],
+      "trust_status": "deferred",
+      "trusted_scope": "none_until_endpoint_stability_recovers"
+    },
+    {
+      "interface_id": "akshare_unknown_or_unclassified",
+      "wrapper": "AKShare",
+      "upstream": "unknown",
+      "source_type": "open_source_api_wrapper",
+      "upstream_role": "unknown",
+      "endpoint_status": "requires_interface_audit",
+      "qa_status": "not_evaluated",
+      "field_limitations": [
+        "upstream_unknown"
+      ],
+      "trust_status": "candidate_only",
+      "trusted_scope": "none"
+    }
+  ]
+}

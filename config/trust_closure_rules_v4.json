@@ -1,6 +1,6 @@
 {
-  "version": "trust_closure_rules_v5_institutional_policy",
-  "generated_at": "2026-05-21T07:18:45Z",
+  "version": "trust_closure_rules_v6_proxy_recalibration",
+  "generated_at": "2026-05-21T07:55:35Z",
   "states": [
     {
       "status": "candidate",
@@ -285,6 +285,23 @@
         "source role invalid",
         "blocked license/storage boundary"
       ]
+    },
+    {
+      "status": "institutional_proxy_high_confidence_candidate",
+      "conditions": [
+        "wrapper/proxy interface inherits confidence from explicit upstream institutional or official source",
+        "interface is stable and QA/entity mapping pass"
+      ],
+      "evidence_required": [
+        "upstream provenance",
+        "controlled run QA",
+        "field-level coverage"
+      ],
+      "downgrade_conditions": [
+        "deferred endpoint",
+        "unknown upstream",
+        "QA failure"
+      ]
     }
   ],
   "morningstar_source_treatment": {
@@ -363,6 +380,11 @@
       ],
       "not_public_free_source": true
     },
+    "formal_trusted_consumption_unchanged": true
+  },
+  "proxy_recalibration": {
+    "threshold_lowered_for_institutional_proxy": true,
+    "trusted_candidate_allowed_at_field_or_dataset_level": true,
     "formal_trusted_consumption_unchanged": true
   }
 }
