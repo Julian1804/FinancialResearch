@@ -12,6 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 FIELD_TRUST_PREVIEW_ROOT = PROJECT_ROOT / "runtime" / "field_level_trusted_preview"
+VERSIONS_ROOT = FIELD_TRUST_PREVIEW_ROOT / "versions"
 WORKSPACE_ROOT = PROJECT_ROOT / "runtime" / "research_workspace"
 ANALYSIS_PACKET_ROOT = PROJECT_ROOT / "runtime" / "analysis_packet_builder_v2"
 BACKTEST_ROOT = PROJECT_ROOT / "runtime" / "backtest_execution_v1"
@@ -50,9 +51,19 @@ def run_ohlc_trusted_data_product_v1() -> dict[str, Any]:
     # Step 7: Write detailed limited-field upgrade paths
     upgrade_paths_result = write_detailed_upgrade_paths()
 
+    # Step 8: Version snapshot + latest pointer + manifest (append-only)
+    versioning_result = write_version_snapshot_and_pointers(data_product)
+
+    # Fix dashboard version_count now that manifest has been appended
+    panel = read_json(DASHBOARD_ROOT / "data_product_panel.json")
+    manifest = read_json(FIELD_TRUST_PREVIEW_ROOT / "data_product_manifest.json")
+    panel["version_count"] = len(manifest.get("versions", []))
+    write_json(DASHBOARD_ROOT / "data_product_panel.json", panel)
+
     summary = {
         "generated_at": utc_now(),
         "data_product_id": data_product["data_product_id"],
+        "version_id": data_product.get("version_id"),
         "data_product_completed": True,
         "symbols": data_product["scope"]["symbol_count"],
         "records": data_product["scope"]["record_count"],
@@ -67,6 +78,13 @@ def run_ohlc_trusted_data_product_v1() -> dict[str, Any]:
         "backtest_dryrun_completed": backtest_dryrun_result["completed"],
         "dashboard_data_product_panel_written": dashboard_result["written"],
         "limited_field_upgrade_paths_written": upgrade_paths_result["written"],
+        "versioning": {
+            "versioned": versioning_result["versioned"],
+            "version_id": versioning_result["version_id"],
+            "latest_pointer_written": versioning_result["latest_pointer_written"],
+            "manifest_updated": versioning_result["manifest_updated"],
+            "previous_version_count": versioning_result["previous_version_count"],
+        },
         "limited_fields_blocked_and_warned": True,
         "no_openai_api_called": True,
         "parse_lab_affected": False,
@@ -79,6 +97,9 @@ def run_ohlc_trusted_data_product_v1() -> dict[str, Any]:
             "backtest_trusted_ohlc_dryrun": str(FIELD_TRUST_PREVIEW_ROOT / "backtest_trusted_ohlc_dryrun_v1.json"),
             "dashboard_data_product_panel": str(DASHBOARD_ROOT / "data_product_panel.json"),
             "detailed_upgrade_paths": str(FIELD_TRUST_PREVIEW_ROOT / "field_upgrade_path_detailed_v1.json"),
+            "latest_pointer": str(FIELD_TRUST_PREVIEW_ROOT / "latest_data_product.json"),
+            "manifest": str(FIELD_TRUST_PREVIEW_ROOT / "data_product_manifest.json"),
+            "version_dir": str(versioning_result["version_dir"]),
         },
     }
     write_json(FIELD_TRUST_PREVIEW_ROOT / "ohlc_trusted_data_product_v1_summary.json", summary)
@@ -113,11 +134,13 @@ def build_data_product_envelope() -> dict[str, Any]:
                 validation_evidence.setdefault(field, {"exact_matches": 0, "baostock_values": 0, "akshare_tencent_values": 0})
                 validation_evidence[field]["exact_matches"] += 1
 
+    version_id = generate_version_id()
     return {
         "data_product_id": "dp_v1_a_share_etf_ohlc_trusted_preview_20260521",
         "data_product_name": "A-share / ETF OHLC Trusted Candidate Preview v1",
         "generated_at": utc_now(),
         "version": "1.0.0",
+        "version_id": version_id,
         "status": "active_preview_only",
         "scope": {
             "dataset_id": "a_share_etf_daily_baostock_akshare_tencent_v4",
@@ -517,8 +540,12 @@ def run_backtest_forecast_dryrun_with_trusted_ohlc(data_product: dict[str, Any])
 # =============================================================================
 
 def write_dashboard_data_product_status(data_product: dict[str, Any]) -> dict[str, Any]:
-    """Write a dashboard panel showing data product level status."""
+    """Write a dashboard panel showing data product level status, including version info."""
     DASHBOARD_ROOT.mkdir(parents=True, exist_ok=True)
+
+    # Load manifest for version count if available
+    manifest = read_json(FIELD_TRUST_PREVIEW_ROOT / "data_product_manifest.json")
+    version_count = len(manifest.get("versions", [])) if manifest else 0
 
     panel = {
         "generated_at": utc_now(),
@@ -526,6 +553,10 @@ def write_dashboard_data_product_status(data_product: dict[str, Any]) -> dict[st
         "data_product_id": data_product["data_product_id"],
         "data_product_name": data_product["data_product_name"],
         "version": data_product["version"],
+        "version_id": data_product.get("version_id"),
+        "current_version": data_product.get("version_id"),
+        "latest_refresh_time": data_product["generated_at"],
+        "version_count": version_count,
         "status_summary": {
             "symbols": data_product["scope"]["symbol_count"],
             "records": data_product["scope"]["record_count"],
@@ -540,6 +571,8 @@ def write_dashboard_data_product_status(data_product: dict[str, Any]) -> dict[st
         "upgrade_evidence_for_limited_fields": data_product["next_upgrade_evidence_required"],
         "dashboard_markers": [
             "A-share/ETF OHLC Trusted Preview Data Product v1",
+            f"Current version: {data_product.get('version_id', 'N/A')}",
+            f"Version count: {version_count}",
             "16 symbols, 1216 records, 2026-01-21 to 2026-05-20",
             "Trusted Fields: open, high, low, close",
             "Limited Fields: amount, turnover_rate, pct_change, preclose",
@@ -730,6 +763,130 @@ def write_detailed_upgrade_paths() -> dict[str, Any]:
 
     write_json(FIELD_TRUST_PREVIEW_ROOT / "field_upgrade_path_detailed_v1.json", detailed)
     return {"written": True, "fields_documented": len(detailed["fields"])}
+
+
+# =============================================================================
+# Step 8: Version Snapshot + Latest Pointer + Manifest
+# =============================================================================
+
+def generate_version_id() -> str:
+    """Generate a timestamp-based version id, e.g. v20260521_183000."""
+    now = datetime.now(timezone.utc)
+    return f"v{now.strftime('%Y%m%d_%H%M%S')}"
+
+
+def write_version_snapshot_and_pointers(data_product: dict[str, Any]) -> dict[str, Any]:
+    """Write a versioned snapshot, latest pointer, and append to manifest."""
+    version_id = data_product["version_id"]
+    version_dir = VERSIONS_ROOT / version_id
+    version_dir.mkdir(parents=True, exist_ok=True)
+
+    # Copy key artefacts into version dir (lightweight symlinks would be better, but copy for Windows safety)
+    root_files = {
+        "data_product.json": FIELD_TRUST_PREVIEW_ROOT / "data_product_v1_ohlc_trusted_preview.json",
+        "statistical_report.json": FIELD_TRUST_PREVIEW_ROOT / "statistical_report_trusted_ohlc_v1.json",
+        "analysis_packet.json": FIELD_TRUST_PREVIEW_ROOT / "analysis_packet_trusted_ohlc_v1.json",
+        "backtest_dryrun.json": FIELD_TRUST_PREVIEW_ROOT / "backtest_trusted_ohlc_dryrun_v1.json",
+        "dashboard_panel.json": DASHBOARD_ROOT / "data_product_panel.json",
+        "field_upgrade_paths.json": FIELD_TRUST_PREVIEW_ROOT / "field_upgrade_path_detailed_v1.json",
+    }
+    for name, src in root_files.items():
+        if src.exists():
+            dest = version_dir / name
+            dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+
+    # Build latest pointer
+    scope = data_product["scope"]
+    pointer = {
+        "version_id": version_id,
+        "created_at": utc_now(),
+        "data_product_path": str(version_dir / "data_product.json"),
+        "statistical_report_path": str(version_dir / "statistical_report.json"),
+        "analysis_packet_path": str(version_dir / "analysis_packet.json"),
+        "backtest_dryrun_path": str(version_dir / "backtest_dryrun.json"),
+        "dashboard_panel_path": str(version_dir / "dashboard_panel.json"),
+        "field_upgrade_paths_path": str(version_dir / "field_upgrade_paths.json"),
+        "record_count": scope["record_count"],
+        "symbol_count": scope["symbol_count"],
+        "date_range": scope["date_range"],
+        "trusted_fields": TRUSTED_FIELDS,
+        "limited_fields": LIMITED_FIELDS,
+        "formal_trusted_consumption_enabled": False,
+        "limited_field_guard_active": True,
+    }
+    write_json(FIELD_TRUST_PREVIEW_ROOT / "latest_data_product.json", pointer)
+
+    # Append-only manifest
+    manifest_path = FIELD_TRUST_PREVIEW_ROOT / "data_product_manifest.json"
+    manifest = read_json(manifest_path)
+    if not manifest:
+        manifest = {
+            "data_product_id": data_product["data_product_id"],
+            "data_product_name": data_product["data_product_name"],
+            "created_at": utc_now(),
+            "versions": [],
+        }
+    previous_count = len(manifest.get("versions", []))
+    manifest.setdefault("versions", []).append({
+        "version_id": version_id,
+        "created_at": utc_now(),
+        "record_count": scope["record_count"],
+        "symbol_count": scope["symbol_count"],
+        "date_range": scope["date_range"],
+        "trusted_fields": TRUSTED_FIELDS,
+        "limited_fields": LIMITED_FIELDS,
+        "formal_trusted_consumption_enabled": False,
+        "version_dir": str(version_dir),
+    })
+    write_json(manifest_path, manifest)
+
+    return {
+        "versioned": True,
+        "version_id": version_id,
+        "version_dir": str(version_dir),
+        "latest_pointer_written": True,
+        "manifest_updated": True,
+        "previous_version_count": previous_count,
+    }
+
+
+# =============================================================================
+# Consumer helpers: read latest pointer with fallback to root-level files
+# =============================================================================
+
+def read_latest_data_product() -> dict[str, Any] | None:
+    """Read the latest data product via pointer if it exists."""
+    pointer_path = FIELD_TRUST_PREVIEW_ROOT / "latest_data_product.json"
+    if pointer_path.exists():
+        pointer = read_json(pointer_path)
+        dp_path = Path(pointer.get("data_product_path", ""))
+        if dp_path.exists():
+            return read_json(dp_path)
+    return None
+
+
+def read_latest_or_fallback(filename: str, fallback_root: Path) -> dict[str, Any]:
+    """Read via latest pointer if available, otherwise fall back to root-level file."""
+    pointer_path = FIELD_TRUST_PREVIEW_ROOT / "latest_data_product.json"
+    if pointer_path.exists():
+        pointer = read_json(pointer_path)
+        key_map = {
+            "data_product": "data_product_path",
+            "statistical_report": "statistical_report_path",
+            "analysis_packet": "analysis_packet_path",
+            "backtest_dryrun": "backtest_dryrun_path",
+            "dashboard_panel": "dashboard_panel_path",
+            "field_upgrade_paths": "field_upgrade_paths_path",
+        }
+        if filename in key_map:
+            mapped = Path(pointer.get(key_map[filename], ""))
+            if mapped.exists():
+                return read_json(mapped)
+    # Fallback to root-level
+    fallback = fallback_root / filename
+    if fallback.exists():
+        return read_json(fallback)
+    return {}
 
 
 # =============================================================================
