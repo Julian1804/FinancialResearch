@@ -37,6 +37,7 @@ FUND_ETF_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow"
 FUND_ETF_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase2"
 FUND_ETF_PHASE3_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase3"
 AUTOMATED_INGESTION_ROOT = PROJECT_ROOT / "runtime" / "automated_ingestion_system"
+FIELD_TRUST_PREVIEW_ROOT = PROJECT_ROOT / "runtime" / "field_level_trusted_preview"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -671,6 +672,7 @@ def generate_statistical_report(snapshot: dict[str, Any]) -> dict[str, Any]:
     category_counts = Counter(item["category"] for item in included)
     status_counts = Counter(item["staging_status"] for item in included)
     source_counts = Counter(item["source_id"] for item in included)
+    field_trust_preview = read_json(FIELD_TRUST_PREVIEW_ROOT / "statistical_report_trusted_preview_input.json")
     report_json = {
         "report_id": report_id,
         "generated_at": utc_now(),
@@ -704,6 +706,10 @@ def generate_statistical_report(snapshot: dict[str, Any]) -> dict[str, Any]:
         "evidence_boundary": evidence_boundary(snapshot),
         "insufficient_evidence": build_insufficient_evidence(request, included),
         "candidate_data_warning": "All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.",
+        "field_level_trusted_candidate_preview": field_trust_preview or {
+            "field_level_trusted_candidate_preview_available": False,
+            "formal_trusted_consumption": False,
+        },
         "formal_trusted_consumption": False,
     }
     report_md = render_statistical_report_md(report_json, missing, future)
@@ -848,6 +854,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     fund_etf_phase3_flow_proxy = read_json(FUND_ETF_PHASE3_ROOT / "flow_proxy_v3_results.json") or {"items": []}
     fund_etf_phase3_trust_queue = read_json(FUND_ETF_PHASE3_ROOT / "trust_upgrade_queue_phase3.json") or {"queue": []}
     automated_ingestion_status = read_json(AUTOMATED_INGESTION_ROOT / "dashboard_automation_status.json")
+    field_trust_preview = read_json(FIELD_TRUST_PREVIEW_ROOT / "dashboard_field_trust_summary.json")
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -891,6 +898,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
             "phase3_trust_queue": fund_etf_phase3_trust_queue.get("queue", []),
         },
         "automated_ingestion": automated_ingestion_status,
+        "field_level_trusted_preview": field_trust_preview,
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
@@ -989,6 +997,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Institutional Proxy High Confidence Candidate",
         "AKShare Tencent Trusted Candidate",
         "Eastmoney-backed Deferred",
+        "Field-Level Trusted Candidate Preview",
+        "Trusted Candidate Preview Selector",
+        "OHLC Trusted Candidate Fields",
+        "Limited Field Review",
+        "Formal Trusted Consumption Off",
         "line",
         "bar",
         "pie",
@@ -1492,6 +1505,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     const AUTHORITATIVE_STATUS = DASHBOARD_DATA.authoritative_source_status || {{}};
     const FUND_ETF = DASHBOARD_DATA.fund_etf_capital_flow || {{}};
     const AUTOMATED = DASHBOARD_DATA.automated_ingestion || {{}};
+    const FIELD_TRUST = DASHBOARD_DATA.field_level_trusted_preview || {{}};
     const COMMODITY_TAXONOMY = DASHBOARD_DATA.commodity_taxonomy || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
@@ -1701,6 +1715,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const recalibration = AUTOMATED.trust_threshold_recalibration || {{}};
       const recalAshare = recalibration.a_share_etf || {{}};
       const recalInterfaces = recalibration.akshare_interface_classification || {{}};
+      const fieldTrust = FIELD_TRUST || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1753,6 +1768,14 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           <div><p>Eastmoney-backed Deferred</p><div class="metric">${{recalibration.eastmoney_backed_deferred_preserved ? 'yes' : 'no'}}</div><span class="tag warn">${{escapeHtml(recalInterfaces.akshare_eastmoney_stock_zh_a_hist || 'deferred')}}</span></div>
         </div>
         <p><strong>Trusted scope</strong>: ${{(recalAshare.trusted_candidate_scope || []).map(escapeHtml).join('; ') || 'none yet'}}. Formal trusted consumption remains off.</p>
+        <hr>
+        <h4>Field-Level Trusted Candidate Preview</h4>
+        <div class="grid cols-3">
+          <div><p>Trusted Candidate Preview Selector</p><div class="metric">${{fieldTrust.preview_record_count || 0}}</div><span class="tag">preview rows</span></div>
+          <div><p>OHLC Trusted Candidate Fields</p><div class="metric">${{(fieldTrust.ohlc_trusted_candidate_fields || []).length || 0}}</div><span class="tag">${{(fieldTrust.ohlc_trusted_candidate_fields || []).map(escapeHtml).join(', ') || 'pending'}}</span></div>
+          <div><p>Formal Trusted Consumption Off</p><div class="metric">${{fieldTrust.formal_trusted_consumption === false ? 'no' : 'check'}}</div><span class="tag warn">preview-only</span></div>
+        </div>
+        <p><strong>Limited Field Review</strong>: ${{(fieldTrust.limited_fields || []).map(escapeHtml).join(', ') || 'none'}}. These fields are warning-only until their upgrade evidence is complete.</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>
@@ -2121,6 +2144,18 @@ def render_statistical_report_md(report: dict[str, Any], missing: list[dict[str,
     ]
     for category, count in sorted(report["summary"]["category_counts"].items()):
         lines.append(f"- {category}: {count}")
+    preview = report.get("field_level_trusted_candidate_preview", {})
+    if preview.get("field_level_trusted_candidate_preview_available"):
+        lines.extend([
+            "",
+            "## Field-Level Trusted Candidate Preview",
+            "",
+            f"- Dataset: {preview.get('dataset_id')}",
+            f"- Trusted candidate preview fields: {', '.join(preview.get('trusted_candidate_fields', []))}",
+            f"- Limited fields: {', '.join(preview.get('limited_fields', []))}",
+            f"- Preview records: {preview.get('preview_record_count')}",
+            "- Formal trusted consumption: false",
+        ])
     lines.extend([
         "",
         "## Insufficient Evidence",

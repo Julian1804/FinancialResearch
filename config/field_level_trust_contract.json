@@ -1,0 +1,121 @@
+{
+  "contract_id": "field_level_trust_contract_v1",
+  "generated_at": "2026-05-21T08:24:07Z",
+  "scope": {
+    "dataset_id": "a_share_etf_daily_baostock_akshare_tencent_v4",
+    "data_category": "market_daily",
+    "entity_type": "a_share_or_etf",
+    "symbols": [
+      "000001",
+      "000858",
+      "002594",
+      "159915",
+      "159919",
+      "300750",
+      "300760",
+      "510300",
+      "510500",
+      "512880",
+      "588000",
+      "600036",
+      "600276",
+      "600519",
+      "601318",
+      "601899"
+    ],
+    "time_window": {
+      "start_trade_date": "2026-01-21",
+      "end_trade_date": "2026-05-20",
+      "time_window_trust_status": "trusted_candidate_preview"
+    },
+    "source_pair": [
+      "baostock_daily",
+      "akshare_tencent_daily"
+    ]
+  },
+  "source_level_trust": {
+    "baostock_daily": {
+      "source_role": "primary_value_source",
+      "trust_status": "production_candidate",
+      "provenance_note": "Operational source with cross-source validation partner."
+    },
+    "akshare_tencent_daily": {
+      "source_role": "secondary_validation_source",
+      "trust_status": "institutional_proxy_high_confidence_candidate",
+      "provenance_note": "AKShare wrapper around Tencent-backed daily market interface; interface-level trust only."
+    }
+  },
+  "field_level_trust": {
+    "open": {
+      "trust_status": "trusted_candidate",
+      "consumption_preview_allowed": true,
+      "selection_rule": "Baostock primary value allowed only when AKShare Tencent exact-matches the same symbol/date field.",
+      "evidence": "1216 common records and 4864 total OHLC exact matches in trust threshold recalibration."
+    },
+    "high": {
+      "trust_status": "trusted_candidate",
+      "consumption_preview_allowed": true,
+      "selection_rule": "Baostock primary value allowed only when AKShare Tencent exact-matches the same symbol/date field.",
+      "evidence": "1216 common records and 4864 total OHLC exact matches in trust threshold recalibration."
+    },
+    "low": {
+      "trust_status": "trusted_candidate",
+      "consumption_preview_allowed": true,
+      "selection_rule": "Baostock primary value allowed only when AKShare Tencent exact-matches the same symbol/date field.",
+      "evidence": "1216 common records and 4864 total OHLC exact matches in trust threshold recalibration."
+    },
+    "close": {
+      "trust_status": "trusted_candidate",
+      "consumption_preview_allowed": true,
+      "selection_rule": "Baostock primary value allowed only when AKShare Tencent exact-matches the same symbol/date field.",
+      "evidence": "1216 common records and 4864 total OHLC exact matches in trust threshold recalibration."
+    },
+    "volume": {
+      "trust_status": "production_candidate",
+      "consumption_preview_allowed": false,
+      "reason": "Volume is useful operational evidence, but current trusted preview is scoped to OHLC only."
+    },
+    "amount": {
+      "trust_status": "ready_for_trusted_candidate_limited",
+      "consumption_preview_allowed": false,
+      "reason": "Field lacks consistent secondary-source coverage or definition agreement in current normalized sample."
+    },
+    "turnover_rate": {
+      "trust_status": "ready_for_trusted_candidate_limited",
+      "consumption_preview_allowed": false,
+      "reason": "Field lacks consistent secondary-source coverage or definition agreement in current normalized sample."
+    },
+    "pct_change": {
+      "trust_status": "ready_for_trusted_candidate_limited",
+      "consumption_preview_allowed": false,
+      "reason": "Field lacks consistent secondary-source coverage or definition agreement in current normalized sample."
+    },
+    "preclose": {
+      "trust_status": "ready_for_trusted_candidate_limited",
+      "consumption_preview_allowed": false,
+      "reason": "Field lacks consistent secondary-source coverage or definition agreement in current normalized sample."
+    }
+  },
+  "dataset_level_trust": {
+    "status": "ready_for_trusted_candidate",
+    "reason": "The full daily table has strong source-level evidence, but only OHLC is consumable as trusted_candidate preview."
+  },
+  "entity_level_trust": {
+    "status": "trusted_candidate_preview_for_controlled_watchlist",
+    "entity_mapping_required": true,
+    "unmapped_entity_behavior": "exclude_from_trusted_candidate_preview"
+  },
+  "preview_layer_policy": {
+    "formal_trusted_consumption": false,
+    "preview_only": true,
+    "do_not_promote_whole_table": true,
+    "limited_fields_must_emit_warning": true
+  },
+  "selector_evidence": {
+    "input_common_records": 1216,
+    "selector_included_records": 1216,
+    "selector_excluded_records": 0,
+    "ohlc_exact_match_count": 4864,
+    "expected_ohlc_match_count": 4864
+  }
+}

@@ -19,6 +19,7 @@ from backend.app.modules.financial_report.services import data_connector_phase2_
 
 OUTPUT_ROOT = PROJECT_ROOT / "runtime" / "analysis_packet_builder_v2"
 PHASE6_ROOT = PROJECT_ROOT / "runtime" / "frdata_connectors_phase6"
+FIELD_TRUST_PREVIEW_ROOT = PROJECT_ROOT / "runtime" / "field_level_trusted_preview"
 DOC_REPORT = PROJECT_ROOT / "docs" / "ANALYSIS_PACKET_BUILDER_V2_REPORT.md"
 DOC_PROMPT = PROJECT_ROOT / "docs" / "GPT_WEB_PROMPT_TEMPLATE_V2.md"
 DOC_CONTRACT = PROJECT_ROOT / "docs" / "ANALYSIS_PACKET_DATA_CONTRACT.md"
@@ -85,11 +86,13 @@ def load_source_context() -> dict[str, Any]:
     staging = read_json(PHASE6_ROOT / "consumption_grade_staging_v2.json")
     mismatch = read_json(PHASE6_ROOT / "a_share_daily_mismatch_review.json")
     metadata = read_json(PHASE6_ROOT / "metadata_index_summary.json")
+    field_trust_preview = read_json(FIELD_TRUST_PREVIEW_ROOT / "analysis_packet_trusted_preview_input.json")
     return {
         "connector_runs": connector_runs,
         "staging": staging,
         "mismatch": mismatch,
         "metadata": metadata,
+        "field_trust_preview": field_trust_preview,
         "run_by_source": {item["source_id"]: item for item in connector_runs.get("items", [])},
         "staging_by_source": build_staging_by_source(staging),
     }
@@ -132,6 +135,10 @@ def build_packet_set(
         },
         "data_layer_legend": data_layer_legend(),
         "source_layers": build_source_layers(source_context),
+        "field_level_trusted_candidate_preview": source_context.get("field_trust_preview", {
+            "can_consume_trusted_candidate_fields": False,
+            "formal_trusted_consumption": False,
+        }),
         "market_daily_summary": market_summary,
         "macro_summary": macro_summary,
         "commodity_summary": commodity_summary,
@@ -204,6 +211,7 @@ def build_market_daily_summary(target_symbol: str, source_context: dict[str, Any
         "abnormal_volume_signal": abnormal_volume_signal(volumes),
         "price_trend_note": price_trend_note(closes),
         "source_consistency_note": build_source_consistency_note(target_symbol, source_context),
+        "field_level_trusted_candidate_preview": build_symbol_field_trust_preview(target_symbol, source_context),
         "baostock_vs_akshare_tencent": {
             "baostock_record_count": len(baostock_records),
             "akshare_tencent_record_count": len(akshare_records),
@@ -229,6 +237,28 @@ def build_market_daily_summary(target_symbol: str, source_context: dict[str, Any
         "formal_trusted_consumption": False,
     }
     return summary
+
+
+def build_symbol_field_trust_preview(target_symbol: str, source_context: dict[str, Any]) -> dict[str, Any]:
+    preview = source_context.get("field_trust_preview") or {}
+    latest_by_symbol = preview.get("latest_trusted_ohlc_by_symbol", {})
+    latest = latest_by_symbol.get(target_symbol)
+    if not latest:
+        return {
+            "status": "insufficient_evidence",
+            "reason": f"no field-level trusted candidate OHLC preview row for {target_symbol}",
+            "formal_trusted_consumption": False,
+        }
+    return {
+        "status": "available_trusted_candidate_preview",
+        "trusted_candidate_fields": preview.get("trusted_candidate_fields", []),
+        "limited_fields": preview.get("limited_fields", []),
+        "latest_trade_date": latest.get("trade_date"),
+        "latest_ohlc": {field: latest.get(field) for field in preview.get("trusted_candidate_fields", [])},
+        "source_pair": latest.get("source_pair", []),
+        "limitation_note": preview.get("packet_limitation_note"),
+        "formal_trusted_consumption": False,
+    }
 
 
 def build_macro_summary(source_context: dict[str, Any]) -> dict[str, Any]:
