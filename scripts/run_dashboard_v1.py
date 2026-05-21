@@ -35,6 +35,7 @@ MARKET_DATA_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "market_data_foundation_pha
 AUTHORITATIVE_SOURCE_ROOT = PROJECT_ROOT / "runtime" / "authoritative_crawler_framework"
 FUND_ETF_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow"
 FUND_ETF_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase2"
+FUND_ETF_PHASE3_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase3"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -838,6 +839,13 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     fund_etf_phase2_equity = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_equity_stock_validation.json") or {"markets": []}
     fund_etf_phase2_flow_proxy = read_json(FUND_ETF_PHASE2_ROOT / "flow_proxy_v2_results.json") or {"items": []}
     fund_etf_phase2_trust_queue = read_json(FUND_ETF_PHASE2_ROOT / "morningstar_multi_asset_trust_upgrade_queue.json") or {"queue": []}
+    fund_etf_phase3_summary = read_json(FUND_ETF_PHASE3_ROOT / "phase3_summary.json")
+    fund_etf_phase3_official = read_json(FUND_ETF_PHASE3_ROOT / "official_universe_acquisition_results.json") or {"regions": []}
+    fund_etf_phase3_tiny = read_json(FUND_ETF_PHASE3_ROOT / "morningstar_tiny_sample_validation_results.json") or {"items": []}
+    fund_etf_phase3_equity = read_json(FUND_ETF_PHASE3_ROOT / "morningstar_equity_stock_validation_phase3.json") or {"markets": []}
+    fund_etf_phase3_coverage = read_json(FUND_ETF_PHASE3_ROOT / "coverage_validation_phase3.json") or {"regions": []}
+    fund_etf_phase3_flow_proxy = read_json(FUND_ETF_PHASE3_ROOT / "flow_proxy_v3_results.json") or {"items": []}
+    fund_etf_phase3_trust_queue = read_json(FUND_ETF_PHASE3_ROOT / "trust_upgrade_queue_phase3.json") or {"queue": []}
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -872,6 +880,13 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
             "phase2_equity": fund_etf_phase2_equity.get("markets", []),
             "phase2_flow_proxy": fund_etf_phase2_flow_proxy.get("items", []),
             "phase2_trust_queue": fund_etf_phase2_trust_queue.get("queue", []),
+            "phase3_summary": fund_etf_phase3_summary,
+            "phase3_official_universe": fund_etf_phase3_official,
+            "phase3_tiny_sample": fund_etf_phase3_tiny,
+            "phase3_equity": fund_etf_phase3_equity.get("markets", []),
+            "phase3_coverage": fund_etf_phase3_coverage.get("regions", []),
+            "phase3_flow_proxy": fund_etf_phase3_flow_proxy.get("items", []),
+            "phase3_trust_queue": fund_etf_phase3_trust_queue.get("queue", []),
         },
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
@@ -924,6 +939,11 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Morningstar Multi-Asset Validation",
         "Morningstar Equity / Stock Panel",
         "Trust Upgrade Queue",
+        "Official Universe Acquisition",
+        "Morningstar Tiny Sample Validation",
+        "Coverage Validation Phase3",
+        "Flow Proxy v3",
+        "Trust Upgrade Queue Phase3",
         "line",
         "bar",
         "pie",
@@ -1336,8 +1356,28 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
             <div id="morningstarEquityStockPanel"></div>
           </div>
         </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Official Universe Acquisition</h3>
+            <div id="officialUniverseAcquisitionPhase3Panel"></div>
+          </div>
+          <div class="panel">
+            <h3>Morningstar Tiny Sample Validation</h3>
+            <div id="morningstarTinySamplePhase3Panel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Coverage Validation Phase3</h3>
+            <div id="coverageValidationPhase3Panel"></div>
+          </div>
+          <div class="panel">
+            <h3>Flow Proxy v3</h3>
+            <div id="flowProxyPhase3Panel"></div>
+          </div>
+        </div>
         <div class="panel">
-          <h3>Trust Upgrade Queue</h3>
+          <h3>Trust Upgrade Queue Phase3</h3>
           <div id="fundEtfTrustQueuePanel"></div>
         </div>
         <div class="panel">
@@ -1645,6 +1685,36 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       document.getElementById('fundEtfTrustQueuePanel').innerHTML =
         `<div><span class="tag warn">blocked: ${{trustQueue.length}}</span><span class="tag warn">trusted_candidate: ${{phase2.trusted_candidate_count || 0}}</span><span class="tag">flow_proxy_v2: ${{proxies.length}}</span></div>` +
         `<p class="small">Queue requires sample data, official universe coverage, field completeness, freshness, cross-source validation and license/storage clearance.</p>`;
+      renderFundEtfPhase3();
+    }}
+    function renderFundEtfPhase3() {{
+      const phase3 = FUND_ETF.phase3_summary || {{}};
+      const official = FUND_ETF.phase3_official_universe || {{}};
+      const tiny = FUND_ETF.phase3_tiny_sample || {{}};
+      const coverage = FUND_ETF.phase3_coverage || [];
+      const equity = FUND_ETF.phase3_equity || [];
+      const proxies = FUND_ETF.phase3_flow_proxy || [];
+      const trustQueue = FUND_ETF.phase3_trust_queue || [];
+      const regions = official.regions || [];
+      document.getElementById('officialUniverseAcquisitionPhase3Panel').innerHTML =
+        `<div><span class="tag ${{phase3.official_universe_sample_records ? 'good' : 'warn'}}">sample records: ${{phase3.official_universe_sample_records || 0}}</span><span class="tag">no high frequency</span><span class="tag">candidate only</span></div>` +
+        `<table><thead><tr><th>Region</th><th>Status</th><th>Next action</th></tr></thead><tbody>${{regions.map(row => `<tr><td>${{escapeHtml(row.region)}}</td><td>${{escapeHtml(row.status)}}</td><td>${{escapeHtml(row.next_action || '')}}</td></tr>`).join('') || '<tr><td colspan="3">phase3 not run</td></tr>'}}</tbody></table>`;
+      const tinyItems = tiny.items || [];
+      const usable = tinyItems.filter(item => item.usable_for_fr).length;
+      document.getElementById('morningstarTinySamplePhase3Panel').innerHTML =
+        `<div><span class="tag ${{usable ? 'good' : 'warn'}}">usable tiny methods: ${{usable}}</span><span class="tag">token: ${{escapeHtml(tiny.token_status || 'unknown')}}</span><span class="tag warn">not coverage validation</span></div>` +
+        `<table><thead><tr><th>Dataset</th><th>Tiny status</th><th>Use</th></tr></thead><tbody>${{tinyItems.slice(0, 8).map(row => `<tr><td>${{escapeHtml(row.dataset_name)}}</td><td>${{escapeHtml(row.tiny_sample_status)}}</td><td>${{escapeHtml(row.likely_data_type)}}</td></tr>`).join('') || '<tr><td colspan="3">no tiny sample</td></tr>'}}</tbody></table>`;
+      document.getElementById('coverageValidationPhase3Panel').innerHTML =
+        `<table><thead><tr><th>Region</th><th>Validation</th><th>Blockers</th></tr></thead><tbody>${{coverage.map(row => `<tr><td>${{escapeHtml(row.region)}}</td><td>${{escapeHtml(row.validation_status)}}</td><td>${{(row.blockers || []).map(escapeHtml).join(', ')}}</td></tr>`).join('') || '<tr><td colspan="3">coverage validation pending</td></tr>'}}</tbody></table>` +
+        `<p class="small">Metadata visibility is never treated as coverage ratio. Official universe or manual import is required.</p>`;
+      const actualFlow = proxies.filter(row => row.actual_flow_available).length;
+      document.getElementById('flowProxyPhase3Panel').innerHTML =
+        `<div><span class="tag">proxy records: ${{proxies.length}}</span><span class="tag warn">actual flow available: ${{actualFlow}}</span><span class="tag warn">not actual flow</span></div>` +
+        `<p class="small">amount / volume / price momentum / turnover are market activity proxies. AUM, shares outstanding, holdings and exposure changes remain unavailable until licensed/official source samples pass validation.</p>`;
+      const trusted = trustQueue.filter(row => row.can_upgrade_to_trusted_candidate).length;
+      document.getElementById('fundEtfTrustQueuePanel').innerHTML +=
+        `<hr><div><span class="tag warn">Phase3 blocked queue: ${{trustQueue.length}}</span><span class="tag warn">trusted_candidate: ${{trusted}}</span><span class="tag">equity markets checked: ${{equity.length}}</span></div>` +
+        `<p class="small">Phase3 keeps Morningstar as licensed_source_candidate. Equity/stock tiny search reachability does not prove A-share/HK/US/Europe coverage.</p>`;
     }}
     function renderSeriesTable(series) {{
       if (!series.length) return '<span class="tag warn">insufficient_evidence</span>';
