@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import html
 import json
@@ -942,7 +942,12 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Official Universe Acquisition",
         "Morningstar Tiny Sample Validation",
         "Coverage Validation Phase3",
+        "AMAC Total Benchmark",
+        "US Nasdaq x Morningstar Matching",
+        "China Fund Company Sample",
+        "Europe Source Feasibility",
         "Flow Proxy v3",
+        "Flow Proxy Level Readiness",
         "Trust Upgrade Queue Phase3",
         "line",
         "bar",
@@ -1368,11 +1373,31 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         </div>
         <div class="grid cols-2">
           <div class="panel">
+            <h3>AMAC Total Benchmark</h3>
+            <div id="amacTotalBenchmarkPanel"></div>
+          </div>
+          <div class="panel">
+            <h3>US Nasdaq x Morningstar Matching</h3>
+            <div id="usMorningstarMatchingPanel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>China Fund Company Sample</h3>
+            <div id="chinaFundCompanySamplePanel"></div>
+          </div>
+          <div class="panel">
+            <h3>Europe Source Feasibility</h3>
+            <div id="europeSourceFeasibilityPanel"></div>
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="panel">
             <h3>Coverage Validation Phase3</h3>
             <div id="coverageValidationPhase3Panel"></div>
           </div>
           <div class="panel">
-            <h3>Flow Proxy v3</h3>
+            <h3>Flow Proxy v3 / Flow Proxy Level Readiness</h3>
             <div id="flowProxyPhase3Panel"></div>
           </div>
         </div>
@@ -1699,6 +1724,18 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       document.getElementById('officialUniverseAcquisitionPhase3Panel').innerHTML =
         `<div><span class="tag ${{phase3.official_universe_sample_records ? 'good' : 'warn'}}">sample records: ${{phase3.official_universe_sample_records || 0}}</span><span class="tag">no high frequency</span><span class="tag">candidate only</span></div>` +
         `<table><thead><tr><th>Region</th><th>Status</th><th>Next action</th></tr></thead><tbody>${{regions.map(row => `<tr><td>${{escapeHtml(row.region)}}</td><td>${{escapeHtml(row.status)}}</td><td>${{escapeHtml(row.next_action || '')}}</td></tr>`).join('') || '<tr><td colspan="3">phase3 not run</td></tr>'}}</tbody></table>`;
+      document.getElementById('amacTotalBenchmarkPanel').innerHTML =
+        `<div><span class="tag ${{phase3.amac_total_benchmark_completed ? 'good' : 'warn'}}">AMAC benchmark: ${{phase3.amac_total_benchmark_completed ? 'completed' : 'missing'}}</span><span class="tag">fund count: ${{phase3.amac_total_fund_count || 'na'}}</span></div>` +
+        `<p class="small">AMAC aggregate validates China public-fund market size only. It does not replace individual fund universe import.</p>`;
+      document.getElementById('usMorningstarMatchingPanel').innerHTML =
+        `<div><span class="tag good">tested: ${{phase3.us_nasdaq_morningstar_symbols_tested || 0}}</span><span class="tag good">matched: ${{phase3.us_nasdaq_morningstar_matched_count || 0}}</span><span class="tag">ratio: ${{phase3.us_nasdaq_morningstar_match_ratio ?? 'na'}}</span></div>` +
+        `<p class="small">This is sample matchability only, not full US ETF universe coverage or trusted_candidate status.</p>`;
+      document.getElementById('chinaFundCompanySamplePanel').innerHTML =
+        `<div><span class="tag">reachable sites: ${{phase3.china_fund_company_reachable_count || 0}}</span><span class="tag warn">product list: ${{phase3.china_fund_company_sample_status || 'manual_import_required'}}</span></div>` +
+        `<p class="small">No fund-company product list was scraped without source-specific endpoint and terms review.</p>`;
+      document.getElementById('europeSourceFeasibilityPanel').innerHTML =
+        `<div><span class="tag">reachable sources: ${{phase3.europe_source_reachable_count || 0}}</span><span class="tag warn">universe parse: source_specific_review_required</span></div>` +
+        `<p class="small">Reachability is not crawl permission. Europe remains manual/import or source-specific connector work.</p>`;
       const tinyItems = tiny.items || [];
       const usable = tinyItems.filter(item => item.usable_for_fr).length;
       document.getElementById('morningstarTinySamplePhase3Panel').innerHTML =
@@ -1709,7 +1746,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         `<p class="small">Metadata visibility is never treated as coverage ratio. Official universe or manual import is required.</p>`;
       const actualFlow = proxies.filter(row => row.actual_flow_available).length;
       document.getElementById('flowProxyPhase3Panel').innerHTML =
-        `<div><span class="tag">proxy records: ${{proxies.length}}</span><span class="tag warn">actual flow available: ${{actualFlow}}</span><span class="tag warn">not actual flow</span></div>` +
+        `<div><span class="tag">proxy records: ${{proxies.length}}</span><span class="tag warn">actual flow available: ${{actualFlow}}</span><span class="tag warn">not actual flow</span><span class="tag">levels: 1-6</span></div>` +
         `<p class="small">amount / volume / price momentum / turnover are market activity proxies. AUM, shares outstanding, holdings and exposure changes remain unavailable until licensed/official source samples pass validation.</p>`;
       const trusted = trustQueue.filter(row => row.can_upgrade_to_trusted_candidate).length;
       document.getElementById('fundEtfTrustQueuePanel').innerHTML +=

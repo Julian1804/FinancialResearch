@@ -47,13 +47,22 @@ def test_fund_etf_capital_flow_phase3() -> None:
     proxy = read_json(OUTPUT_ROOT / "flow_proxy_v3_results.json")
     coverage = read_json(OUTPUT_ROOT / "coverage_validation_phase3.json")
     trust = read_json(OUTPUT_ROOT / "trust_upgrade_queue_phase3.json")
+    amac = read_json(OUTPUT_ROOT / "amac_total_benchmark_result.json")
+    match = read_json(OUTPUT_ROOT / "us_nasdaq_morningstar_matching_pilot.json")
     dashboard = read_json(PROJECT_ROOT / "runtime" / "authoritative_crawler_framework" / "dashboard_source_status.json")
 
     assert summary["phase3_completed"] is True
+    assert summary["amac_total_benchmark_completed"] is True
+    assert summary["amac_total_fund_count"] and summary["amac_total_fund_count"] > 0
+    assert summary["us_nasdaq_morningstar_symbols_tested"] > 0
+    assert summary["us_nasdaq_morningstar_matched_count"] >= 0
     assert set(summary["official_universe_regions"]) == {"China", "US", "Europe"}
     assert official["large_download_performed"] is False
     assert official["high_frequency_requests"] is False
     assert len(official["regions"]) == 3
+    assert amac["benchmark_status"] == "completed"
+    assert match["large_download_performed"] is False
+    assert match["symbols_tested"] > 0
     assert tiny["large_morningstar_download_performed"] is False
     assert tiny["no_auto_login"] is True
     assert tiny["no_password_saved"] is True
@@ -64,6 +73,7 @@ def test_fund_etf_capital_flow_phase3() -> None:
     assert all(row["not_actual_flow_warning"] for row in proxy["items"][:10])
     assert {row["region"] for row in coverage["regions"]} == {"US", "China", "Europe"}
     assert trust["trusted_candidate_count"] == 0
+    assert trust["sample_validated_candidate_count"] >= 0
     assert trust["formal_trusted_consumption"] is False
     source = next(item for item in dashboard["sources"] if item["source_id"] == "fund_etf_capital_flow_phase3")
     assert source["status"] == "pilot_completed"

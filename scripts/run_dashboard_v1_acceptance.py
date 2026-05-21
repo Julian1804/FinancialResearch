@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import shutil
@@ -276,7 +276,12 @@ def run_strengthened_ui_smoke() -> dict[str, Any]:
             "Official Universe Acquisition",
             "Morningstar Tiny Sample Validation",
             "Coverage Validation Phase3",
+            "AMAC Total Benchmark",
+            "US Nasdaq x Morningstar Matching",
+            "China Fund Company Sample",
+            "Europe Source Feasibility",
             "Flow Proxy v3",
+            "Flow Proxy Level Readiness",
             "Trust Upgrade Queue Phase3",
             "Macro & Asset Mini Charts",
             "Recent Event Ticker",

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import sys
@@ -241,7 +241,12 @@ def test_ui_smoke_markers_and_http_serving() -> None:
         "Official Universe Acquisition",
         "Morningstar Tiny Sample Validation",
         "Coverage Validation Phase3",
+        "AMAC Total Benchmark",
+        "US Nasdaq x Morningstar Matching",
+        "China Fund Company Sample",
+        "Europe Source Feasibility",
         "Flow Proxy v3",
+        "Flow Proxy Level Readiness",
         "Trust Upgrade Queue Phase3",
         "line",
         "bar",

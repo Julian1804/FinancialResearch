@@ -1,6 +1,6 @@
 # Fund / ETF Capital Flow Phase 3 Report
 
-Generated at: 2026-05-21T00:35:12Z
+Generated at: 2026-05-21T03:05:10Z
 
 ## Scope
 
@@ -9,9 +9,12 @@ Phase 3 attempted low-frequency official/authoritative universe acquisition and 
 ## Results
 
 - Official universe sample records: 50
+- AMAC total benchmark completed: True (fund count: 13930)
+- US Nasdaq x Morningstar symbols tested: 20 / matched: 20
 - Morningstar tiny-sample usable dataset count: 24
 - Coverage validation regions: US, China, Europe
 - Trusted candidate count: 0
+ - Sample validated candidate count: 15
 
 ## Boundaries
 
