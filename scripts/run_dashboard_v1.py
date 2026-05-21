@@ -36,6 +36,7 @@ AUTHORITATIVE_SOURCE_ROOT = PROJECT_ROOT / "runtime" / "authoritative_crawler_fr
 FUND_ETF_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow"
 FUND_ETF_PHASE2_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase2"
 FUND_ETF_PHASE3_ROOT = PROJECT_ROOT / "runtime" / "fund_etf_capital_flow_phase3"
+AUTOMATED_INGESTION_ROOT = PROJECT_ROOT / "runtime" / "automated_ingestion_system"
 
 
 DOC_IA = PROJECT_ROOT / "docs" / "FR_DASHBOARD_INFORMATION_ARCHITECTURE.md"
@@ -846,6 +847,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     fund_etf_phase3_coverage = read_json(FUND_ETF_PHASE3_ROOT / "coverage_validation_phase3.json") or {"regions": []}
     fund_etf_phase3_flow_proxy = read_json(FUND_ETF_PHASE3_ROOT / "flow_proxy_v3_results.json") or {"items": []}
     fund_etf_phase3_trust_queue = read_json(FUND_ETF_PHASE3_ROOT / "trust_upgrade_queue_phase3.json") or {"queue": []}
+    automated_ingestion_status = read_json(AUTOMATED_INGESTION_ROOT / "dashboard_automation_status.json")
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -888,6 +890,7 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
             "phase3_flow_proxy": fund_etf_phase3_flow_proxy.get("items", []),
             "phase3_trust_queue": fund_etf_phase3_trust_queue.get("queue", []),
         },
+        "automated_ingestion": automated_ingestion_status,
         "commodity_taxonomy": commodity_taxonomy,
         "legacy_streamlit_used": False,
         "old_ui_false_positive_guard": True,
@@ -949,6 +952,14 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Flow Proxy v3",
         "Flow Proxy Level Readiness",
         "Trust Upgrade Queue Phase3",
+        "Automated Ingestion System v1",
+        "Entity Master Status",
+        "Identifier Crosswalk",
+        "Unresolved Entity Queue",
+        "Ingestion Schedule",
+        "Latest Ingestion Runs",
+        "Data Trust Pipeline",
+        "Official On-hold Sources",
         "line",
         "bar",
         "pie",
@@ -1139,6 +1150,10 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
             <div class="panel">
               <h3>Market Foundation Snapshot</h3>
               <div class="grid cols-3" id="domainSnapshotCards"></div>
+            </div>
+            <div class="panel">
+              <h3>Automated Ingestion System v1</h3>
+              <div id="automatedIngestionPanel"></div>
             </div>
           </div>
           <div>
@@ -1447,6 +1462,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     const PHASE2 = DASHBOARD_DATA.market_data_phase2_summary || {{}};
     const AUTHORITATIVE_STATUS = DASHBOARD_DATA.authoritative_source_status || {{}};
     const FUND_ETF = DASHBOARD_DATA.fund_etf_capital_flow || {{}};
+    const AUTOMATED = DASHBOARD_DATA.automated_ingestion || {{}};
     const COMMODITY_TAXONOMY = DASHBOARD_DATA.commodity_taxonomy || {{}};
     const DATA_CATEGORIES = ['macro','asset_class','commodity','market_daily','financial_report','announcement','sector','company','capital_flow','policy_event','geopolitical_event','sentiment','research_report','forecast','backtest'];
     document.getElementById('includedCount').textContent = DASHBOARD_DATA.snapshot_counts.included;
@@ -1455,6 +1471,7 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
     document.getElementById('statusTags').innerHTML = Object.entries(DASHBOARD_DATA.source_status_counts).map(([k,v]) => `<span class="tag">${{k}}: ${{v}}</span>`).join('');
     document.getElementById('topSummaryCards').innerHTML = renderTopSummaryCards();
     document.getElementById('domainSnapshotCards').innerHTML = renderDomainSnapshots();
+    document.getElementById('automatedIngestionPanel').innerHTML = renderAutomatedIngestion();
     document.getElementById('miniCharts').innerHTML = renderSeriesTable([...(MACRO_ASSET.macro_series || []).slice(0, 6), ...(MACRO_ASSET.asset_series || []).slice(0, 4)]);
     document.getElementById('eventTicker').innerHTML = (MACRO_ASSET.recent_events || []).map(event => `<div class="event-line"><strong>${{escapeHtml(event.title || '')}}</strong><br><span class="small">${{escapeHtml(event.event_date || '')}} · ${{escapeHtml(event.source || '')}}</span></div>`).join('') || '<div class="event-line">No verified headline/event source connected yet.</div>';
     renderCategoryCheckboxes();
@@ -1623,6 +1640,24 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const max = Math.max(...top.map(row => Math.abs(Number(row.latest_value) || 0)), 1);
       const points = top.map((row, idx) => `${{idx * 68 + 22}},${{145 - (Math.abs(Number(row.latest_value) || 0) / max) * 110}}`).join(' ');
       return `<svg viewBox="0 0 560 165" width="100%" height="175" role="img" aria-label="${{escapeHtml(label)}}"><polyline points="${{points}}" fill="none" stroke="var(--green)" stroke-width="3"/><text x="10" y="158" fill="var(--muted)">${{escapeHtml(label)}} preview from latest available observations</text></svg>`;
+    }}
+    function renderAutomatedIngestion() {{
+      const entity = AUTOMATED.entity_master || {{}};
+      const source = AUTOMATED.source_status || {{}};
+      const schedule = AUTOMATED.schedule || {{}};
+      const trust = AUTOMATED.data_trust_pipeline || {{}};
+      const runs = AUTOMATED.latest_ingestion_runs || [];
+      const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
+      return `
+        <div class="grid cols-3">
+          <div><p>Entity Master Status</p><div class="metric">${{entity.entity_count || 0}}</div><span class="tag">Identifier Crosswalk: ${{entity.crosswalk_count || 0}}</span></div>
+          <div><p>Unresolved Entity Queue</p><div class="metric">${{entity.unresolved_entity_count || 0}}</div><span class="tag warn">duplicate risk: ${{entity.duplicate_risk_count || 0}}</span></div>
+          <div><p>Ingestion Schedule</p><div class="metric">${{schedule.enabled_count || 0}}</div><span class="tag warn">blocked: ${{schedule.blocked_count || 0}}</span></div>
+        </div>
+        <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
+        <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
+        <h4>Latest Ingestion Runs</h4>
+        <table><thead><tr><th>Source</th><th>Records</th><th>QA</th><th>Entity Mapping</th></tr></thead><tbody>${{runRows || '<tr><td colspan="4">no automated runs yet</td></tr>'}}</tbody></table>`;
     }}
     function renderTopSummaryCards() {{
       const cards = MACRO_ASSET.top_summary_cards || [];

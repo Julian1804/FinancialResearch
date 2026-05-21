@@ -1,0 +1,61 @@
+{
+  "version": "entity_identifier_rules_v1",
+  "generated_at": "2026-05-21T04:25:06Z",
+  "matching_rules": [
+    {
+      "entity_type": "equity",
+      "exact_match_keys": [
+        "country",
+        "exchange",
+        "ticker"
+      ],
+      "secondary_keys": [
+        "isin",
+        "sec_cik",
+        "morningstar_sec_id"
+      ],
+      "fuzzy_allowed": true,
+      "fuzzy_status": "probable_match_needs_review"
+    },
+    {
+      "entity_type": "fund_or_etf",
+      "exact_match_keys": [
+        "isin",
+        "exchange",
+        "ticker"
+      ],
+      "secondary_keys": [
+        "morningstar_sec_id",
+        "fund_code",
+        "exchange_fund_code"
+      ],
+      "fuzzy_allowed": true,
+      "fuzzy_status": "probable_match_needs_review"
+    },
+    {
+      "entity_type": "macro_series",
+      "exact_match_keys": [
+        "source_id",
+        "series_id"
+      ],
+      "fuzzy_allowed": false
+    },
+    {
+      "entity_type": "commodity_or_futures",
+      "exact_match_keys": [
+        "source_id",
+        "world_bank_code",
+        "fred_series_id",
+        "exchange_symbol",
+        "contract_code"
+      ],
+      "fuzzy_allowed": false
+    }
+  ],
+  "merge_guards": [
+    "Do not merge same ticker across different exchanges without ISIN or official identifier confirmation.",
+    "Do not merge commodity benchmark, spot, and futures instruments.",
+    "Do not auto-merge fuzzy fund names.",
+    "Unmapped identifiers enter unresolved_entity_queue."
+  ]
+}

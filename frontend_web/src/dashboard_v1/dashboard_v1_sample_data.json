@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T03:05:20Z",
+  "generated_at": "2026-05-21T04:28:18Z",
   "snapshot_counts": {
     "included": 20,
     "excluded": 7,
@@ -579,7 +579,7 @@
       "exclusion_reason": "publish_date_later_than_window_end"
     }
   ],
-  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-21T03:05:20Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
+  "copy_prompt": "You are helping analyze a FinancialResearch statistical packet.\n\nHard rules:\n- Use only the packet below.\n- Treat `as_of_date` / window_end as the information boundary.\n- Do not use future information.\n- Candidate/staging data cannot be stated as trusted facts.\n- If evidence is missing or not as-of safe, write insufficient_evidence.\n- Output a Markdown research discussion plus a FINAL_REPORT_JSON block.\n\nPacket:\n```json\n{\n  \"report_id\": \"statistical_report_snapshot_sample_research_snapshot_b31725fff052\",\n  \"generated_at\": \"2026-05-21T04:28:18Z\",\n  \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n  \"research_object\": {\n    \"type\": \"black_swan_event\",\n    \"id\": \"custom_ukraine_energy_shock_2022\",\n    \"title\": \"Global energy price shock after the 2022 Russia-Ukraine conflict\",\n    \"description\": \"Prototype as-of snapshot showing macro, commodity, market daily and report evidence boundaries.\"\n  },\n  \"selected_data_categories\": [\n    \"macro\",\n    \"asset_class\",\n    \"commodity\",\n    \"market_daily\",\n    \"financial_report\",\n    \"research_report\",\n    \"forecast\",\n    \"backtest\"\n  ],\n  \"time_mode\": \"publish_date\",\n  \"as_of_check_enabled\": true,\n  \"as_of_safe\": true,\n  \"window_start\": \"2026-04-01\",\n  \"window_end\": \"2026-05-18\",\n  \"summary\": {\n    \"included_count\": 20,\n    \"category_counts\": {\n      \"market_daily\": 4,\n      \"macro\": 16\n    },\n    \"status_counts\": {\n      \"market_daily_candidate_staging\": 2,\n      \"market_daily_secondary_candidate_staging\": 2,\n      \"historical_candidate_staging\": 16\n    },\n    \"source_counts\": {\n      \"baostock_daily\": 2,\n      \"akshare_tencent_daily\": 2,\n      \"treasury_fiscaldata\": 16\n    },\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_future_publish_date_count\": 4\n  },\n  \"macro_summary\": {\n    \"status\": \"available\",\n    \"category\": \"macro\",\n    \"item_count\": 16,\n    \"sources\": [\n      \"treasury_fiscaldata\"\n    ],\n    \"statuses\": {\n      \"historical_candidate_staging\": 16\n    },\n    \"candidate_only\": true\n  },\n  \"asset_class_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"asset_class\",\n    \"reason\": \"No included asset_class evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"sector_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"sector\",\n    \"reason\": \"No sector-level connector is available in Dashboard v1.\",\n    \"candidate_only\": true\n  },\n  \"company_summary\": {\n    \"status\": \"available_candidate_evidence\",\n    \"item_count\": 4,\n    \"symbols\": [\n      \"000001\",\n      \"600519\"\n    ],\n    \"sources\": [\n      \"akshare_tencent_daily\",\n      \"baostock_daily\"\n    ],\n    \"candidate_only\": true\n  },\n  \"capital_flow_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"capital_flow\",\n    \"reason\": \"Capital flow connectors are not yet connected.\",\n    \"candidate_only\": true\n  },\n  \"financial_report_announcement_summary\": {\n    \"status\": \"insufficient_evidence\",\n    \"category\": \"financial_report\",\n    \"reason\": \"No included financial_report evidence in the sample window.\",\n    \"candidate_only\": true\n  },\n  \"evidence_boundary\": {\n    \"snapshot_id\": \"snapshot_sample_research_snapshot_b31725fff052\",\n    \"time_mode\": \"publish_date\",\n    \"as_of_check_enabled\": true,\n    \"window_start\": \"2026-04-01\",\n    \"window_end\": \"2026-05-18\",\n    \"included_item_count\": 20,\n    \"missing_publish_date_review_count\": 44,\n    \"excluded_due_to_future_publish_date_count\": 4,\n    \"candidate_data_warning\": \"Candidate/staging data is not trusted final fact.\",\n    \"not_asof_safe\": false\n  },\n  \"insufficient_evidence\": [\n    {\n      \"category\": \"asset_class\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"backtest\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"commodity\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"financial_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"forecast\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"research_report\",\n      \"reason\": \"No as-of safe included evidence in current snapshot.\"\n    },\n    {\n      \"category\": \"capital_flow\",\n      \"reason\": \"Capital flow connectors are not connected in Dashboard v1.\"\n    },\n    {\n      \"category\": \"sector\",\n      \"reason\": \"Sector-level connectors are not connected in Dashboard v1.\"\n    }\n  ],\n  \"candidate_data_warning\": \"All dashboard v1 data remains candidate/staging/analysis workflow evidence unless explicitly upgraded by the formal trust layer.\",\n  \"formal_trusted_consumption\": false\n}\n```\n\nFINAL_REPORT_JSON must include:\n- packet_id or snapshot_id\n- data_snapshot_id\n- target_symbol or research_object\n- as_of_date\n- analysis_scope\n- key_assumptions\n- investment_view\n- forecast_items\n- risk_items\n- watchlist_signals\n- confidence\n- next_review_date\n- insufficient_evidence_items\n- candidate_data_usage_note\n",
   "report_upload_classification": {
     "schema_valid": true,
     "validation_errors": [],
@@ -3194,7 +3194,7 @@
     }
   },
   "authoritative_source_status": {
-    "generated_at": "2026-05-21T03:05:10Z",
+    "generated_at": "2026-05-21T04:25:06Z",
     "sources": [
       {
         "source_id": "morningstar_direct",
@@ -3253,6 +3253,16 @@
         "sample_validated_candidate_count": 15,
         "candidate_only": true,
         "warning": "Morningstar tiny sample is not coverage validation. Flow proxy is not actual flow."
+      },
+      {
+        "source_id": "automated_ingestion_system_v1",
+        "status": "ready",
+        "entity_count": 70,
+        "crosswalk_count": 96,
+        "unresolved_entity_count": 30,
+        "latest_pilot_run_count": 5,
+        "trusted_candidate_count": 0,
+        "warning": "Automation status is candidate/staging only and does not enter formal trusted consumption."
       }
     ]
   },
@@ -18726,6 +18736,192 @@
         "can_upgrade_to_trusted_candidate": false
       }
     ]
+  },
+  "automated_ingestion": {
+    "generated_at": "2026-05-21T04:25:06Z",
+    "title": "Automated Ingestion System v1",
+    "entity_master": {
+      "entity_count": 70,
+      "crosswalk_count": 96,
+      "unresolved_entity_count": 30,
+      "duplicate_risk_count": 0,
+      "status": "ready_with_review_queue"
+    },
+    "source_status": {
+      "official_automated": [
+        "fred",
+        "us_treasury_fiscaldata",
+        "world_bank_pink_sheet",
+        "nasdaq_trader_symbol_directory",
+        "amac_aggregate_pdf"
+      ],
+      "official_on_hold": [
+        "amac_individual_fund_universe",
+        "sse_szse_etf_lists",
+        "bls_public_api"
+      ],
+      "candidate_sources": [
+        "baostock",
+        "akshare_tencent",
+        "akshare_eastmoney",
+        "morningstar_direct",
+        "eastmoney_public"
+      ]
+    },
+    "schedule": {
+      "enabled_count": 5,
+      "blocked_count": 4,
+      "frequency_counts": {
+        "daily": 3,
+        "daily/monthly": 1,
+        "monthly": 3,
+        "weekly_or_on_demand": 1,
+        "quarterly": 1
+      }
+    },
+    "latest_ingestion_runs": [
+      {
+        "run_id": "auto_v1_akshare_tencent_daily_54e068b5",
+        "retrieval_snapshot_id": "snapshot_auto_v1_akshare_tencent_daily_54e068b5",
+        "source_id": "akshare_tencent_daily",
+        "dataset_id": "akshare_tencent_a_share_daily",
+        "domain": "market_daily",
+        "category": "daily_market",
+        "metric_id": "ohlcv",
+        "start_date": null,
+        "end_date": null,
+        "records_raw": 90,
+        "records_normalized": 90,
+        "raw_path": "Z:\\data_lake_master\\raw\\market_data\\a_share_daily\\akshare_tencent\\20260519\\akshare_tencent_watchlist_daily_30d.json",
+        "normalized_path": "Z:\\data_lake_master\\structured\\market_data\\a_share_daily\\akshare_tencent\\akshare_tencent_watchlist_daily_30d.jsonl",
+        "qa_status": "quality_passed",
+        "revision_status": "not_checked_market_daily_sample",
+        "publish_date_coverage": "market_trade_date_inferred",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true,
+        "formal_trusted_consumption": false,
+        "staging_status": "candidate_staging",
+        "entity_mapping_status": "mapped_for_sample_watchlist",
+        "elapsed_seconds": 0.0,
+        "error_message": ""
+      },
+      {
+        "run_id": "auto_v1_baostock_daily_e543fdc7",
+        "retrieval_snapshot_id": "snapshot_auto_v1_baostock_daily_e543fdc7",
+        "source_id": "baostock_daily",
+        "dataset_id": "baostock_a_share_daily",
+        "domain": "market_daily",
+        "category": "daily_market",
+        "metric_id": "ohlcv",
+        "start_date": null,
+        "end_date": null,
+        "records_raw": 90,
+        "records_normalized": 90,
+        "raw_path": "Z:\\data_lake_master\\raw\\market_data\\a_share_daily\\baostock\\20260519\\baostock_watchlist_daily_30d.json",
+        "normalized_path": "Z:\\data_lake_master\\structured\\market_data\\a_share_daily\\baostock\\baostock_watchlist_daily_30d.jsonl",
+        "qa_status": "quality_passed",
+        "revision_status": "not_checked_market_daily_sample",
+        "publish_date_coverage": "market_trade_date_inferred",
+        "trust_status": "candidate_external_data",
+        "candidate_only": true,
+        "formal_trusted_consumption": false,
+        "staging_status": "candidate_staging",
+        "entity_mapping_status": "mapped_for_sample_watchlist",
+        "elapsed_seconds": 0.0,
+        "error_message": ""
+      },
+      {
+        "run_id": "auto_v1_fred_treasury_existing_macro_4f60aeb7",
+        "retrieval_snapshot_id": "snapshot_auto_v1_fred_treasury_existing_macro_4f60aeb7",
+        "source_id": "fred_treasury_existing_macro",
+        "dataset_id": "fred_treasury_incremental_check",
+        "domain": "macro_rates_fx",
+        "category": "incremental_check",
+        "metric_id": "multi_series",
+        "start_date": null,
+        "end_date": null,
+        "records_raw": 60291,
+        "records_normalized": 60291,
+        "raw_path": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\phase2_run_records.json",
+        "normalized_path": "D:\\workspace\\FinancialResearch\\runtime\\market_data_foundation_phase2\\normalized_phase2_records.jsonl",
+        "qa_status": "quality_passed_or_cached",
+        "revision_status": "vintage_summary_available",
+        "publish_date_coverage": "not_fabricated_observation_date_only",
+        "trust_status": "trusted_by_real_external_candidate_after_QA",
+        "candidate_only": true,
+        "formal_trusted_consumption": false,
+        "staging_status": "validation_candidate",
+        "entity_mapping_status": "macro_series_crosswalk_ready",
+        "elapsed_seconds": 0.0,
+        "error_message": ""
+      },
+      {
+        "run_id": "auto_v1_world_bank_fred_commodity_existing_b0c8cd61",
+        "retrieval_snapshot_id": "snapshot_auto_v1_world_bank_fred_commodity_existing_b0c8cd61",
+        "source_id": "world_bank_fred_commodity_existing",
+        "dataset_id": "commodity_rates_dry_run_incremental_check",
+        "domain": "commodity_asset_class",
+        "category": "incremental_check",
+        "metric_id": "commodity_benchmark",
+        "start_date": null,
+        "end_date": null,
+        "records_raw": 86877,
+        "records_normalized": 86877,
+        "raw_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\raw_artifact_index.json",
+        "normalized_path": "D:\\workspace\\FinancialResearch\\runtime\\macro_asset_historical_ingestion\\normalized_commodity_history_latest.jsonl",
+        "qa_status": "quality_passed_or_cached",
+        "revision_status": "revision_log_available",
+        "publish_date_coverage": "publish_date_unavailable_when_source_lacks_release_date",
+        "trust_status": "trusted_by_real_external_candidate_after_QA",
+        "candidate_only": true,
+        "formal_trusted_consumption": false,
+        "staging_status": "validation_candidate",
+        "entity_mapping_status": "commodity_crosswalk_ready",
+        "elapsed_seconds": 0.0,
+        "error_message": ""
+      },
+      {
+        "run_id": "auto_v1_morningstar_direct_2c5857ab",
+        "retrieval_snapshot_id": "snapshot_auto_v1_morningstar_direct_2c5857ab",
+        "source_id": "morningstar_direct",
+        "dataset_id": "morningstar_controlled_candidate_audit",
+        "domain": "licensed_multi_asset",
+        "category": "audit",
+        "metric_id": "dataset_candidate_status",
+        "start_date": null,
+        "end_date": null,
+        "records_raw": 29,
+        "records_normalized": 29,
+        "raw_path": "D:\\workspace\\FinancialResearch\\runtime\\automated_ingestion_system\\morningstar_controlled_ingestion_candidates.json",
+        "normalized_path": "D:\\workspace\\FinancialResearch\\runtime\\automated_ingestion_system\\morningstar_controlled_ingestion_candidates.json",
+        "qa_status": "metadata_quality_passed_candidate",
+        "revision_status": "not_applicable_metadata_audit",
+        "publish_date_coverage": "not_applicable_metadata_audit",
+        "trust_status": "licensed_source_candidate",
+        "candidate_only": true,
+        "formal_trusted_consumption": false,
+        "staging_status": "controlled_candidate",
+        "entity_mapping_status": "partial_crosswalk_possible",
+        "elapsed_seconds": 0.0,
+        "error_message": ""
+      }
+    ],
+    "data_trust_pipeline": {
+      "candidate": 5,
+      "validation": 2,
+      "trusted_candidate": 0,
+      "trusted": 0
+    },
+    "morningstar": {
+      "controlled_candidate_count": 26,
+      "trusted_candidate_count": 0,
+      "no_auto_login": true,
+      "no_password_saved": true,
+      "token_leaked": false
+    },
+    "legacy_streamlit_used": false,
+    "no_openai_api_called": true,
+    "formal_trusted_consumption_affected": false
   },
   "commodity_taxonomy": {
     "version": "commodity_taxonomy_v2",
