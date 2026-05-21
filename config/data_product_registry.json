@@ -1,0 +1,52 @@
+{
+  "version": "data_product_registry_v1",
+  "generated_at": "2026-05-21T11:23:47Z",
+  "registry_id": "fr_data_product_registry_v1",
+  "data_products": [
+    {
+      "data_product_id": "dp_v1_a_share_etf_ohlc_trusted_preview_20260521",
+      "data_product_name": "A-share / ETF OHLC Trusted Candidate Preview v1",
+      "domain": "a_share_and_etf",
+      "entity_type": "a_share_or_etf",
+      "asset_class": "a_share_and_etf",
+      "source_pair": [
+        "baostock_daily",
+        "akshare_tencent_daily"
+      ],
+      "trusted_fields": [
+        "open",
+        "high",
+        "low",
+        "close"
+      ],
+      "limited_fields": [
+        "amount",
+        "turnover_rate",
+        "pct_change",
+        "preclose"
+      ],
+      "latest_pointer_path": "runtime/field_level_trusted_preview/latest_data_product.json",
+      "manifest_path": "runtime/field_level_trusted_preview/data_product_manifest.json",
+      "versions_root": "runtime/field_level_trusted_preview/versions",
+      "refresh_command": "D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\run_ohlc_trusted_data_product_v1.py",
+      "refresh_frequency": "daily_or_on_demand",
+      "refresh_policy": "incremental_version_append_only",
+      "formal_trusted_consumption_enabled": false,
+      "status": "active_preview_only",
+      "qa_status": "passed",
+      "last_refresh_time": "2026-05-21T11:23:47Z",
+      "version_count": 8,
+      "latest_version_id": "v20260521_112347",
+      "registered_at": "2026-05-21T11:05:00Z",
+      "registry_notes": [
+        "This data product is registered as a controlled refresh target.",
+        "Each refresh appends a new version; old versions are preserved.",
+        "Limited fields remain blocked from trusted preview.",
+        "Formal trusted consumption is OFF.",
+        "Refresh does not trigger OpenAI API calls."
+      ]
+    }
+  ],
+  "registered_count": 1,
+  "formal_trusted_consumption_enabled_global": false
+}
