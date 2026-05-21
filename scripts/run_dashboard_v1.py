@@ -965,6 +965,13 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Cross-source Validation v2",
         "Scheduled Run Simulation",
         "Candidate Status Upgrade",
+        "Automated Ingestion v3",
+        "Operational Data Filling",
+        "Candidate Promotion Summary",
+        "A-share / ETF Controlled Expansion",
+        "Macro Rates FX Commodity Incremental",
+        "Morningstar Field Depth",
+        "Scheduled Run v2",
         "line",
         "bar",
         "pie",
@@ -1657,6 +1664,12 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
       const validation = v2.cross_source_validation || {{}};
       const sim = v2.scheduled_run_simulation || {{}};
       const progression = v2.trust_progression || {{}};
+      const v3 = AUTOMATED.v3_operational_fill || {{}};
+      const v3Promo = v3.candidate_promotion_summary || {{}};
+      const v3Ashare = v3.a_share_etf_expansion || {{}};
+      const v3Macro = v3.macro_rates_fx_commodity_incremental || {{}};
+      const v3Morningstar = v3.morningstar_field_depth || {{}};
+      const v3Schedule = v3.scheduled_run_v2 || {{}};
       const runRows = runs.slice(0, 6).map(run => `<tr><td>${{escapeHtml(run.source_id)}}</td><td>${{escapeHtml(run.records_normalized)}}</td><td>${{escapeHtml(run.qa_status)}}</td><td>${{escapeHtml(run.entity_mapping_status)}}</td></tr>`).join('');
       return `
         <div class="grid cols-3">
@@ -1672,6 +1685,15 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           <div><p>Scheduled Run Simulation</p><div class="metric">${{sim.executed_count || 0}}</div><span class="tag warn">deferred/on-hold ${{sim.deferred_or_on_hold_count || 0}}</span></div>
         </div>
         <p><strong>Candidate Status Upgrade</strong>: schema_validated ${{progression.schema_validated || 0}} · cross_validated ${{progression.cross_validated || 0}} · freshness_validated ${{progression.freshness_validated || 0}} · ready_for_trusted ${{progression.ready_for_trusted || 0}} · trusted_candidate ${{progression.trusted_candidate || 0}}</p>
+        <hr>
+        <h4>Automated Ingestion v3 · Operational Data Filling</h4>
+        <div class="grid cols-3">
+          <div><p>A-share / ETF Controlled Expansion</p><div class="metric">${{v3Ashare.common_records || 0}}</div><span class="tag">${{v3Ashare.dataset_status || 'pending'}}</span></div>
+          <div><p>Macro Rates FX Commodity Incremental</p><div class="metric">${{v3Macro.datasets_checked || 0}}</div><span class="tag">freshness ${{v3Macro.freshness_validated_count || 0}}</span></div>
+          <div><p>Morningstar Field Depth</p><div class="metric">${{v3Morningstar.selected_dataset_count || 0}}</div><span class="tag warn">trusted_candidate ${{v3Morningstar.trusted_candidate_count || 0}}</span></div>
+        </div>
+        <p><strong>Candidate Promotion Summary</strong>: schema_validated ${{v3Promo.schema_validated_candidate || 0}} · cross_validated ${{v3Promo.cross_validated_candidate || 0}} · freshness_validated ${{v3Promo.freshness_validated_candidate || 0}} · ready_for_trusted ${{v3Promo.ready_for_trusted_candidate || 0}} · trusted_candidate ${{v3Promo.trusted_candidate || 0}}</p>
+        <p><strong>Scheduled Run v2</strong>: executed ${{v3Schedule.executed || 0}} · on-hold ${{v3Schedule.on_hold || 0}} · failed ${{v3Schedule.failed || 0}}</p>
         <p><strong>Official On-hold Sources</strong>: ${{(source.official_on_hold || []).map(escapeHtml).join(', ') || 'none'}}</p>
         <p><strong>Data Trust Pipeline</strong>: candidate ${{trust.candidate || 0}} · validation ${{trust.validation || 0}} · trusted_candidate ${{trust.trusted_candidate || 0}} · trusted ${{trust.trusted || 0}}</p>
         <h4>Latest Ingestion Runs</h4>
