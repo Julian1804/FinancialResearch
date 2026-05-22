@@ -23,8 +23,29 @@
         "limited_fields_remain_blocked",
         "no_openai_api_called"
       ]
+    },
+    {
+      "schedule_id": "dp_refresh_morningstar_returns_holdings_v1",
+      "data_product_id": "dp_v1_morningstar_returns_holdings_exposure_candidate_preview",
+      "data_product_name": "Morningstar Returns + Holdings Exposure Candidate Preview v1",
+      "entity_type": "etf_fund_share_class",
+      "update_frequency": "on_demand",
+      "refresh_mode": "append_only_versioning",
+      "refresh_command": "D:\\workspace\\envs\\financial_research_backend\\Scripts\\python.exe scripts\\run_morningstar_controlled_backfill_phase8.py",
+      "enabled": true,
+      "blocker": null,
+      "formal_trusted_consumption_enabled": false,
+      "next_run_plan": "eligible_for_controlled_refresh",
+      "last_refresh_time": "2026-05-22T06:47:30.354269Z",
+      "expected_outcomes": [
+        "new_version_snapshot_created",
+        "latest_pointer_updated",
+        "manifest_appended",
+        "limited_fields_remain_blocked",
+        "no_openai_api_called"
+      ]
     }
   ],
-  "enabled_count": 1,
+  "enabled_count": 2,
   "blocked_count": 0
 }
