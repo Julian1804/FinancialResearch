@@ -114,7 +114,7 @@ def test_run_state_updated() -> None:
     rs = read_json(STATE / "run_state.json")
     assert rs.get("batch2a_completed") is True
     assert rs.get("batch2a_run_id", "").startswith("batch2a_")
-    assert rs.get("next_step") in ("batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c")
+    assert rs.get("next_step") in ("batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c", "batch2c_plan_or_incremental")
 
 
 def test_nas_structured_batch2a() -> None:

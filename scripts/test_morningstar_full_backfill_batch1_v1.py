@@ -46,7 +46,7 @@ def test_run_state_batch1_completed() -> None:
     assert state.get("preflight_passed") is True
     assert state.get("batch1_completed") is True
     assert state.get("batch1_api_calls", 0) > 0
-    assert state.get("next_step") in ("batch2_or_incremental", "batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c")
+    assert state.get("next_step") in ("batch2_or_incremental", "batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c", "batch2c_plan_or_incremental")
 
 
 def test_batch1_manifest_exists() -> None:
