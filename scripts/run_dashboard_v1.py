@@ -852,6 +852,9 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
     fund_etf_phase3_trust_queue = read_json(FUND_ETF_PHASE3_ROOT / "trust_upgrade_queue_phase3.json") or {"queue": []}
     automated_ingestion_status = read_json(AUTOMATED_INGESTION_ROOT / "dashboard_automation_status.json")
     field_trust_preview = read_json(FIELD_TRUST_PREVIEW_ROOT / "dashboard_field_trust_summary.json")
+    morningstar_workspace = read_json(PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "workspace" / "morningstar_workspace_index.json") if (PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "workspace" / "morningstar_workspace_index.json").exists() else {}
+    morningstar_stat_report = read_json(PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "statistical_report" / "morningstar_statistical_report_v1.json") if (PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "statistical_report" / "morningstar_statistical_report_v1.json").exists() else {}
+    morningstar_packet = read_json(PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "analysis_packet" / "morningstar_analysis_packet_integration_v1.json") if (PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1" / "analysis_packet" / "morningstar_analysis_packet_integration_v1.json").exists() else {}
     ui_data = {
         "generated_at": utc_now(),
         "snapshot_counts": snapshot["counts"],
@@ -861,6 +864,9 @@ def write_dashboard_ui(snapshot: dict[str, Any], statistical_report: dict[str, A
             "copy_to_gpt_research_prompt": statistical_report["copy_to_gpt_research_prompt"],
             "evidence_boundary": statistical_report["evidence_boundary"],
         },
+        "morningstar_workspace": morningstar_workspace,
+        "morningstar_statistical_report": morningstar_stat_report,
+        "morningstar_analysis_packet": morningstar_packet,
         "source_status_counts": dict(Counter(item["staging_status"] for item in evidence_items)),
         "category_counts": dict(Counter(item["category"] for item in evidence_items)),
         "included_preview": snapshot["included_items"][:8],
@@ -1014,6 +1020,10 @@ def run_ui_smoke(ui_result: dict[str, Any]) -> dict[str, Any]:
         "Download GPT Prompt",
         "Download JSON Report",
         "Download Evidence Boundary",
+        "Morningstar Returns + Holdings Exposure Candidate Preview",
+        "Generate Morningstar Report",
+        "Download Morningstar Statistical Report",
+        "Download Analysis Packet",
         "Report Upload",
         "Analysis Zone",
         "Forecast Zone",
@@ -1249,6 +1259,20 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
           </div>
           <label>Selected Data Categories</label>
           <div class="checkbox-grid" id="categoryCheckboxes"></div>
+          <div class="panel" style="margin-top:12px;">
+            <h3>Morningstar Returns + Holdings Exposure Candidate Preview</h3>
+            <p class="small">Candidate preview only. TNA/ENF blocked. US equities excluded as standalone time series.</p>
+            <div class="actions">
+              <button class="amber" onclick="showMorningstarGenerated()">Generate Morningstar Report</button>
+            </div>
+            <div id="morningstarGeneratedResult" class="small"></div>
+            <div class="actions" id="morningstarDownloadButtons">
+              <a class="download-link" id="downloadMorningstarReport" href="#" download>Download Morningstar Statistical Report</a>
+              <a class="download-link" id="downloadMorningstarPacket" href="#" download>Download Analysis Packet</a>
+              <a class="download-link" id="downloadMorningstarEvidence" href="#" download>Download Evidence Boundary</a>
+              <a class="download-link" id="downloadMorningstarWorkspace" href="#" download>Download Workspace Index</a>
+            </div>
+          </div>
           <div class="actions">
             <button class="green" onclick="showGenerated()">Generate Statistical Report</button>
             <button onclick="copyPrompt()">Copy Prompt</button>
@@ -1985,6 +2009,41 @@ def render_dashboard_html(ui_data: dict[str, Any]) -> str:
         document.getElementById('generatedResult').innerHTML =
           '<p><strong>Static fallback:</strong> action server unavailable, showing latest generated paths.</p><pre>' +
           JSON.stringify(DASHBOARD_DATA.report_paths, null, 2) + '</pre>';
+      }}
+    }}
+    async function showMorningstarGenerated() {{
+      try {{
+        const response = await fetch('/api/dashboard/generate_morningstar_report', {{
+          method: 'POST',
+          headers: {{'Content-Type': 'application/json'}},
+          body: JSON.stringify({{}})
+        }});
+        const payload = await response.json();
+        const mapping = [
+          ['downloadMorningstarReport', payload.outputs?.morningstar_statistical_report],
+          ['downloadMorningstarPacket', payload.outputs?.morningstar_analysis_packet],
+          ['downloadMorningstarEvidence', payload.outputs?.morningstar_evidence_boundary],
+          ['downloadMorningstarWorkspace', payload.outputs?.morningstar_workspace_index]
+        ];
+        mapping.forEach(([id, path]) => {{
+          const link = document.getElementById(id);
+          if (path) {{
+            link.href = `/api/dashboard/download?path=${{encodeURIComponent(path)}}`;
+          }} else {{
+            link.href = '#';
+          }}
+        }});
+        document.getElementById('morningstarGeneratedResult').innerHTML =
+          '<div class="panel"><h3>Morningstar Candidate Report Generated</h3>' +
+          '<p><strong>data_product_id:</strong> ' + escapeHtml(payload.data_product_id || '') + '</p>' +
+          '<p><strong>version_id:</strong> ' + escapeHtml(payload.version_id || '') + '</p>' +
+          '<p><strong>api_calls_made:</strong> ' + (payload.api_calls_made ?? 0) + '</p>' +
+          '<p><strong>tna_enf_blocked:</strong> ' + (payload.tna_enf_blocked ? 'YES' : 'NO') + '</p>' +
+          '<p><strong>us_equity_standalone_excluded:</strong> ' + (payload.us_equity_standalone_excluded ? 'YES' : 'NO') + '</p>' +
+          '<pre>' + JSON.stringify(payload, null, 2) + '</pre></div>';
+      }} catch (error) {{
+        document.getElementById('morningstarGeneratedResult').innerHTML =
+          '<p><strong>Static fallback:</strong> action server unavailable. Morningstar data product paths are not dynamically loaded.</p>';
       }}
     }}
     function copyPrompt() {{

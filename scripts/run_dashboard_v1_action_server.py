@@ -74,6 +74,31 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
                 }
             )
             return
+        if parsed.path == "/api/dashboard/generate_morningstar_report":
+            from scripts.run_morningstar_research_workflow_integration_v1 import run_integration
+            summary = run_integration()
+            ms_root = PROJECT_ROOT / "runtime" / "morningstar_research_workflow_v1"
+            self.send_json(
+                {
+                    "status": "ok",
+                    "action": "generate_morningstar_report",
+                    "data_product_id": summary["data_product_id"],
+                    "version_id": summary["version_id"],
+                    "api_calls_made": 0,
+                    "no_openai_api_called": True,
+                    "formal_trusted_consumption": False,
+                    "parse_lab_affected": False,
+                    "us_equity_standalone_excluded": True,
+                    "tna_enf_blocked": True,
+                    "outputs": {
+                        "morningstar_workspace_index": str(ms_root / "workspace" / "morningstar_workspace_index.json"),
+                        "morningstar_statistical_report": str(ms_root / "statistical_report" / "morningstar_statistical_report_v1.json"),
+                        "morningstar_analysis_packet": str(ms_root / "analysis_packet" / "morningstar_analysis_packet_integration_v1.json"),
+                        "morningstar_evidence_boundary": str(ms_root / "analysis_packet" / "morningstar_analysis_packet_integration_v1.json"),
+                    },
+                }
+            )
+            return
         if parsed.path == "/api/dashboard/classify_uploaded_report":
             raw_report = str(payload.get("raw_report") or "")
             output_name = str(payload.get("output_name") or "api_report_upload_action")
