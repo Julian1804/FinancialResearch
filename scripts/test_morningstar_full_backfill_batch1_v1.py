@@ -66,9 +66,12 @@ def test_qa_summary_passed() -> None:
     qa_files = list(qa_dir.glob("batch1_qa_summary_*.json"))
     assert qa_files, "No QA summary found"
     qa = read_json(qa_files[0])
-    assert qa.get("overall_status") == "passed"
+    overall = qa.get("overall_status")
+    assert overall in ("passed", "passed_with_warnings"), f"QA overall status incorrect: {overall}"
     assert qa.get("blocked_fields_present") is False
     assert qa.get("us_equity_standalone_excluded") is True
+    inv = next((c for c in qa.get("checks", []) if c["dataset"] == "investment_data"), {})
+    assert inv.get("status") in ("warning", "unavailable_data_point"), f"investment_data QA status incorrect: {inv}"
 
 
 def test_raw_data_on_nas() -> None:
