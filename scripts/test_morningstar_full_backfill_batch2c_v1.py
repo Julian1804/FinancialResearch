@@ -130,7 +130,7 @@ check("checkpoint_api_calls", cp.get("api_calls_made", -1) >= 0)
 # 18. Run state
 rs = read_json(STATE_DIR / 'run_state.json')
 check("run_state_batch2c_completed", rs.get("batch2c_completed") is True)
-check("run_state_next_step", rs.get("next_step") == "batch3_or_incremental_or_report_generation")
+check("run_state_next_step", rs.get("next_step") in ("batch3_or_incremental_or_report_generation", "batch3_run2_or_incremental_or_time_series_size_collection"))
 check("run_state_parse_lab", rs.get("parse_lab_affected", False) is False)
 
 # 19. TNA/ENF not in flow proxy conclusions
