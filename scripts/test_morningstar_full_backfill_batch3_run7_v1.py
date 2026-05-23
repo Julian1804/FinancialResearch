@@ -16,11 +16,11 @@ def ck(name, cond):
 fi=rj(LN/'batch3_run7_exposure_field_inventory.json'); ck("field_inventory",fi["report_id"] is not None)
 sm=rj(LN/'batch3_run7_exposure_semantic_field_map.json'); ck("semantic_map",len(sm["groups"])>=8)
 st=rj(LN/'batch3_run7_sector_taxonomy_mapping.json'); ck("taxonomy",len(st["mappings"])>=15)
-er=rj(LN/'batch3_run7_direction_evidence_rules.json'); ck("rules","flow_proxy_ready" in er["rules"])
+er=rj(LN/'batch3_run7_direction_evidence_rules.json'); ck("rules","flow_proxy_ready" in er["tiers"])
 
 rc=rj(LN/'batch3_run7_observability_reclassification.json')
-ck("reclass_holdings_demoted",rc["holdings_no_longer_hard_requirement"] is True)
-ck("reclass_nav_demoted",rc["nav_returns_demoted_to_flow_proxy_enhancer"] is True)
+ck("reclass_holdings_demoted",rc["holdings_no_longer_mandatory"] is True)
+ck("reclass_nav_demoted",rc["nav_returns_demoted"] is True)
 
 fp=rj(LN/'batch3_run7_flow_proxy_ready_universe.json'); ck("flow_ready",fp["total"]==11752)
 ca=rj(LN/'batch3_run7_capital_allocation_observable_universe.json'); ck("cap_alloc",ca["total"]==0)
@@ -29,7 +29,7 @@ mo=rj(LN/'batch3_run7_metadata_only_universe.json'); ck("meta_only",mo["total"]=
 
 es=rj(LN/'batch3_run7_exposure_summary.json')
 ck("exposure_summary",es["report_id"] is not None)
-ck("exposure_holdings_missing",es["holdings_missing_but_direction_available"]>0)
+ck("exposure_holdings_missing",es["holdings_missing_direction_available"]>0)
 
 ck("sector_summary",rj(LN/'batch3_run7_sector_industry_summary.json')["report_id"] is not None)
 ck("country_summary",rj(LN/'batch3_run7_country_region_summary.json')["report_id"] is not None)
