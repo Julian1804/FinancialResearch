@@ -1173,5 +1173,32 @@ FINAL_REPORT_JSON must include:
       }
     }
   </script>
+  <!-- Morningstar Token Status Bar -->
+  <div id="ms-token-bar" style="position:fixed;top:0;right:16px;z-index:9999;background:#16213e;border:1px solid #334155;border-radius:0 0 6px 6px;padding:4px 14px;font-size:11px;font-family:monospace;color:#94a3b8;display:none;align-items:center;gap:10px">
+    <span id="ms-token-dot" style="width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0"></span>
+    <span id="ms-token-text">MS Token: loading...</span>
+    <a href="/morningstar_token_panel.html" style="color:#3b82f6;text-decoration:none;font-size:10px;margin-left:4px">Manage</a>
+  </div>
+  <script>
+  (function(){
+    var bar=document.getElementById('ms-token-bar');
+    var dot=document.getElementById('ms-token-dot');
+    var text=document.getElementById('ms-token-text');
+    function update(){
+      fetch('/api/dashboard/morningstar/token_status').then(function(r){return r.json()}).then(function(d){
+        bar.style.display='flex';
+        var c='#6b7280',s=d.status||'missing';
+        if(s==='valid_estimated') c='#4ade80';
+        else if(s==='expiring_soon') c='#f59e0b';
+        else if(s==='expired_estimated') c='#ef4444';
+        dot.style.background=c;
+        text.innerHTML='MS Token: <b style="color:#e0e0e0">'+s.replace('_',' ')+'</b> '+(d.masked_token||'none')+' | '+(d.remaining_hours||0)+'h';
+        if(d.expired_estimated) text.innerHTML+=' &#9888;';
+      }).catch(function(){ bar.style.display='none' });
+    }
+    update();
+    setInterval(update,60000);
+  })();
+  </script>
 </body>
 </html>
