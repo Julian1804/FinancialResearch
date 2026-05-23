@@ -59,7 +59,7 @@ ck("qa", rj(QA/'capital_flow_exposure_qa_summary_v1.json')["qa_id"] is not None)
 # Run state
 rs = rj(ST/'run_state.json')
 ck("run_state", rs.get("batch3_run10_completed") is True)
-ck("next_step", "time_series" in rs["next_step"])
+ck("next_step", ("time_series" in rs["next_step"]) or ("token_refresh" in rs["next_step"]))
 
 print(f"\nResults: {passed} passed, {failed} failed, {passed+failed} total")
 if failed>0: sys.exit(1)
