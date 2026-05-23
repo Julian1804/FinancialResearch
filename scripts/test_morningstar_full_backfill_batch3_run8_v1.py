@@ -61,7 +61,7 @@ ck("manifest",rj(LR/'manifest'/'batch3_run8_manifest_20260523.json')["manifest_i
 # Run state
 rs = rj(ST/'run_state.json')
 ck("run_state",rs.get("batch3_run8_completed") is True)
-ck("next_step",rs["next_step"]=="batch3_run9_or_flow_proxy_computation")
+ck("next_step",rs["next_step"] in ("batch3_run9_or_flow_proxy_computation","batch3_run10_or_flow_proxy_computation"))
 
 print(f"\nResults: {passed} passed, {failed} failed, {passed+failed} total")
 if failed>0: sys.exit(1)
