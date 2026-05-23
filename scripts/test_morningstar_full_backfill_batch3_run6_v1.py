@@ -60,7 +60,7 @@ check("source_audit",read_json(LOCAL_RUNTIME/'batch3_run6'/'batch3_run6_universe
 
 rs=read_json(STATE_DIR/'run_state.json')
 check("run_state_run6",rs.get("batch3_run6_completed") is True)
-check("next_step",rs["next_step"]=="batch3_run7_or_incremental_or_time_series")
+check("next_step",rs["next_step"] in ("batch3_run7_or_incremental_or_time_series","batch3_run8_or_flow_proxy_computation"))
 # Observability classification checks
 hi=read_json(LOCAL_RUNTIME/'batch3_run6'/'batch3_run6_high_observability_universe.json')
 check("high_obs_exists","high_observability" in hi["universe_id"])

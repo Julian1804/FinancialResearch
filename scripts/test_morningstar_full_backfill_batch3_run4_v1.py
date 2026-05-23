@@ -89,7 +89,7 @@ check("checkpoint", read_json(LOCAL_RUNTIME / 'batch3_run4' / 'batch3_run4_check
 # 13. Run state
 rs = read_json(STATE_DIR / 'run_state.json')
 check("run_state_batch3_run4", rs.get("batch3_run4_completed") is True)
-check("next_step", rs.get("next_step") in ("batch3_run5_or_incremental_or_time_series_size_collection", "batch3_run6_or_incremental_or_time_series_size", "batch3_run7_or_incremental_or_time_series"))
+check("next_step", rs.get("next_step") in ("batch3_run5_or_incremental_or_time_series_size_collection", "batch3_run6_or_incremental_or_time_series_size", "batch3_run7_or_incremental_or_time_series","batch3_run8_or_flow_proxy_computation"))
 
 # 14. API stats
 cp = read_json(LOCAL_RUNTIME / 'batch3_run4' / 'batch3_run4_checkpoint.json')
