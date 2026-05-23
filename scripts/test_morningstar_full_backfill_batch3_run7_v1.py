@@ -48,7 +48,7 @@ ck("manifest",rj(LOCAL_RUNTIME/'manifest'/'batch3_run7_manifest_20260523.json')[
 
 rs=rj(STATE_DIR/'run_state.json')
 ck("run_state_run7",rs.get("batch3_run7_completed") is True)
-ck("next_step",rs["next_step"]=="batch3_run8_or_flow_proxy_computation")
+ck("next_step",rs["next_step"] in ("batch3_run8_or_flow_proxy_computation","batch3_run9_or_flow_proxy_computation"))
 
 print(f"\nResults: {passed} passed, {failed} failed, {passed+failed} total")
 if failed>0: sys.exit(1)

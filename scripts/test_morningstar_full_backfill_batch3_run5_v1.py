@@ -72,7 +72,7 @@ check("api_failed",cp["api_failed"]==0)
 
 rs=read_json(STATE_DIR/'run_state.json')
 check("run_state_run5",rs.get("batch3_run5_completed") is True)
-check("next_step",rs["next_step"] in ("batch3_run6_or_incremental_or_time_series_size","batch3_run7_or_incremental_or_time_series","batch3_run8_or_flow_proxy_computation"))
+check("next_step",rs["next_step"] in ("batch3_run6_or_incremental_or_time_series_size","batch3_run7_or_incremental_or_time_series","batch3_run8_or_flow_proxy_computation","batch3_run9_or_flow_proxy_computation"))
 
 print(f"\nResults: {passed} passed, {failed} failed, {passed+failed} total")
 if failed>0: sys.exit(1)
