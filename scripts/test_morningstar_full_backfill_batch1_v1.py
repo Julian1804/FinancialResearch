@@ -46,7 +46,7 @@ def test_run_state_batch1_completed() -> None:
     assert state.get("preflight_passed") is True
     assert state.get("batch1_completed") is True
     assert state.get("batch1_api_calls", 0) > 0
-    assert state.get("next_step") in ("batch2_or_incremental", "batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c", "batch2c_plan_or_incremental", "batch3_or_incremental_or_report_generation", "batch3_run2_or_incremental_or_time_series_size_collection", "batch3_run3_or_incremental_or_time_series_size_collection", "batch3_run4_or_incremental_or_time_series_deepening", "batch3_run5_or_incremental_or_time_series_size_collection")
+    assert state.get("next_step") in ("batch2_or_incremental", "batch2b_dry_run_plan_or_incremental", "token_refresh_required_before_batch2c", "batch2c_plan_or_incremental", "batch3_or_incremental_or_report_generation", "batch3_run2_or_incremental_or_time_series_size_collection", "batch3_run3_or_incremental_or_time_series_size_collection", "batch3_run4_or_incremental_or_time_series_deepening", "batch3_run5_or_incremental_or_time_series_size_collection", "batch3_run6_or_incremental_or_time_series_size")
 
 
 def test_batch1_manifest_exists() -> None:
