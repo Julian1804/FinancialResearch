@@ -1,0 +1,94 @@
+{
+  "version": "a_share_data_source_policy_v1",
+  "generated_at": "2026-05-23T10:05:16Z",
+  "principles": [
+    "Data source trust is interface-level, not platform-level.",
+    "AKShare is a wrapper, not the sole data source.",
+    "Stable FRED, SEC, BaoStock, Tencent, CNINFO and other sources remain active by data domain.",
+    "Candidate consumption must retain upstream provenance and field-level limitations.",
+    "Formal trusted consumption is not opened by this policy."
+  ],
+  "a_share_daily_market_data_source_policy": {
+    "default_primary_candidate": "akshare_tencent_a_share_daily",
+    "validation_partner": "akshare_baostock_a_share_daily",
+    "deferred_fallback": "akshare_eastmoney_stock_zh_a_hist",
+    "future_specific_connector": "eastmoney_specific_future_connector",
+    "primary_reason": "Tencent daily line interface is currently stable and provides date/open/close/high/low/amount.",
+    "baostock_role": "stable_supplement_validation_partner_historical_source",
+    "eastmoney_daily_role": "unstable_for_primary_fallback_or_deferred_monitor_required",
+    "formal_trusted_consumption": false
+  },
+  "a_share_daily_field_derivation_policy": {
+    "raw_fields_from_tencent": [
+      "date",
+      "open",
+      "close",
+      "high",
+      "low",
+      "amount"
+    ],
+    "supplemented_fields": {
+      "stock_code": "parse from sh/sz/bj-prefixed symbol parameter",
+      "exchange": "parse from sh/sz/bj-prefixed symbol parameter",
+      "adjust_type": "qfq/hfq/raw request parameter",
+      "source": "akshare_tencent",
+      "upstream": "tencent"
+    },
+    "derived_fields": {
+      "price_change": "close_t - close_t_minus_1",
+      "pct_change": "close_t / close_t_minus_1 - 1",
+      "amplitude": "(high - low) / close_t_minus_1"
+    },
+    "derivation_requirements": [
+      "record derivation_method",
+      "record previous_close_source",
+      "set price_change/pct_change/amplitude to null for first observation without previous close",
+      "do not mix raw/qfq/hfq adjustment modes",
+      "derived fields inherit the original adjustment basis"
+    ],
+    "not_consumption_grade_hard_calculation": {
+      "turnover_amount": "Do not compute from OHLC and volume; exact turnover amount needs source-provided transaction value.",
+      "turnover_rate": "Do not compute without stable float/free-float share base."
+    }
+  },
+  "a_share_daily_missing_field_policy": {
+    "amount": "source_provided_only_or_missing",
+    "turnover_amount": "missing_until_stable_source_provides",
+    "turnover_rate": "missing_until_float_share_source_available",
+    "pct_change": "derived_candidate_with_method_and_previous_close_source",
+    "amplitude": "derived_candidate_with_method_and_previous_close_source"
+  },
+  "source_priority_by_field": {
+    "open": [
+      "akshare_tencent_a_share_daily",
+      "akshare_baostock_a_share_daily"
+    ],
+    "high": [
+      "akshare_tencent_a_share_daily",
+      "akshare_baostock_a_share_daily"
+    ],
+    "low": [
+      "akshare_tencent_a_share_daily",
+      "akshare_baostock_a_share_daily"
+    ],
+    "close": [
+      "akshare_tencent_a_share_daily",
+      "akshare_baostock_a_share_daily"
+    ],
+    "amount": [
+      "akshare_tencent_a_share_daily",
+      "eastmoney_specific_future_connector"
+    ],
+    "turnover_rate": [
+      "eastmoney_specific_future_connector",
+      "future_float_share_connector"
+    ],
+    "pct_change": [
+      "derived_from_close_with_previous_close_source",
+      "source_provided_fallback"
+    ],
+    "preclose": [
+      "source_provided_or_derived_from_prior_close_with_adjustment_policy"
+    ]
+  }
+}

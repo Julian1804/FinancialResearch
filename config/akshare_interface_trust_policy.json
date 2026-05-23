@@ -1,0 +1,102 @@
+{
+  "version": "akshare_interface_trust_policy_v1",
+  "generated_at": "2026-05-23T10:05:16Z",
+  "wrapper_policy": "AKShare is evaluated interface-by-interface by upstream provenance, stability, field quality and QA evidence.",
+  "interfaces": {
+    "stock_zh_a_hist_tx": {
+      "upstream": "tencent",
+      "domain": "a_share_daily_market_data",
+      "status": "primary_candidate",
+      "consumer_status": "production_candidate",
+      "known_fields": [
+        "date",
+        "open",
+        "close",
+        "high",
+        "low",
+        "amount"
+      ],
+      "trust_role": "institutional_proxy_source",
+      "default_chain": true,
+      "notes": "Use as A-share daily primary candidate while recording adjustment mode and derivation policy."
+    },
+    "stock_zh_a_hist": {
+      "upstream": "eastmoney",
+      "domain": "a_share_daily_market_data",
+      "status": "unstable_for_primary",
+      "consumer_status": "fallback_or_deferred",
+      "default_chain": false,
+      "monitor_required": true,
+      "notes": "Eastmoney daily history endpoint remains unstable and must not be the default primary chain."
+    },
+    "stock_balance_sheet_by_yearly_em": {
+      "upstream": "eastmoney",
+      "domain": "financial_statement_balance_sheet",
+      "status": "available_keep",
+      "consumer_status": "production_candidate",
+      "trust_role": "institutional_proxy_source"
+    },
+    "stock_profit_sheet_by_yearly_em": {
+      "upstream": "eastmoney",
+      "domain": "financial_statement_income",
+      "status": "available_keep",
+      "consumer_status": "production_candidate",
+      "trust_role": "institutional_proxy_source"
+    },
+    "stock_cash_flow_sheet_by_yearly_em": {
+      "upstream": "eastmoney",
+      "domain": "financial_statement_cash_flow",
+      "status": "available_keep",
+      "consumer_status": "production_candidate",
+      "trust_role": "institutional_proxy_source"
+    },
+    "stock_yjbb_em": {
+      "upstream": "eastmoney",
+      "domain": "earnings_report_table",
+      "status": "available_keep",
+      "consumer_status": "production_candidate"
+    },
+    "stock_news_em": {
+      "upstream": "eastmoney",
+      "domain": "company_news_event_sentiment",
+      "status": "available_keep",
+      "consumer_status": "event_sentiment_candidate"
+    },
+    "stock_notice_report": {
+      "upstream": "eastmoney",
+      "domain": "announcement_metadata",
+      "status": "available_keep",
+      "consumer_status": "announcement_candidate_supplement",
+      "authority_note": "CNINFO remains preferred authority for formal disclosure metadata and PDFs."
+    },
+    "stock_financial_abstract": {
+      "upstream": "sina",
+      "domain": "financial_abstract",
+      "status": "continue_testing",
+      "consumer_status": "production_candidate_if_stability_passes"
+    },
+    "stock_financial_analysis_indicator": {
+      "upstream": "sina",
+      "domain": "financial_analysis_indicator",
+      "status": "continue_testing",
+      "consumer_status": "production_candidate_if_stability_passes"
+    },
+    "stock_financial_abstract_ths": {
+      "upstream": "ths",
+      "domain": "financial_abstract",
+      "status": "continue_testing",
+      "consumer_status": "production_candidate_if_stability_passes"
+    }
+  },
+  "eastmoney_large_run_stability_metrics": [
+    "success_rate",
+    "failure_rate",
+    "timeout_count",
+    "anti_scraping_error",
+    "field_missing_rate",
+    "schema_drift",
+    "last_successful_run",
+    "last_failure_reason"
+  ],
+  "formal_trusted_consumption": false
+}

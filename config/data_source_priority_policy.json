@@ -1,0 +1,63 @@
+{
+  "version": "data_source_priority_policy_v1",
+  "generated_at": "2026-05-23T10:05:16Z",
+  "multi_source_principles": [
+    "FR does not use one universal data source.",
+    "Choose primary sources by data domain, stability, provenance and field completeness.",
+    "Keep source_priority and upstream provenance at field level.",
+    "Do not use PDF parsing output to overwrite authoritative structured interfaces."
+  ],
+  "domains": {
+    "macro_rates_inflation_employment": {
+      "primary_sources": [
+        "fred_macro",
+        "treasury_fiscaldata"
+      ],
+      "retained_sources": [
+        "FRED",
+        "U.S. Treasury FiscalData",
+        "BLS deferred retry"
+      ]
+    },
+    "us_regulatory_filings": {
+      "primary_sources": [
+        "sec_filings"
+      ],
+      "retained_sources": [
+        "SEC EDGAR"
+      ]
+    },
+    "a_share_daily_market": {
+      "primary_sources": [
+        "akshare_tencent_a_share_daily"
+      ],
+      "secondary_sources": [
+        "akshare_baostock_a_share_daily"
+      ],
+      "deferred_sources": [
+        "akshare_eastmoney_stock_zh_a_hist"
+      ]
+    },
+    "a_share_structured_financials": {
+      "primary_sources": [
+        "akshare_eastmoney_financial_statements",
+        "akshare_ths_financial_abstract"
+      ],
+      "secondary_sources": [
+        "akshare_sina_financial_abstract"
+      ],
+      "authority_metadata": [
+        "cninfo_report_pdf"
+      ]
+    },
+    "announcements_and_reports": {
+      "primary_sources": [
+        "cninfo_report_pdf"
+      ],
+      "supplemental_sources": [
+        "eastmoney_notice_report"
+      ]
+    }
+  },
+  "fallback_policy": "Fallback sources are used when primary is missing or unavailable; they do not silently overwrite primary values."
+}

@@ -1,0 +1,74 @@
+{
+  "version": "financial_metric_source_priority_v1",
+  "generated_at": "2026-05-23T10:05:16Z",
+  "primary_selection_rule": "Select the most stable interface with the clearest field definition, consistent reporting period and timely updates.",
+  "duplicate_financial_field_resolution_policy": {
+    "same_company_same_period_same_metric": {
+      "primary_source_value": "enters consumption candidate field",
+      "secondary_source_value": "stored as validation_reference or fallback only",
+      "fallback_behavior": "use secondary only when primary missing and provenance is retained",
+      "large_discrepancy_behavior": "mark discrepancy_warning; do not start default manual review and do not let PDF parse overwrite structured interface"
+    }
+  },
+  "metric_priorities": {
+    "revenue": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "net_profit": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "gross_margin": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "net_margin": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "roe": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "roa": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "eps": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "debt_to_asset": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    },
+    "cash_flow_from_operations": {
+      "primary": "akshare_ths_financial_abstract",
+      "secondary": "akshare_sina_financial_analysis_indicator",
+      "fallback": "akshare_sina_financial_abstract",
+      "statement_fallback": "akshare_eastmoney_financial_statements"
+    }
+  },
+  "comparison_targets": [
+    "sina_stock_financial_abstract",
+    "sina_stock_financial_analysis_indicator",
+    "ths_stock_financial_abstract"
+  ]
+}
