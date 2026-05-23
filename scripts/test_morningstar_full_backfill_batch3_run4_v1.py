@@ -25,6 +25,7 @@ def check(name, condition):
 univ = read_json(LOCAL_RUNTIME / 'batch3_run4' / 'batch3_run4_expanded_universe.json')
 check("universe_exists", "batch3_run4" in univ.get("universe_id", ""))
 check("universe_10k", univ.get("total_candidates", 0) >= 10000)
+check("universe_exact", univ.get("total_candidates", 0) == 12951)
 
 # 2. Investment data panel
 inv = read_json(STRUCTURED_DIR / 'batch3_run4_investment_data_panel.json')

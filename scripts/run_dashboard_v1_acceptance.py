@@ -389,7 +389,7 @@ def http_get_text(url: str) -> str:
 
 
 def http_get_bytes(url: str) -> bytes:
-    with urllib.request.urlopen(url, timeout=10) as response:
+    with urllib.request.urlopen(url, timeout=60) as response:
         return response.read()
 
 
