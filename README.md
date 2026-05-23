@@ -1,196 +1,110 @@
 # FinancialResearch
 
-FinancialResearch 是一个个人投资研究用的金融研究总集成平台，目标是提供类似研究 Dashboard 的工作台，逐步覆盖：
+FinancialResearch is a comprehensive financial research platform. It is not only a financial-report parser, not only a fund-flow tool, and not a single-source market-data dashboard.
 
-- 财报研究
-- 宏观研究
-- 舆情分析
-- 大类资产 / 商品 / 股指 / 汇率 / 利率跟踪
-- 研究资料库
-- 决策支持
+The platform collects, governs, and connects multi-source financial data so that research workflows can produce statistical reports, human-in-the-loop GPT Web analysis packets, structured reports, forecasts, backtests, revision records, and decision-support evidence.
 
-本次重构是工程架构升级，不是推翻原有财报分析方法论。FinancialResearch 仍然围绕长期跟踪、预测、回测、修正来组织研究工作。
+## Current Research Mainline
 
-## Research Methodology
+The current mainline is **global and China capital-flow research**:
 
-原有财报分析方法论保持不变：
+- Where does money come from?
+- Which countries, asset classes, sectors, currencies, funds, ETFs, companies, and markets receive or lose capital?
+- How can price movement be separated from actual or proxy capital flow?
+- How do global flows affect China assets, A-shares, H-shares, sectors, and companies?
+- How should later data validate, falsify, or revise earlier forecasts?
 
-- 先做一级 / 二级 / 三级行业分类
-- 结合宏观环境作为 benchmark
-- 围绕财报长期跟踪、预测、回测、修正
-- 区分主时序财报和辅助材料
+This is the current research focus, not the permanent only topic. The platform remains designed to add other research themes.
 
-财报分析核心框架仍保留：
+## Platform Modules
 
-1. 行业定位
-2. 宏观环境
-3. 公司概况
-4. 成本结构
-5. 客户结构
-6. 盈利模式
-7. 资金流向
-8. 未来展望
-9. 护城河
-10. 风险 + 预期
+- **Data Sources**: FRED, SEC, BaoStock, Tencent, AKShare interface-level wrappers, CNINFO, Eastmoney, Sina, THS, Morningstar, World Bank, Treasury, BLS, and future official or licensed sources.
+- **Data Products**: field-level trusted candidate previews, Morningstar candidate data products, macro/asset/commodity historical products, and future production candidates.
+- **Research Workspace**: research object, topic, data category, time window, as-of snapshot, and statistical report generation.
+- **Report Workflow**: copy-to-GPT prompt, human-in-the-loop GPT Web discussion, final report upload, report classification, and structured storage.
+- **Forecast / Backtest / Revision**: testable forecasts, actual lookup, backtest results, revision candidates, and research workspace index.
+- **Dashboard / Manual Updates**: Dashboard v1, Morningstar manual token workflow, source status, data product refresh hook, and operational panels.
+- **Storage / QA / Governance**: NAS-first storage, retention policy, QA summaries, provenance, candidate promotion, and trusted consumption boundaries.
 
-主时序财报和辅助材料必须区分：主时序财报才预期包含资产负债表、利润表、现金流量表；业绩新闻稿、业绩公告、业绩简报、电话会议纪要、投资者演示材料等辅助材料不应因缺少三大表被判失败。
+## Current Status
 
-## Current Architecture
+- Morningstar is `ready_for_operational_manual_updates`: token is provided manually, no auto-login, no password storage, no token leakage, full backfill disabled unless explicitly planned.
+- A-share multi-source policy is established: Tencent daily via AKShare is the current primary candidate, BaoStock remains a validation/historical partner, Eastmoney daily is deferred, and Eastmoney/Sina/THS financial interfaces are handled by interface-level policy.
+- Storage retention policy is established: keep consumption-grade structured data, manifests, QA and provenance; retain raw/intermediate artifacts short-term unless audit requires otherwise; generate cleanup plans only.
+- Dashboard manual update framework is established and keeps formal trusted consumption off by default.
+- Field-level trusted candidate preview exists for A-share/ETF OHLC, while limited fields remain blocked from trusted preview.
 
-`financial_report` remains the core financial-report research module inside the platform. The detailed financial-report methodology is maintained in [docs/FINANCIAL_REPORT_MODULE_GUIDE.md](docs/FINANCIAL_REPORT_MODULE_GUIDE.md) and [backend/app/modules/financial_report/README.md](backend/app/modules/financial_report/README.md), so the root README can stay as a concise platform overview.
+## How To Start
 
-当前新架构：
-
-- `backend/`: FastAPI 主后端
-- `frontend_web/`: 未来 React + Vite 前端
-- `requirements/`: 分层依赖文件
-- `scripts/`: 本地 smoke test / dry-run 验证脚本
-- `docs/`: 架构、集成、测试与复盘文档
-
-核心 backend 模块：
-
-- `backend/app/modules/financial_report`: 财报研究模块
-- `backend/app/modules/macro_research`: 宏观研究模块占位
-- `backend/app/modules/sentiment_analysis`: 舆情分析模块占位
-- `backend/app/modules/market_data_tracking`: 大类资产跟踪模块占位
-- `backend/app/modules/research_repository`: 研究资料库模块占位
-- `backend/app/modules/decision_support`: 决策支持模块占位
-- `backend/app/modules/system_tasks`: 系统任务模块占位
-
-简化目录结构：
-
-```text
-FinancialResearch/
-  backend/
-  frontend_web/
-  requirements/
-  scripts/
-  docs/
-  README.md
-```
-
-旧 `app/` Streamlit 工程已从当前 refactor 分支移除，可从 Git 历史恢复。
-
-## Why Streamlit Was Removed
-
-Streamlit 曾用于快速原型验证，帮助项目跑通财报上传、解析、抽取、分析、预测、回测等早期流程。
-
-但长期平台化阶段需要更稳定的架构。旧 Streamlit 版本暴露出：
-
-- 页面刷新、侧边栏切换、task detail 切换时容易断线或重跑
-- 长任务与 UI 进程耦合，重 parser 容易拖垮页面
-- cancel / queued / running / hung 状态不够清晰
-- logs 与真实任务状态可能不同步
-- UI 层和业务逻辑混在 `app/pages` 与 `app/services`
-- 不利于后续扩展宏观、舆情、大类资产、资料库和决策支持模块
-
-因此新架构改为 FastAPI + React。重任务通过 API、任务状态、registry 和 review gate 管理，前端只负责展示和交互。
-
-详细复盘见：
-
-- [STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md](docs/STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md)
-- [STREAMLIT_REMOVAL_REPORT.md](docs/STREAMLIT_REMOVAL_REPORT.md)
-
-## Parse Lab Boundary
-
-Parse Lab 是独立 PDF 解析服务，不放在本仓库内。
-
-边界原则：
-
-- FinancialResearch backend 通过 HTTP API 调用 Parse Lab
-- `frontend_web` 不直接调用 Parse Lab
-- FinancialResearch 不 import Parse Lab 内部 parser 模块
-- FinancialResearch 不直接调用 Marker / MinerU / Surya / pdfplumber / PyMuPDF
-- Parse Lab 负责 PDF 解析、页面级路由、表格恢复、跨页表格候选、quality flags
-- FinancialResearch 负责研究流程、质量门槛、review decision、字段抽取、分析、预测、回测和 Dashboard
-
-默认 Parse Lab API v1 地址：
-
-```text
-PARSE_LAB_BASE_URL=http://127.0.0.1:8021
-```
-
-如果要运行 Parse Lab 相关接口，需要先启动 Parse Lab API v1：
-
-```text
-http://127.0.0.1:8021
-```
-
-## Completed In Current Refactor
-
-当前阶段已完成：
-
-- FastAPI backend skeleton
-- `/api/health` smoke test
-- Parse Lab HTTP client connectivity
-- Parse Lab single PDF submit + quality gate
-- Parsed document registry
-- Review queue
-- Review decision / extraction eligibility gate
-- Canonical table schema
-- Financial table candidate extraction dry-run
-- Statement field mapping prototype
-- Statement field mapping refinement
-- Minimal financial extraction dry-run prototype
-- Document role / report type gate
-- Legacy Streamlit lessons documentation
-
-## Not Yet Complete
-
-当前尚未完成：
-
-- 未接正式 extraction
-- 未接 metrics
-- 未接 forecast
-- 未接 backtest
-- 未接 report generation
-- 未做正式 frontend Dashboard
-- 未实现数据库持久化
-- 当前 registry / review decisions 仍是本地 JSONL
-- dry-run prototype 不等于正式财务字段入库
-
-## Run Backend
-
-启动 FinancialResearch backend：
+Backend:
 
 ```powershell
 D:\workspace\envs\financial_research_backend\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8030
 ```
 
-Health check：
+Dashboard action server:
+
+```powershell
+cd D:\workspace\FinancialResearch
+D:\workspace\envs\financial_research_backend\Scripts\python.exe scripts\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188
+```
+
+Dashboard URL:
 
 ```text
-GET http://127.0.0.1:8030/api/health
+http://127.0.0.1:5188/
 ```
 
-预期返回：
+Parse Lab is a separate service and is not part of this repository. FinancialResearch calls it through HTTP only when parser workflows require it.
 
-```json
-{"status":"ok","service":"financial_research_backend"}
-```
+## Documentation Map
 
-## Development Principles
+Project-level:
 
-- UI thin, backend-driven
-- Long-running tasks must not run inside frontend runtime
-- Parse Lab stays isolated
-- Frontend must call FinancialResearch backend, not Parse Lab directly
-- Parser dependencies must not be installed into the FinancialResearch backend environment
-- All parse outputs must pass quality gate and review decision before extraction
-- Auxiliary materials must not be penalized for missing three statements
-- No metrics / forecast / backtest before extraction regression tests
-- Keep source traceability: `source_pages`, `table_group_id`, `quality_flags`, parser source, confidence
-- Macro, sentiment, and market data modules should stay inside the main platform until heavy dependencies, long tasks, real-time collection, or model inference justify splitting them out
+- [Project Context](docs/PROJECT_CONTEXT.md)
+- [Current Research Mainline](docs/CURRENT_RESEARCH_MAINLINE.md)
+- [Project Roadmap](docs/PROJECT_ROADMAP.md)
+- [Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)
 
-## Documentation Index
+Research topics:
 
-- [FINANCIAL_REPORT_MODULE_GUIDE.md](docs/FINANCIAL_REPORT_MODULE_GUIDE.md)
-- [MODULE_DOCUMENTATION_GOVERNANCE.md](docs/MODULE_DOCUMENTATION_GOVERNANCE.md)
-- [FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md](docs/FINANCIAL_RESEARCH_NEW_ARCHITECTURE.md)
-- [FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md](docs/FINANCIAL_RESEARCH_PLATFORM_REFACTOR_PLAN.md)
-- [STREAMLIT_REMOVAL_REPORT.md](docs/STREAMLIT_REMOVAL_REPORT.md)
-- [STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md](docs/STREAMLIT_LEGACY_ISSUES_AND_REFACTOR_LESSONS.md)
-- [FINANCIAL_RESEARCH_PARSE_INTEGRATION_TODO.md](docs/FINANCIAL_RESEARCH_PARSE_INTEGRATION_TODO.md)
-- [PRE_COMMIT_REVIEW_REPORT.md](docs/PRE_COMMIT_REVIEW_REPORT.md)
-- [RESEARCH_FRAMEWORK.md](docs/RESEARCH_FRAMEWORK.md)
-- [ROADMAP.md](docs/ROADMAP.md)
+- [Global and China Capital Flow Mainline](docs/research_topics/capital_flow/GLOBAL_AND_CHINA_CAPITAL_FLOW_MAINLINE.md)
+- [Capital Flow Research Framework](docs/research_topics/capital_flow/CAPITAL_FLOW_RESEARCH_FRAMEWORK.md)
+- [Flow Proxy and Exposure Methodology](docs/research_topics/capital_flow/FLOW_PROXY_AND_EXPOSURE_METHODOLOGY.md)
+
+Data sources:
+
+- [Data Source Strategy Overview](docs/data_sources/DATA_SOURCE_STRATEGY_OVERVIEW.md)
+- [Morningstar Pipeline Status](docs/data_sources/MORNINGSTAR_PIPELINE_STATUS.md)
+- [A-share Multi-source Policy](docs/data_sources/A_SHARE_MULTI_SOURCE_POLICY.md)
+- [Macro Data Source Plan](docs/data_sources/MACRO_DATA_SOURCE_PLAN.md)
+- [Commodity and Asset Data Plan](docs/data_sources/COMMODITY_AND_ASSET_DATA_PLAN.md)
+
+Modules:
+
+- [Macro Module Framework](docs/modules/MACRO_MODULE_FRAMEWORK.md)
+- [Asset Class Module Framework](docs/modules/ASSET_CLASS_MODULE_FRAMEWORK.md)
+- [Commodity Module Framework](docs/modules/COMMODITY_MODULE_FRAMEWORK.md)
+- [A+H Stock Module Framework](docs/modules/AH_STOCK_MODULE_FRAMEWORK.md)
+- [Sentiment/Event Module Framework](docs/modules/SENTIMENT_EVENT_MODULE_FRAMEWORK.md)
+- [Report Workflow Module Framework](docs/modules/REPORT_WORKFLOW_MODULE_FRAMEWORK.md)
+- [Forecast/Backtest Module Framework](docs/modules/FORECAST_BACKTEST_MODULE_FRAMEWORK.md)
+
+Governance:
+
+- [Storage Retention Policy](docs/storage/STORAGE_RETENTION_POLICY.md)
+- [Dashboard Information Architecture](docs/dashboard/DASHBOARD_INFORMATION_ARCHITECTURE.md)
+- [Agent Workflow and Safety Rules](docs/development/AGENT_WORKFLOW_AND_SAFETY_RULES.md)
+
+Detailed historical reports are preserved under `docs/` and should be read from their module-specific files instead of being compressed into this README.
+
+## Safety Boundaries
+
+- Never commit `config/local_secrets.json` or any token.
+- Never print full API tokens in docs, logs, runtime JSON, or stdout.
+- Formal trusted consumption is off by default.
+- Morningstar does not auto-login and does not store passwords.
+- Non-China equity time series are not collected by default; non-China equities may be represented as entity shells or exposure constituents only unless a specific approved data product says otherwise.
+- Do not delete, move, or rename NAS large directories.
+- Do not run `git init`.
+- Git commands must be scoped to `git -C D:\workspace\FinancialResearch ...`.
