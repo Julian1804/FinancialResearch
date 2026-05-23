@@ -44,6 +44,9 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/dashboard/download":
             self.serve_download(parsed.query)
             return
+        if parsed.path == "/api/dashboard/morningstar/token_status":
+            self._handle_token_status()
+            return
         self.serve_static(parsed.path)
 
     def do_POST(self) -> None:  # noqa: N802
@@ -114,6 +117,9 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
                 }
             )
             return
+        if parsed.path == "/api/dashboard/morningstar/token":
+            self._handle_token_save(payload)
+            return
         self.send_json({"status": "not_found", "path": parsed.path}, status=404)
 
     def serve_static(self, request_path: str) -> None:
@@ -176,6 +182,115 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    # ── Morningstar Token Management ──
+    SECRETS_PATH = PROJECT_ROOT / "config" / "local_secrets.json"
+
+    def _load_secrets(self) -> dict:
+        if not self.SECRETS_PATH.exists():
+            return {}
+        return json.loads(self.SECRETS_PATH.read_text(encoding="utf-8"))
+
+    def _save_secrets(self, data: dict) -> None:
+        self.SECRETS_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    def _mask_token(self, token: str) -> str:
+        if not token or len(token) < 4:
+            return "****"
+        return "****" + token[-4:]
+
+    def _decode_jwt_exp(self, token: str):
+        import base64 as b64
+        try:
+            parts = token.split(".")
+            if len(parts) < 2: return None
+            p = parts[1]; pad = 4 - len(p) % 4
+            if pad != 4: p += "=" * pad
+            return json.loads(b64.urlsafe_b64decode(p)).get("exp")
+        except: return None
+
+    def _handle_token_save(self, payload: dict) -> None:
+        token = str(payload.get("md_auth_token") or "").strip()
+        hint = str(payload.get("account_hint") or "")
+        if not token:
+            self.send_json({"status": "error", "reason": "empty_token"}, status=400)
+            return
+        secrets = self._load_secrets()
+        ms = secrets.setdefault("morningstar", {})
+        old_hint = ms.get("account_hint", "")
+        ms["md_auth_token"] = token
+        ms["token_saved_at"] = datetime.now(timezone.utc).isoformat()
+        ms["token_expires_hours"] = 24
+        ms["token_source"] = "dashboard_manual_input"
+        if hint: ms["account_hint"] = hint
+        elif old_hint: ms["account_hint"] = old_hint
+        self._save_secrets(secrets)
+        masked = self._mask_token(token)
+        sys.stderr.write(f"dashboard_v1_action_server: morningstar token saved masked={masked}\n")
+        self.send_json({
+            "status": "ok", "masked_token": masked,
+            "saved_at": ms["token_saved_at"],
+            "expires_hours": 24,
+            "account_hint": ms.get("account_hint", ""),
+        })
+
+    def _handle_token_status(self) -> None:
+        from datetime import timezone as tz, timedelta
+        secrets = self._load_secrets()
+        ms = secrets.get("morningstar", {})
+        token = ms.get("md_auth_token", "")
+        saved_at = ms.get("token_saved_at", "")
+        expires_h = int(ms.get("token_expires_hours", 24))
+        fallback_used = False
+
+        if not saved_at:
+            # fallback: file mtime
+            try:
+                mtime = self.SECRETS_PATH.stat().st_mtime
+                saved_at = datetime.fromtimestamp(mtime, tz.utc).isoformat()
+                fallback_used = True
+            except: saved_at = ""
+
+        remaining_s = 0; remaining_h = 0; remaining_m = 0
+        estimated_expires = ""; expired_est = False; expiring_soon = False
+
+        if saved_at:
+            try:
+                saved_dt = datetime.fromisoformat(saved_at)
+                estimated_expires_dt = saved_dt + timedelta(hours=expires_h)
+                estimated_expires = estimated_expires_dt.isoformat()
+                now_dt = datetime.now(tz.utc)
+                remaining_s = max(0, (estimated_expires_dt - now_dt).total_seconds())
+                remaining_h = remaining_s / 3600
+                remaining_m = remaining_s / 60
+                expired_est = now_dt > estimated_expires_dt
+                expiring_soon = not expired_est and remaining_h < 2
+            except: pass
+
+        status_text = "missing"
+        if token:
+            if expired_est: status_text = "expired_estimated"
+            elif expiring_soon: status_text = "expiring_soon"
+            else: status_text = "valid_estimated"
+
+        jwt_exp = self._decode_jwt_exp(token) if token else None
+
+        self.send_json({
+            "token_available": bool(token),
+            "masked_token": self._mask_token(token) if token else None,
+            "token_saved_at": saved_at,
+            "estimated_expires_at": estimated_expires,
+            "remaining_seconds": round(remaining_s),
+            "remaining_hours": round(remaining_h, 1),
+            "remaining_minutes": round(remaining_m, 1),
+            "expired_estimated": expired_est,
+            "expiring_soon": expiring_soon,
+            "status": status_text,
+            "jwt_exp": jwt_exp,
+            "account_hint": ms.get("account_hint", ""),
+            "fallback_used": fallback_used,
+            "token_source": ms.get("token_source", "unknown"),
+        })
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("dashboard_v1_action_server: " + (format % args) + "\n")
