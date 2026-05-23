@@ -47,6 +47,9 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/dashboard/morningstar/token_status":
             self._handle_token_status()
             return
+        if parsed.path == "/api/dashboard/data_sources/morningstar/status":
+            self._handle_morningstar_source_status()
+            return
         self.serve_static(parsed.path)
 
     def do_POST(self) -> None:  # noqa: N802
@@ -119,6 +122,9 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/dashboard/morningstar/token":
             self._handle_token_save(payload)
+            return
+        if parsed.path == "/api/dashboard/data_sources/morningstar/update":
+            self._handle_morningstar_update()
             return
         self.send_json({"status": "not_found", "path": parsed.path}, status=404)
 
@@ -291,6 +297,18 @@ class DashboardActionHandler(BaseHTTPRequestHandler):
             "fallback_used": fallback_used,
             "token_source": ms.get("token_source", "unknown"),
         })
+
+    def _handle_morningstar_update(self) -> None:
+        from scripts.run_morningstar_manual_database_update_v1 import run_morningstar_update
+        result = run_morningstar_update()
+        self.send_json(result)
+
+    def _handle_morningstar_source_status(self) -> None:
+        p = PROJECT_ROOT / "runtime" / "morningstar_manual_update" / "morningstar_latest_status.json"
+        if p.exists():
+            self.send_json(json.loads(p.read_text(encoding="utf-8")))
+        else:
+            self.send_json({"source_id":"morningstar","status":"no_data","last_run_status":"never_run"})
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("dashboard_v1_action_server: " + (format % args) + "\n")

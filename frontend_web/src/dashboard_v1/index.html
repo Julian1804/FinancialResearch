@@ -1179,12 +1179,24 @@ FINAL_REPORT_JSON must include:
     <span id="ms-token-text">MS Token: loading...</span>
     <a href="/morningstar_token_panel.html" style="color:#3b82f6;text-decoration:none;font-size:10px;margin-left:4px">Manage</a>
   </div>
+  <!-- Morningstar Source Status Bar -->
+  <div id="ms-src-bar" style="position:fixed;top:34px;right:16px;z-index:9999;background:#16213e;border:1px solid #334155;border-radius:0 0 6px 6px;padding:4px 14px;font-size:11px;font-family:monospace;color:#94a3b8;display:none;align-items:center;gap:10px">
+    <span id="ms-src-dot" style="width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0"></span>
+    <span id="ms-src-text">MS Source: loading...</span>
+    <button id="ms-update-btn" onclick="triggerMSUpdate()" style="background:#2563eb;color:#fff;border:none;border-radius:3px;padding:2px 8px;font-size:10px;cursor:pointer">Update</button>
+    <span id="ms-update-status" style="font-size:10px"></span>
+  </div>
   <script>
   (function(){
     var bar=document.getElementById('ms-token-bar');
     var dot=document.getElementById('ms-token-dot');
     var text=document.getElementById('ms-token-text');
-    function update(){
+    var sbar=document.getElementById('ms-src-bar');
+    var sdot=document.getElementById('ms-src-dot');
+    var stext=document.getElementById('ms-src-text');
+    var sbtn=document.getElementById('ms-update-btn');
+    var sstat=document.getElementById('ms-update-status');
+    function updateToken(){
       fetch('/api/dashboard/morningstar/token_status').then(function(r){return r.json()}).then(function(d){
         bar.style.display='flex';
         var c='#6b7280',s=d.status||'missing';
@@ -1194,10 +1206,33 @@ FINAL_REPORT_JSON must include:
         dot.style.background=c;
         text.innerHTML='MS Token: <b style="color:#e0e0e0">'+s.replace('_',' ')+'</b> '+(d.masked_token||'none')+' | '+(d.remaining_hours||0)+'h';
         if(d.expired_estimated) text.innerHTML+=' &#9888;';
+        if(d.expired_estimated||s==='missing'){sbtn.disabled=true;sbtn.title='Token expired or missing'}
+        else {sbtn.disabled=false;sbtn.title='Run Morningstar database update'}
       }).catch(function(){ bar.style.display='none' });
     }
-    update();
-    setInterval(update,60000);
+    function updateSource(){
+      fetch('/api/dashboard/data_sources/morningstar/status').then(function(r){return r.json()}).then(function(d){
+        sbar.style.display='flex';
+        var c='#6b7280',s=d.last_run_status||'never_run';
+        if(s==='completed'||s==='completed_dry_run') c='#4ade80';
+        else if(s==='failed') c='#ef4444';
+        sdot.style.background=c;
+        stext.innerHTML='MS Data: <b style="color:#e0e0e0">'+(d.latest_data_date||'N/A')+'</b> | Upd: '+(d.latest_update_run_time||'never').slice(0,16).replace('T',' ');
+      }).catch(function(){ sbar.style.display='none' });
+    }
+    window.triggerMSUpdate=function(){
+      sstat.textContent='running...'; sbtn.disabled=true;
+      fetch('/api/dashboard/data_sources/morningstar/update',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
+      .then(function(r){return r.json()}).then(function(d){
+        sstat.textContent=d.status||'done';
+        if(d.status==='ok'){sstat.textContent='done: '+d.latest_data_date}
+        else{sstat.textContent=d.status+': '+(d.reason||'')}
+        setTimeout(function(){sstat.textContent='';sbtn.disabled=false},5000);
+        updateSource();
+      }).catch(function(){sstat.textContent='failed';sbtn.disabled=false});
+    };
+    updateToken(); updateSource();
+    setInterval(function(){updateToken();updateSource()},60000);
   })();
   </script>
 </body>
