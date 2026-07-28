@@ -1,110 +1,187 @@
 # FinancialResearch
 
-FinancialResearch is a comprehensive financial research platform. It is not only a financial-report parser, not only a fund-flow tool, and not a single-source market-data dashboard.
+FinancialResearch is a source-only financial research, dataset, analysis,
+simulation, and evidence platform. It is not a real-time chart display surface,
+not a trading system, and not investment advice.
 
-The platform collects, governs, and connects multi-source financial data so that research workflows can produce statistical reports, human-in-the-loop GPT Web analysis packets, structured reports, forecasts, backtests, revision records, and decision-support evidence.
+## License And Public Use
 
-## Current Research Mainline
+FinancialResearch is publicly visible for noncommercial learning, research,
+experimentation, testing, and feedback under the PolyForm Strict License 1.0.0.
+See `LICENSE`.
 
-The current mainline is **global and China capital-flow research**:
+The license permits use for noncommercial purposes only. It does not grant
+permission to modify this source, create derivative works, distribute copies or
+modified versions, or use the project commercially. GitHub visibility and GitHub
+fork functionality do not grant any additional project license beyond
+applicable GitHub platform terms and the `LICENSE` file.
 
-- Where does money come from?
-- Which countries, asset classes, sectors, currencies, funds, ETFs, companies, and markets receive or lose capital?
-- How can price movement be separated from actual or proxy capital flow?
-- How do global flows affect China assets, A-shares, H-shares, sectors, and companies?
-- How should later data validate, falsify, or revise earlier forecasts?
+Submit suggestions, bug reports, design proposals, research observations, and
+feedback through Issues or Discussions. This project is not OSI open source.
 
-This is the current research focus, not the permanent only topic. The platform remains designed to add other research themes.
+FinancialResearch is not investment, financial, or trading advice. Third-party
+software, interfaces, documents, and data remain subject to their own licenses
+and terms.
 
-## Platform Modules
+## 许可与公开使用
 
-- **Data Sources**: FRED, SEC, BaoStock, Tencent, AKShare interface-level wrappers, CNINFO, Eastmoney, Sina, THS, Morningstar, World Bank, Treasury, BLS, and future official or licensed sources.
-- **Data Products**: field-level trusted candidate previews, Morningstar candidate data products, macro/asset/commodity historical products, and future production candidates.
-- **Research Workspace**: research object, topic, data category, time window, as-of snapshot, and statistical report generation.
-- **Report Workflow**: copy-to-GPT prompt, human-in-the-loop GPT Web discussion, final report upload, report classification, and structured storage.
-- **Forecast / Backtest / Revision**: testable forecasts, actual lookup, backtest results, revision candidates, and research workspace index.
-- **Dashboard / Manual Updates**: Dashboard v1, Morningstar manual token workflow, source status, data product refresh hook, and operational panels.
-- **Storage / QA / Governance**: NAS-first storage, retention policy, QA summaries, provenance, candidate promotion, and trusted consumption boundaries.
+FinancialResearch 以 PolyForm Strict License 1.0.0 授权公开可见，仅用于非商业
+学习、研究、实验、测试和反馈。请阅读 `LICENSE`。
 
-## Current Status
+该许可不授予修改源代码、创建衍生作品、分发副本或修改版本、或进行商业使用的权利。
+GitHub 的可见性或 fork 功能不会在 GitHub 平台条款和本项目 `LICENSE` 之外授予额外
+项目许可。
 
-- Morningstar is `ready_for_operational_manual_updates`: token is provided manually, no auto-login, no password storage, no token leakage, full backfill disabled unless explicitly planned.
-- A-share multi-source policy is established: Tencent daily via AKShare is the current primary candidate, BaoStock remains a validation/historical partner, Eastmoney daily is deferred, and Eastmoney/Sina/THS financial interfaces are handled by interface-level policy.
-- Storage retention policy is established: keep consumption-grade structured data, manifests, QA and provenance; retain raw/intermediate artifacts short-term unless audit requires otherwise; generate cleanup plans only.
-- Dashboard manual update framework is established and keeps formal trusted consumption off by default.
-- Field-level trusted candidate preview exists for A-share/ETF OHLC, while limited fields remain blocked from trusted preview.
+建议、问题报告、设计提案、研究观察和反馈请通过 Issues 或 Discussions 提交。本项目
+不是 OSI 开源项目。
 
-## How To Start
+FinancialResearch 不构成投资、金融或交易建议。第三方软件、接口、文档和数据仍受其
+各自许可和条款约束。
 
-Backend:
+## Current Checkpoint
 
-```powershell
-D:\workspace\envs\financial_research_backend\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8030
+This repository is being prepared as a clean public source distribution. It
+does not include databases, Parquet snapshots, runtime evidence, scratch files,
+private corpora, credentials, model weights, provider payloads, or generated
+read models.
+
+Current local engineering state, not bundled for public users:
+
+- active snapshot: `frrem1r3_20260722T190906Z_7f8820854863`
+- active read model: `readmodel4_frrem1r3_20260722T190906Z_7f8820854863_v1`
+- accepted unpublished candidate: `frrem3r2_20260728T031358Z_88b9fa67d6c7`
+- accepted unpublished read model:
+  `readmodel7_frrem3r2_20260728T031358Z_88b9fa67d6c7_v1`
+
+The unpublished candidate is not active and is not served by the public source
+tree.
+
+## Install
+
+Requirements:
+
+- Python 3.10 or newer
+- Windows, macOS, or Linux with enough disk for any database you build locally
+- Public/free data-source access configured by you
+
+Install the base environment with the single dependency file:
+
+```bash
+python -m venv .venv
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-Dashboard action server:
+The base install intentionally excludes TensorFlow, GPU stacks, external LLM
+SDKs, and experimental simulation packages. Optional AI or forecasting
+dependencies should be installed only for explicitly supported future workflows,
+for example:
 
-```powershell
-cd D:\workspace\FinancialResearch
-D:\workspace\envs\financial_research_backend\Scripts\python.exe scripts\run_dashboard_v1_action_server.py --host 127.0.0.1 --port 5188
+```bash
+python -m pip install openai
+python -m pip install "tensorflow-cpu>=2.16,<2.18" "tensorflow-probability>=0.24,<0.25"
 ```
 
-Dashboard URL:
+## Configuration
 
-```text
-http://127.0.0.1:5188/
+Copy `.env.example` to `.env` and set only the values you need. Database and
+storage locations are environment-specific. Do not commit `.env`, credentials,
+local database files, runtime folders, or source payloads.
+
+External AI is optional. Without external AI, the current public source can run
+deterministic validation and import smoke checks, but natural-language research
+and AI-assisted workflows remain unavailable or prototype-only.
+
+## Run
+
+Backend import/start target:
+
+```bash
+python -m uvicorn backend.app.main:app --reload
 ```
 
-Parse Lab is a separate service and is not part of this repository. FinancialResearch calls it through HTTP only when parser workflows require it.
+Static frontend source is under `frontend_web/src/dashboard_v1/`. You can serve
+it with any local static file server, for example:
 
-## Documentation Map
+```bash
+python -m http.server 8080 --directory frontend_web/src/dashboard_v1
+```
 
-Project-level:
+The current frontend is a static skeleton. It references API routes that are not
+all implemented yet. The UI/API cutover is incomplete and should be treated as
+prototype status.
 
-- [Project Context](docs/PROJECT_CONTEXT.md)
-- [Current Research Mainline](docs/CURRENT_RESEARCH_MAINLINE.md)
-- [Project Roadmap](docs/PROJECT_ROADMAP.md)
-- [Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)
+## Validation
 
-Research topics:
+Base checks:
 
-- [Global and China Capital Flow Mainline](docs/research_topics/capital_flow/GLOBAL_AND_CHINA_CAPITAL_FLOW_MAINLINE.md)
-- [Capital Flow Research Framework](docs/research_topics/capital_flow/CAPITAL_FLOW_RESEARCH_FRAMEWORK.md)
-- [Flow Proxy and Exposure Methodology](docs/research_topics/capital_flow/FLOW_PROXY_AND_EXPOSURE_METHODOLOGY.md)
+```bash
+python scripts/test_fr_unified_data_entry_core.py
+python -m py_compile scripts/fr_unified_data_entry_core.py
+```
 
-Data sources:
+The public-source export and review-bundle harness is internal and is not
+included in the public tree.
 
-- [Data Source Strategy Overview](docs/data_sources/DATA_SOURCE_STRATEGY_OVERVIEW.md)
-- [Morningstar Pipeline Status](docs/data_sources/MORNINGSTAR_PIPELINE_STATUS.md)
-- [A-share Multi-source Policy](docs/data_sources/A_SHARE_MULTI_SOURCE_POLICY.md)
-- [Macro Data Source Plan](docs/data_sources/MACRO_DATA_SOURCE_PLAN.md)
-- [Commodity and Asset Data Plan](docs/data_sources/COMMODITY_AND_ASSET_DATA_PLAN.md)
+## Database Bootstrap Status
 
-Modules:
+The intended public model is:
 
-- [Macro Module Framework](docs/modules/MACRO_MODULE_FRAMEWORK.md)
-- [Asset Class Module Framework](docs/modules/ASSET_CLASS_MODULE_FRAMEWORK.md)
-- [Commodity Module Framework](docs/modules/COMMODITY_MODULE_FRAMEWORK.md)
-- [A+H Stock Module Framework](docs/modules/AH_STOCK_MODULE_FRAMEWORK.md)
-- [Sentiment/Event Module Framework](docs/modules/SENTIMENT_EVENT_MODULE_FRAMEWORK.md)
-- [Report Workflow Module Framework](docs/modules/REPORT_WORKFLOW_MODULE_FRAMEWORK.md)
-- [Forecast/Backtest Module Framework](docs/modules/FORECAST_BACKTEST_MODULE_FRAMEWORK.md)
+1. configure storage;
+2. configure public/free data sources;
+3. download the initial full dataset;
+4. build source observations;
+5. build standard facts;
+6. build read models;
+7. run QA;
+8. run later incremental updates.
 
-Governance:
+That full one-command bootstrap is not implemented yet. Existing scripts and
+runtime evidence prove pieces of the workflow, but the public source tree does
+not currently provide a supported initial full-download command or a unified
+incremental-update command. Do not fabricate one from historical task scripts.
 
-- [Storage Retention Policy](docs/storage/STORAGE_RETENTION_POLICY.md)
-- [Dashboard Information Architecture](docs/dashboard/DASHBOARD_INFORMATION_ARCHITECTURE.md)
-- [Agent Workflow and Safety Rules](docs/development/AGENT_WORKFLOW_AND_SAFETY_RULES.md)
+## Capability Status
 
-Detailed historical reports are preserved under `docs/` and should be read from their module-specific files instead of being compressed into this README.
+No-AI operation:
 
-## Safety Boundaries
+- dataset registry validation: internal/local only because the public source
+  tree excludes storage-path-bearing registry state;
+- backend import and health route: supported;
+- source-observation, standard-fact, and read-model architecture: implemented
+  locally, but public first-run materialization is not yet unified;
+- static frontend: prototype;
+- database browser: prototype, with missing backend routes;
+- deterministic reports: prototype;
+- statistical and traditional machine-learning code: prototype/untested for
+  public release;
+- backtesting, trading, and live simulation: not implemented for public use;
+- document parsing: partially implemented through a separate parser service,
+  not bundled here.
 
-- Never commit `config/local_secrets.json` or any token.
-- Never print full API tokens in docs, logs, runtime JSON, or stdout.
-- Formal trusted consumption is off by default.
-- Morningstar does not auto-login and does not store passwords.
-- Non-China equity time series are not collected by default; non-China equities may be represented as entity shells or exposure constituents only unless a specific approved data product says otherwise.
-- Do not delete, move, or rename NAS large directories.
-- Do not run `git init`.
-- Git commands must be scoped to `git -C D:\workspace\FinancialResearch ...`.
+Optional AI operation:
+
+- natural-language research: prototype only;
+- semantic document interpretation: prototype only;
+- AI-assisted reporting: prototype only;
+- virtual-persona output: not implemented;
+- multi-agent workflows: internal engineering only, excluded from public source;
+- MiroFish-style biomimetic simulation: not implemented.
+
+Unsupported or untested capabilities are deliberately labeled as such.
+
+## Data Sources And Security
+
+Use public/free data sources unless you explicitly configure and approve another
+source. Paid, credentialed, login-gated, terminal-gated, and commercial sources
+are excluded by default.
+
+The public source distribution excludes internal agent instructions, runtime
+evidence, accepted/rejected candidate payloads, databases, Parquet files,
+private corpora, local paths, source payloads, and credentials.
+
+## Third Parties
+
+Confirm third-party obligations before using connected sources or dependencies.
+Source dependencies are installed through `requirements.txt`; databases and
+provider payloads are not redistributed.

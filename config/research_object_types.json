@@ -100,7 +100,7 @@
       "selected_events",
       "fiscal_year",
       "reporting_period",
-      "as_of_check_enabled",
+      "historical_information_availability_check_enabled",
       "include_candidate_data",
       "include_insufficient_evidence"
     ]

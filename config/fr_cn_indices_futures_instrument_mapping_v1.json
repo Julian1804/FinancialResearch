@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "approval_id": "fr_cn_indices_futures_instrument_mapping_v1",
+  "dataset_id": "cn_indices_futures",
+  "next_bounded_evidence_request": {
+    "max_instruments": 10,
+    "max_rows": 100,
+    "max_lookback_days": 370,
+    "required_identity_fields": ["instrument_id", "symbol", "instrument_type", "underlying_index", "exchange_or_venue", "contract_id_when_specific"],
+    "required_source_manifest": ["source_id", "registry_declared_path", "bounded_manifest_id"],
+    "required_unit_currency_scale": ["unit", "currency_when_applicable", "scale"],
+    "required_price_semantics": ["index_close", "future_close_or_settlement", "continuous_or_specific_contract"]
+  },
+  "evidence_gate": {
+    "closed": [
+      "dataset_registry_declares_trade_date",
+      "dataset_registry_declares_candidate_ohlcv_open_interest_fields",
+      "bounded_recovery_manifest_present",
+      "bounded_recovery_failure_log_present"
+    ],
+    "remaining": [
+      "instrument_identity",
+      "index_future_type",
+      "underlying_index",
+      "exchange_or_venue",
+      "contract_identity_when_future",
+      "close_or_settlement_semantics",
+      "instrument_level_unit_currency_scale",
+      "instrument_level_source_traceability"
+    ],
+    "gate_decision": "defer_requires_bounded_summary"
+  },
+  "mappings": [
+    {
+      "dataset_id": "cn_indices_futures",
+      "instrument_id": null,
+      "symbol": null,
+      "contract_id": null,
+      "instrument_type": null,
+      "underlying_index": null,
+      "exchange_or_venue": null,
+      "price_field_semantics": null,
+      "metric_id": null,
+      "unit": null,
+      "currency": null,
+      "scale": null,
+      "frequency": null,
+      "date_field": null,
+      "source_id": null,
+      "source_traceability": ["stage2_recovery_dashboard_v1", "stage2_recovery_manifest_v1"],
+      "mapping_status": "review_required",
+      "review_required_reason": "aggregate summary lacks instrument identity, index/future type, close/settlement semantics, and unit/currency/scale",
+      "evidence_fields_present": ["dataset_id", "dataset_record_count_aggregate", "registry_date_field", "registry_available_fields", "manifest_id", "failure_log_id"],
+      "evidence_fields_missing": ["instrument_id", "symbol", "contract_id_when_specific", "instrument_type", "underlying_index", "exchange_or_venue", "price_field_semantics", "metric_id", "unit", "currency_when_applicable", "scale", "frequency", "instrument_level_source_id"],
+      "blockers": ["instrument_identity_missing", "index_future_type_missing", "underlying_index_missing", "exchange_or_venue_missing", "contract_identity_when_future_missing", "close_settlement_semantics_missing", "metric_id_missing", "unit_currency_scale_missing", "instrument_level_source_traceability_missing"],
+      "next_action": "provide one approved bounded instrument-level summary capped at 10 instruments and 100 rows, separating index, continuous future, and specific contract identities"
+    }
+  ]
+}

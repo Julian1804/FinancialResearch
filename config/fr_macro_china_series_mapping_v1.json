@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "approval_id": "fr_macro_china_series_mapping_v1",
+  "dataset_id": "macro_china",
+  "generic_value_direct_acceptance_forbidden": true,
+  "mappings": [
+    {
+      "dataset_id": "macro_china",
+      "series_id": "cpi:全国_当月",
+      "metric_id": "macro.cn.cpi.national.index",
+      "cn_name": "全国居民消费价格指数当月值",
+      "en_name": "China National CPI Monthly Index",
+      "source_field": "cpi:全国_当月",
+      "unit_type": "index_level",
+      "unit": "index",
+      "currency": "not_applicable",
+      "scale": "source_reported_index_base",
+      "definition": "Source-reported national monthly CPI index; preserve the source-defined index base.",
+      "upstream_source": "Eastmoney Data Center via AKShare",
+      "frequency": "monthly_or_source_defined",
+      "date_field": "observation_date",
+      "source_id": "akshare_china_macro",
+      "source_traceability": [
+        "provider_name=AKShare",
+        "registry_declared_path",
+        "bounded_series_evidence_v1"
+      ],
+      "mapping_status": "exact",
+      "normal_research_eligible": true,
+      "strict_historical_information_availability_eligible": false,
+      "review_required_reason": "release_calendar_missing_blocks_strict_historical_information_availability_only"
+    },
+    {
+      "dataset_id": "macro_china",
+      "series_id": "cpi:全国_同比增长",
+      "metric_id": "macro.cn.cpi.national.yoy",
+      "cn_name": "全国居民消费价格指数同比增长",
+      "en_name": "China National CPI Year-on-Year Growth",
+      "source_field": "cpi:全国_同比增长",
+      "unit_type": "percent",
+      "unit": "percent",
+      "currency": "not_applicable",
+      "scale": "1_percent_point",
+      "definition": "National CPI year-on-year percentage change.",
+      "upstream_source": "Eastmoney Data Center via AKShare",
+      "frequency": "monthly_or_source_defined",
+      "date_field": "observation_date",
+      "source_id": "akshare_china_macro",
+      "source_traceability": [
+        "provider_name=AKShare",
+        "registry_declared_path",
+        "bounded_series_evidence_v1"
+      ],
+      "mapping_status": "exact",
+      "normal_research_eligible": true,
+      "strict_historical_information_availability_eligible": false,
+      "review_required_reason": "release_calendar_missing_blocks_strict_historical_information_availability_only"
+    },
+    {
+      "dataset_id": "macro_china",
+      "series_id": "cpi:全国_环比增长",
+      "metric_id": "macro.cn.cpi.national.mom",
+      "cn_name": "全国居民消费价格指数环比增长",
+      "en_name": "China National CPI Month-on-Month Growth",
+      "source_field": "cpi:全国_环比增长",
+      "unit_type": "percent",
+      "unit": "percent",
+      "currency": "not_applicable",
+      "scale": "1_percent_point",
+      "definition": "National CPI month-on-month percentage change.",
+      "upstream_source": "Eastmoney Data Center via AKShare",
+      "frequency": "monthly_or_source_defined",
+      "date_field": "observation_date",
+      "source_id": "akshare_china_macro",
+      "source_traceability": [
+        "provider_name=AKShare",
+        "registry_declared_path",
+        "bounded_series_evidence_v1"
+      ],
+      "mapping_status": "exact",
+      "normal_research_eligible": true,
+      "strict_historical_information_availability_eligible": false,
+      "review_required_reason": "release_calendar_missing_blocks_strict_historical_information_availability_only"
+    },
+    {
+      "dataset_id": "macro_china",
+      "series_id": "cpi:全国_累计",
+      "metric_id": "macro.cn.cpi.national.cumulative_index",
+      "cn_name": "全国居民消费价格指数累计值",
+      "en_name": "China National CPI Cumulative Index",
+      "source_field": "cpi:全国_累计",
+      "unit_type": "index_level",
+      "unit": "index",
+      "currency": "not_applicable",
+      "scale": "source_reported_index_base",
+      "definition": "Source-reported national cumulative CPI index; preserve the source-defined index base.",
+      "upstream_source": "Eastmoney Data Center via AKShare",
+      "frequency": "monthly_or_source_defined",
+      "date_field": "observation_date",
+      "source_id": "akshare_china_macro",
+      "source_traceability": [
+        "provider_name=AKShare",
+        "registry_declared_path",
+        "bounded_series_evidence_v1"
+      ],
+      "mapping_status": "exact",
+      "normal_research_eligible": true,
+      "strict_historical_information_availability_eligible": false,
+      "review_required_reason": "release_calendar_missing_blocks_strict_historical_information_availability_only"
+    }
+  ]
+}

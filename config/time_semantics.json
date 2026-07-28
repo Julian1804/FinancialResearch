@@ -1,62 +1,62 @@
 {
   "version": "dashboard_v1",
   "default_time_mode": "publish_date",
-  "default_as_of_check_enabled": true,
+  "default_historical_information_availability_check_enabled": true,
   "modes": [
     {
       "id": "publish_date",
       "label": "Publish Date",
       "default": true,
-      "as_of_safe_axis": true
+      "historical_information_available_axis": true
     },
     {
       "id": "data_period",
       "label": "Data Period",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     },
     {
       "id": "fiscal_year",
       "label": "Fiscal Year",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     },
     {
       "id": "reporting_period",
       "label": "Reporting Period",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     },
     {
       "id": "announcement_date",
       "label": "Announcement Date",
       "default": false,
-      "as_of_safe_axis": true
+      "historical_information_available_axis": true
     },
     {
       "id": "event_date",
       "label": "Event Date",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     },
     {
       "id": "analysis_time",
       "label": "Analysis Time",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     },
     {
       "id": "ingestion_time",
       "label": "Ingestion Time",
       "default": false,
-      "as_of_safe_axis": false
+      "historical_information_available_axis": false
     }
   ],
   "rules": {
-    "as_of_default": "Use publish_date and exclude information unavailable after window_end.",
-    "missing_publish_date": "Items missing publish_date go to missing_publish_date_review and do not enter as-of safe reports.",
+    "historical_information_availability_default": "Use publish_date and exclude information unavailable after window_end.",
+    "missing_publish_date": "Items missing publish_date go to missing_publish_date_review and do not enter reports with proven historical information availability.",
     "future_publish_date": "Items with publish_date later than window_end go to excluded_due_to_future_publish_date.",
-    "non_publish_date_modes": "Fiscal/reporting/event/data period modes can query records, but as_of_check still applies when enabled.",
-    "as_of_disabled": "When as_of_check_enabled=false, reports are marked not_asof_safe."
+    "non_publish_date_modes": "Fiscal/reporting/event/data period modes can query records, but historical_information_availability_check still applies when enabled.",
+    "historical_information_availability_disabled": "When historical_information_availability_check_enabled=false, reports are marked historical_information_availability_not_proven."
   }
 }

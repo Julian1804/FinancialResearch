@@ -26,11 +26,19 @@ config/local_secrets.json
 # Local data and generated artifacts
 data/
 runtime/
+scratch/
 _system/
 logs/
 *.log
 *.tmp
 *.temp
+*.sqlite
+*.sqlite3
+*.db
+*.duckdb
+*.parquet
+*.feather
+*.arrow
 
 # OS files
 .DS_Store
@@ -46,6 +54,9 @@ Thumbs.db
 # Build / packaging
 dist/
 build/
+node_modules/
+frontend_web/dist/
+frontend_web/build/
 *.egg-info/
 
 # Coverage

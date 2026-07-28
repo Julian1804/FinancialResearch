@@ -1,0 +1,591 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "fr_dashboard_registry_v1",
+  "updated_at": "2026-06-02",
+  "status": "active_read_only_productized_v1",
+  "module_registry_ref": "config/fr_module_registry.json",
+  "persistence_policy": "Registry dashboards are read-only defaults. User-created Dashboards, Module Slots, Notes and AI Handoff drafts write only to controlled docs/FR_RETAINED_CONCLUSION_INDEX.md small JSON snapshots with immutable version history.",
+  "required_dashboard_fields": [
+    "dashboard_id",
+    "dashboard_name",
+    "dashboard_category",
+    "purpose",
+    "status",
+    "tabs"
+  ],
+  "required_tab_fields": ["tab_id", "tab_name", "module_slots"],
+  "required_slot_fields": [
+    "slot_id",
+    "module_id",
+    "tab_id",
+    "title_override",
+    "display_mode",
+    "default_size",
+    "data_scope",
+    "filters",
+    "time_range",
+    "ai_context_included",
+    "notes_enabled"
+  ],
+  "dashboards": [
+    {
+      "dashboard_id": "a_share_main_money_flow",
+      "dashboard_name": "A-share Participation And Rotation",
+      "dashboard_category": "research_topic",
+      "purpose": "Track broad A-share participation and rotation while preserving ETF activity-proxy boundaries.",
+      "status": "available_read_only",
+      "tabs": [
+        {
+          "tab_id": "overview",
+          "tab_name": "Overview",
+          "module_slots": [
+            {
+              "slot_id": "a_share_overview",
+              "module_id": "a_share_main_money_flow",
+              "tab_id": "overview",
+              "title_override": "A-share Participation Overview",
+              "display_mode": "summary_matrix",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            },
+            {
+              "slot_id": "a_share_rmb_support",
+              "module_id": "rmb_liquidity",
+              "tab_id": "overview",
+              "title_override": "RMB Liquidity Context",
+              "display_mode": "supporting_cards",
+              "default_size": "half",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "data",
+          "tab_name": "Data",
+          "module_slots": [
+            {
+              "slot_id": "a_share_data",
+              "module_id": "a_share_main_money_flow",
+              "tab_id": "data",
+              "title_override": "ETF Activity And Market Data",
+              "display_mode": "data_table",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "charts",
+          "tab_name": "Charts",
+          "module_slots": [
+            {
+              "slot_id": "a_share_charts",
+              "module_id": "a_share_main_money_flow",
+              "tab_id": "charts",
+              "title_override": "Participation And Rotation Charts",
+              "display_mode": "chart_workspace_placeholder",
+              "default_size": "wide",
+              "data_scope": "bounded_timeseries_future",
+              "filters": {},
+              "time_range": "1y",
+              "ai_context_included": true,
+              "notes_enabled": false
+            },
+            {
+              "slot_id": "a_share_usd_support",
+              "module_id": "usd_liquidity",
+              "tab_id": "charts",
+              "title_override": "USD Liquidity Context",
+              "display_mode": "supporting_cards",
+              "default_size": "half",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            },
+            {
+              "slot_id": "a_share_commodity_support",
+              "module_id": "commodities",
+              "tab_id": "charts",
+              "title_override": "Commodity Context",
+              "display_mode": "supporting_cards",
+              "default_size": "half",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "notes",
+          "tab_name": "Notes",
+          "module_slots": [
+            {
+              "slot_id": "a_share_notes",
+              "module_id": "a_share_main_money_flow",
+              "tab_id": "notes",
+              "title_override": "Research Notes",
+              "display_mode": "notes_placeholder",
+              "default_size": "wide",
+              "data_scope": "browser_local_preview",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": false,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "ai_handoff",
+          "tab_name": "AI Handoff",
+          "module_slots": [
+            {
+              "slot_id": "a_share_ai_handoff",
+              "module_id": "a_share_main_money_flow",
+              "tab_id": "ai_handoff",
+              "title_override": "AI Handoff Context",
+              "display_mode": "ai_handoff",
+              "default_size": "wide",
+              "data_scope": "bounded_context_pack",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dashboard_id": "rmb_liquidity",
+      "dashboard_name": "RMB Liquidity Watch",
+      "dashboard_category": "macro_rates",
+      "purpose": "Review RMB money, credit, rates, FX and market-liquidity context.",
+      "status": "available_read_only",
+      "tabs": [
+        {
+          "tab_id": "overview",
+          "tab_name": "Overview",
+          "module_slots": [
+            {
+              "slot_id": "rmb_overview",
+              "module_id": "rmb_liquidity",
+              "tab_id": "overview",
+              "title_override": "RMB Liquidity Overview",
+              "display_mode": "summary_matrix",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "data",
+          "tab_name": "Data",
+          "module_slots": [
+            {
+              "slot_id": "rmb_data",
+              "module_id": "rmb_liquidity",
+              "tab_id": "data",
+              "title_override": "Money Credit Rates And FX Data",
+              "display_mode": "data_table",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "charts",
+          "tab_name": "Charts",
+          "module_slots": [
+            {
+              "slot_id": "rmb_charts",
+              "module_id": "rmb_liquidity",
+              "tab_id": "charts",
+              "title_override": "RMB Liquidity Charts",
+              "display_mode": "chart_workspace_placeholder",
+              "default_size": "wide",
+              "data_scope": "bounded_timeseries_future",
+              "filters": {},
+              "time_range": "1y",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "notes",
+          "tab_name": "Notes",
+          "module_slots": [
+            {
+              "slot_id": "rmb_notes",
+              "module_id": "rmb_liquidity",
+              "tab_id": "notes",
+              "title_override": "RMB Liquidity Notes",
+              "display_mode": "notes_placeholder",
+              "default_size": "wide",
+              "data_scope": "browser_local_preview",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": false,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "ai_handoff",
+          "tab_name": "AI Handoff",
+          "module_slots": [
+            {
+              "slot_id": "rmb_ai_handoff",
+              "module_id": "rmb_liquidity",
+              "tab_id": "ai_handoff",
+              "title_override": "RMB Liquidity AI Handoff",
+              "display_mode": "ai_handoff",
+              "default_size": "wide",
+              "data_scope": "bounded_context_pack",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dashboard_id": "usd_liquidity",
+      "dashboard_name": "USD Liquidity Watch",
+      "dashboard_category": "macro_rates",
+      "purpose": "Review USD funding and global asset-pricing conditions.",
+      "status": "available_read_only",
+      "tabs": [
+        {
+          "tab_id": "overview",
+          "tab_name": "Overview",
+          "module_slots": [
+            {
+              "slot_id": "usd_overview",
+              "module_id": "usd_liquidity",
+              "tab_id": "overview",
+              "title_override": "USD Liquidity Overview",
+              "display_mode": "summary_matrix",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "data",
+          "tab_name": "Data",
+          "module_slots": [
+            {
+              "slot_id": "usd_data",
+              "module_id": "usd_liquidity",
+              "tab_id": "data",
+              "title_override": "USD Rates FX And Asset Pricing Data",
+              "display_mode": "data_table",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "charts",
+          "tab_name": "Charts",
+          "module_slots": [
+            {
+              "slot_id": "usd_charts",
+              "module_id": "usd_liquidity",
+              "tab_id": "charts",
+              "title_override": "USD Liquidity Charts",
+              "display_mode": "chart_workspace_placeholder",
+              "default_size": "wide",
+              "data_scope": "bounded_timeseries_future",
+              "filters": {},
+              "time_range": "1y",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "notes",
+          "tab_name": "Notes",
+          "module_slots": [
+            {
+              "slot_id": "usd_notes",
+              "module_id": "usd_liquidity",
+              "tab_id": "notes",
+              "title_override": "USD Liquidity Notes",
+              "display_mode": "notes_placeholder",
+              "default_size": "wide",
+              "data_scope": "browser_local_preview",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": false,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "ai_handoff",
+          "tab_name": "AI Handoff",
+          "module_slots": [
+            {
+              "slot_id": "usd_ai_handoff",
+              "module_id": "usd_liquidity",
+              "tab_id": "ai_handoff",
+              "title_override": "USD Liquidity AI Handoff",
+              "display_mode": "ai_handoff",
+              "default_size": "wide",
+              "data_scope": "bounded_context_pack",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dashboard_id": "commodities",
+      "dashboard_name": "Commodity Cycle",
+      "dashboard_category": "cross_asset",
+      "purpose": "Review commodity benchmarks and futures while preserving instrument distinctions.",
+      "status": "available_read_only",
+      "tabs": [
+        {
+          "tab_id": "overview",
+          "tab_name": "Overview",
+          "module_slots": [
+            {
+              "slot_id": "commodity_overview",
+              "module_id": "commodities",
+              "tab_id": "overview",
+              "title_override": "Commodity Cycle Overview",
+              "display_mode": "commodity_matrix",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "data",
+          "tab_name": "Data",
+          "module_slots": [
+            {
+              "slot_id": "commodity_data",
+              "module_id": "commodities",
+              "tab_id": "data",
+              "title_override": "Commodity Benchmark And Futures Data",
+              "display_mode": "data_table",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "charts",
+          "tab_name": "Charts",
+          "module_slots": [
+            {
+              "slot_id": "commodity_charts",
+              "module_id": "commodities",
+              "tab_id": "charts",
+              "title_override": "Commodity Cycle Charts",
+              "display_mode": "chart_workspace_placeholder",
+              "default_size": "wide",
+              "data_scope": "bounded_timeseries_future",
+              "filters": {},
+              "time_range": "1y",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "notes",
+          "tab_name": "Notes",
+          "module_slots": [
+            {
+              "slot_id": "commodity_notes",
+              "module_id": "commodities",
+              "tab_id": "notes",
+              "title_override": "Commodity Cycle Notes",
+              "display_mode": "notes_placeholder",
+              "default_size": "wide",
+              "data_scope": "browser_local_preview",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": false,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "ai_handoff",
+          "tab_name": "AI Handoff",
+          "module_slots": [
+            {
+              "slot_id": "commodity_ai_handoff",
+              "module_id": "commodities",
+              "tab_id": "ai_handoff",
+              "title_override": "Commodity Cycle AI Handoff",
+              "display_mode": "ai_handoff",
+              "default_size": "wide",
+              "data_scope": "bounded_context_pack",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dashboard_id": "company_report",
+      "dashboard_name": "Company Report Research",
+      "dashboard_category": "company",
+      "purpose": "Review structured company financials and governed report metadata. PDF parse remains disabled.",
+      "status": "available_read_only_parse_disabled",
+      "tabs": [
+        {
+          "tab_id": "overview",
+          "tab_name": "Overview",
+          "module_slots": [
+            {
+              "slot_id": "company_overview",
+              "module_id": "company_report",
+              "tab_id": "overview",
+              "title_override": "Company Report Overview",
+              "display_mode": "company_evidence",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "data",
+          "tab_name": "Data",
+          "module_slots": [
+            {
+              "slot_id": "company_data",
+              "module_id": "company_report",
+              "tab_id": "data",
+              "title_override": "Structured Financials And PDF Metadata",
+              "display_mode": "data_table",
+              "default_size": "wide",
+              "data_scope": "bounded_summary",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "charts",
+          "tab_name": "Charts",
+          "module_slots": [
+            {
+              "slot_id": "company_charts",
+              "module_id": "company_report",
+              "tab_id": "charts",
+              "title_override": "Company Financial Charts",
+              "display_mode": "chart_workspace_placeholder",
+              "default_size": "wide",
+              "data_scope": "bounded_timeseries_future",
+              "filters": {},
+              "time_range": "1y",
+              "ai_context_included": true,
+              "notes_enabled": false
+            }
+          ]
+        },
+        {
+          "tab_id": "notes",
+          "tab_name": "Notes",
+          "module_slots": [
+            {
+              "slot_id": "company_notes",
+              "module_id": "company_report",
+              "tab_id": "notes",
+              "title_override": "Company Research Notes",
+              "display_mode": "notes_placeholder",
+              "default_size": "wide",
+              "data_scope": "browser_local_preview",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": false,
+              "notes_enabled": true
+            }
+          ]
+        },
+        {
+          "tab_id": "ai_handoff",
+          "tab_name": "AI Handoff",
+          "module_slots": [
+            {
+              "slot_id": "company_ai_handoff",
+              "module_id": "company_report",
+              "tab_id": "ai_handoff",
+              "title_override": "Company Research AI Handoff",
+              "display_mode": "ai_handoff",
+              "default_size": "wide",
+              "data_scope": "bounded_context_pack",
+              "filters": {},
+              "time_range": "latest",
+              "ai_context_included": true,
+              "notes_enabled": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

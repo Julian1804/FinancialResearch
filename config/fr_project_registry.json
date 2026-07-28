@@ -1,0 +1,193 @@
+{
+  "projects": [
+    {
+      "created_at": "2026-06-01",
+      "data_selection": {
+        "activity_proxy_fields": [
+          "amount",
+          "volume",
+          "turnover_rate"
+        ],
+        "activity_proxy_note": "ETF amount, volume, and turnover_rate are trading activity proxies, not fund flow.",
+        "category_aggregate_activity": "planned_until_registry_backed_etf_taxonomy_and_summary_exist",
+        "default_etf_codes": [
+          "510300",
+          "510500",
+          "510050",
+          "159919",
+          "510310"
+        ],
+        "gap_reason": "etf_activity_summary is planned; theme ETF taxonomy remains placeholder until registry-backed taxonomy exists.",
+        "mode": "summary_first",
+        "price_context_fields": [
+          "pct_change",
+          "close"
+        ],
+        "ranking_frequencies": [
+          "daily",
+          "weekly",
+          "monthly"
+        ],
+        "summary_dataset": "etf_activity_summary",
+        "summary_dataset_status": "planned_source_gap",
+        "timeseries_export": "disabled_by_default"
+      },
+      "hypotheses": [
+        "Broad-market ETF trading activity can flag changing attention and liquidity conditions, but it is not fund flow.",
+        "Index style divergence plus rates and FX changes can explain part of the activity rotation across large-cap, mid-cap, growth, and defensive themes.",
+        "Commodity and futures signals provide cross-asset context before deeper bottom-up company research."
+      ],
+      "key_indicators": [
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Huatai-PineBridge CSI 300 ETF",
+          "indicator_id": "510300",
+          "role": "core_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "CSI 500 ETF",
+          "gap_reason": "show only if present in Stage 1 ETF daily data",
+          "indicator_id": "510500",
+          "role": "core_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "SSE 50 ETF",
+          "gap_reason": "show only if present in Stage 1 ETF daily data",
+          "indicator_id": "510050",
+          "role": "core_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Harvest CSI 300 ETF",
+          "indicator_id": "159919",
+          "role": "core_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "CSI 300 ETF alternate listing",
+          "gap_reason": "show only if present in Stage 1 ETF daily data",
+          "indicator_id": "510310",
+          "role": "core_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Semiconductor ETF theme",
+          "gap_reason": "theme mapping is placeholder until registry-backed ETF taxonomy exists",
+          "indicator_id": "semiconductor_etf_theme",
+          "role": "theme_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Consumer ETF theme",
+          "gap_reason": "theme mapping is placeholder until registry-backed ETF taxonomy exists",
+          "indicator_id": "consumer_etf_theme",
+          "role": "theme_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Healthcare ETF theme",
+          "gap_reason": "theme mapping is placeholder until registry-backed ETF taxonomy exists",
+          "indicator_id": "healthcare_etf_theme",
+          "role": "theme_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Brokerage ETF theme",
+          "gap_reason": "theme mapping is placeholder until registry-backed ETF taxonomy exists",
+          "indicator_id": "brokerage_etf_theme",
+          "role": "theme_etf"
+        },
+        {
+          "dataset_id": "etf_daily",
+          "display_name": "Energy ETF theme",
+          "gap_reason": "theme mapping is placeholder until registry-backed ETF taxonomy exists",
+          "indicator_id": "energy_etf_theme",
+          "role": "theme_etf"
+        },
+        {
+          "dataset_id": "rates",
+          "display_name": "China 10Y yield",
+          "indicator_id": "CN10Y",
+          "role": "liquidity"
+        },
+        {
+          "dataset_id": "rates",
+          "display_name": "US 10Y yield",
+          "indicator_id": "US10Y",
+          "role": "liquidity"
+        },
+        {
+          "dataset_id": "macro_china",
+          "display_name": "China LPR",
+          "indicator_id": "LPR",
+          "role": "liquidity"
+        },
+        {
+          "dataset_id": "rates",
+          "display_name": "SHIBOR 3M",
+          "indicator_id": "SHIBOR_3M",
+          "role": "liquidity"
+        },
+        {
+          "dataset_id": "rates",
+          "display_name": "DR007",
+          "indicator_id": "DR007",
+          "role": "liquidity"
+        },
+        {
+          "dataset_id": "global_indices",
+          "display_name": "CSI 300",
+          "indicator_id": "sh000300",
+          "role": "market_style"
+        },
+        {
+          "dataset_id": "global_indices",
+          "display_name": "CSI 500",
+          "indicator_id": "sh000905",
+          "role": "market_style"
+        },
+        {
+          "dataset_id": "global_indices",
+          "display_name": "CSI 1000",
+          "gap_reason": "show only if present in Stage 2 summaries",
+          "indicator_id": "sh000852",
+          "role": "market_style"
+        },
+        {
+          "dataset_id": "global_indices",
+          "display_name": "ChiNext",
+          "indicator_id": "sz399006",
+          "role": "market_style"
+        }
+      ],
+      "known_limitations": [
+        "Project v1 uses registry and lightweight dashboard summaries only; it does not scan raw data lake roots.",
+        "Theme ETF classification remains placeholder unless already present in ETF metadata.",
+        "AI handoff export writes light markdown/json context only and does not call AI APIs."
+      ],
+      "linked_datasets": [
+        "etf_activity_summary",
+        "etf_daily",
+        "a_share_daily",
+        "global_indices",
+        "cn_indices_futures",
+        "rates",
+        "fx",
+        "macro_china",
+        "commodities"
+      ],
+      "project_id": "a_share_main_money_flow",
+      "research_goal": "Track broad A-share market participation and rotation pressure using existing Stage 1 ETF/A-share daily data plus Stage 2 macro, rates, FX, indices, futures, and commodities summaries.",
+      "retired_example_project_content": true,
+      "status": "active",
+      "title": "A股主力资金走向",
+      "update_mode": "manual",
+      "updated_at": "2026-06-01"
+    }
+  ],
+  "registry_id": "fr_project_registry_v1",
+  "schema_version": "1.0",
+  "updated_at": "2026-06-01"
+}

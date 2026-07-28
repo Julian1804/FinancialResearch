@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0",
+  "approval_id": "fr_commodities_instrument_mapping_v1",
+  "dataset_id": "commodities",
+  "generic_instrument_id_forbidden": "INV_GOLD",
+  "required_distinct_investments": [
+    "London Gold",
+    "SHFE Gold",
+    "COMEX Gold"
+  ],
+  "next_bounded_evidence_request": {
+    "max_instruments": 10,
+    "max_rows": 100,
+    "max_lookback_days": 370,
+    "required_identity_fields": [
+      "instrument_id",
+      "symbol",
+      "commodity_family",
+      "venue_or_exchange",
+      "instrument_type",
+      "contract_id_when_future"
+    ],
+    "required_source_manifest": [
+      "source_id",
+      "registry_declared_path",
+      "bounded_manifest_id"
+    ],
+    "required_unit_currency_scale": [
+      "unit",
+      "currency",
+      "scale"
+    ],
+    "required_price_semantics": [
+      "spot_or_future",
+      "close_or_settlement",
+      "continuous_or_specific_contract"
+    ]
+  },
+  "evidence_gate": {
+    "closed": [
+      "distinct_london_shfe_comex_investment_candidates",
+      "generic_INV_GOLD_forbidden",
+      "bounded_recovery_manifest_present",
+      "bounded_recovery_failure_log_present"
+    ],
+    "remaining": [
+      "approved_london_gold_source",
+      "approved_comex_source",
+      "instrument_level_rows",
+      "continuous_contract_roll_mapping",
+      "close_or_settlement_semantics",
+      "instrument_level_unit_currency_scale",
+      "instrument_level_source_traceability"
+    ],
+    "gate_decision": "defer_requires_bounded_summary"
+  },
+  "mappings": [
+    {
+      "dataset_id": "commodities",
+      "instrument_id": "INV_COMMODITY_SPOT_LONDON_GOLD",
+      "symbol": null,
+      "contract_id": null,
+      "commodity_family": "gold",
+      "venue_or_exchange": "London OTC/benchmark",
+      "instrument_type": "spot",
+      "canonical_instrument_id": "INV_COMMODITY_SPOT_LONDON_GOLD",
+      "metric_id": "commodity.close",
+      "price_field_semantics": "spot benchmark price candidate",
+      "unit": null,
+      "currency": "USD",
+      "scale": null,
+      "frequency": null,
+      "date_field": null,
+      "source_id": null,
+      "source_traceability": [
+        "draft_sample_mapping_only"
+      ],
+      "mapping_status": "review_required",
+      "review_required_reason": "source gap and no bounded spot price evidence",
+      "evidence_fields_present": [
+        "instrument_id",
+        "commodity_family",
+        "venue_or_exchange",
+        "instrument_type",
+        "canonical_instrument_id",
+        "metric_id_candidate",
+        "currency_candidate"
+      ],
+      "evidence_fields_missing": [
+        "symbol_or_benchmark_id",
+        "approved_source_id",
+        "bounded_instrument_row",
+        "price_field_semantics_exact",
+        "unit",
+        "scale",
+        "frequency",
+        "date_field"
+      ],
+      "blockers": [
+        "approved_source_missing",
+        "bounded_instrument_row_missing",
+        "price_field_semantics_not_exact",
+        "unit_scale_missing",
+        "date_frequency_missing"
+      ],
+      "next_action": "provide an approved bounded London Gold benchmark manifest and row sample; do not proxy with World Bank GOLD"
+    },
+    {
+      "dataset_id": "commodities",
+      "instrument_id": "INV_CN_SHFE_AU_FUTURE_CONTINUOUS",
+      "symbol": "AU0",
+      "contract_id": null,
+      "commodity_family": "gold",
+      "venue_or_exchange": "SHFE",
+      "instrument_type": "continuous_future",
+      "canonical_instrument_id": "INV_CN_SHFE_AU_FUTURE_CONTINUOUS",
+      "metric_id": "commodity.close",
+      "price_field_semantics": "continuous future close; not settlement",
+      "unit": null,
+      "currency": "CNY",
+      "scale": null,
+      "frequency": "daily",
+      "date_field": "trade_date",
+      "source_id": "akshare.futures_zh_daily_sina",
+      "source_traceability": [
+        "draft_sample_mapping",
+        "stage2_recovery_dashboard_v1"
+      ],
+      "mapping_status": "review_required",
+      "review_required_reason": "bounded instrument row, roll mapping, price-field semantics, and unit/scale remain missing",
+      "evidence_fields_present": [
+        "instrument_id",
+        "symbol",
+        "commodity_family",
+        "venue_or_exchange",
+        "instrument_type",
+        "canonical_instrument_id",
+        "metric_id_candidate",
+        "currency",
+        "frequency",
+        "date_field",
+        "source_id_candidate"
+      ],
+      "evidence_fields_missing": [
+        "bounded_instrument_row",
+        "contract_id_or_roll_mapping",
+        "unit",
+        "scale",
+        "instrument_level_source_traceability"
+      ],
+      "blockers": [
+        "bounded_instrument_row_missing",
+        "continuous_contract_roll_mapping_missing",
+        "unit_scale_missing",
+        "instrument_level_source_traceability_missing"
+      ],
+      "next_action": "provide a bounded AU0 instrument summary with explicit roll mapping, price field semantics, unit, scale, and source manifest"
+    },
+    {
+      "dataset_id": "commodities",
+      "instrument_id": "INV_US_COMEX_GC_FUTURE_CONTINUOUS",
+      "symbol": "GC",
+      "contract_id": null,
+      "commodity_family": "gold",
+      "venue_or_exchange": "COMEX",
+      "instrument_type": "continuous_future",
+      "canonical_instrument_id": "INV_US_COMEX_GC_FUTURE_CONTINUOUS",
+      "metric_id": "futures.settlement_price",
+      "price_field_semantics": "continuous futures settlement candidate",
+      "unit": null,
+      "currency": "USD",
+      "scale": null,
+      "frequency": null,
+      "date_field": null,
+      "source_id": null,
+      "source_traceability": [
+        "draft_sample_mapping_only"
+      ],
+      "mapping_status": "review_required",
+      "review_required_reason": "source gap and no bounded contract evidence",
+      "evidence_fields_present": [
+        "instrument_id",
+        "symbol",
+        "commodity_family",
+        "venue_or_exchange",
+        "instrument_type",
+        "canonical_instrument_id",
+        "metric_id_candidate",
+        "currency_candidate"
+      ],
+      "evidence_fields_missing": [
+        "approved_source_id",
+        "bounded_instrument_row",
+        "contract_id_or_roll_mapping",
+        "price_field_semantics_exact",
+        "unit",
+        "scale",
+        "frequency",
+        "date_field"
+      ],
+      "blockers": [
+        "approved_source_missing",
+        "bounded_instrument_row_missing",
+        "continuous_contract_roll_mapping_missing",
+        "price_field_semantics_not_exact",
+        "unit_scale_missing",
+        "date_frequency_missing"
+      ],
+      "next_action": "provide an approved bounded COMEX GC source manifest and continuous-contract mapping; do not proxy with London or SHFE Gold"
+    }
+  ]
+}

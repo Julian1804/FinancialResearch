@@ -1,0 +1,927 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "fr_module_registry_v1",
+  "status": "draft_active_reference",
+  "updated_at": "2026-06-02",
+  "consumer_status": "registry_driven_workspace_data_series_drilldown_v1_browser_verified",
+  "classification_registry_ref": "config/fr_data_category_registry.json",
+  "dataset_registry_ref": "config/fr_dataset_registry.json",
+  "metric_registry_ref": "config/metrics_registry.json",
+  "project_registry_ref": "config/fr_project_registry.json",
+  "contract_required_fields": [
+    "module_id",
+    "module_name",
+    "module_category",
+    "module_type",
+    "purpose",
+    "default_data_series",
+    "optional_data_series",
+    "supporting_data_series",
+    "default_views",
+    "available_actions",
+    "notes_supported",
+    "ai_context_supported",
+    "export_supported",
+    "source_status",
+    "qa_status",
+    "default_layout",
+    "required_data_categories",
+    "related_company_scope",
+    "related_pdf_scope",
+    "dashboard_slot_supported",
+    "connection_dependencies",
+    "source_gap_policy",
+    "proxy_warning",
+    "status"
+  ],
+  "reference_role_policy": {
+    "default": "Core Module evidence shown by default.",
+    "optional": "Optional input or explicit source gap. Never fabricate a substitute.",
+    "supporting": "Context-only input. Do not present it as core evidence."
+  },
+  "proxy_policy": {
+    "etf_activity": "ETF amount, volume, and turnover_rate are trading activity proxies, not actual net fund flow.",
+    "supporting_data": "Supporting data is context only and must not be presented as a direct conclusion."
+  },
+  "data_series_catalog": [
+    {
+      "series_id": "china_m0",
+      "display_name": "China M0",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "china_m1",
+      "display_name": "China M1",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "china_m2",
+      "display_name": "China M2",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "social_financing",
+      "display_name": "Social Financing",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "not_available",
+      "proxy_policy": null,
+      "gap_reason": "TSF remains a source gap in the current controlled catalog."
+    },
+    {
+      "series_id": "new_rmb_loans",
+      "display_name": "New RMB Loans",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "lpr",
+      "display_name": "LPR",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "rrr",
+      "display_name": "Reserve Requirement Ratio",
+      "dataset_id": "macro_china",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "shibor_3m",
+      "display_name": "Shibor 3M",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "fdr007",
+      "display_name": "FDR007",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "dr007_exact",
+      "display_name": "DR007 Exact Series",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "not_available",
+      "proxy_policy": null,
+      "gap_reason": "Exact DR007 remains unavailable. FDR007 is a separate series, not a replacement."
+    },
+    {
+      "series_id": "cn10y",
+      "display_name": "China 10Y Yield",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "trade_or_observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "cn1y",
+      "display_name": "China 1Y Yield",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "not_available",
+      "proxy_policy": null,
+      "gap_reason": "CN1Y requires a stable ChinaBond or CFETS connector."
+    },
+    {
+      "series_id": "a_share_turnover",
+      "display_name": "A-share Turnover",
+      "dataset_id": "a_share_daily",
+      "availability": "partial_coverage",
+      "source_status": "production_candidate",
+      "qa_status": "field_coverage_partial",
+      "proxy_policy": "Trading activity field; do not equate with net fund flow.",
+      "gap_reason": "Amount and turnover fields can be partial or source-null."
+    },
+    {
+      "series_id": "etf_activity_proxy",
+      "display_name": "ETF Amount / Volume / Turnover Activity Proxy",
+      "dataset_id": "etf_daily",
+      "availability": "partial_coverage",
+      "source_status": "production_candidate",
+      "qa_status": "field_coverage_partial",
+      "proxy_policy": "Activity proxy only; not actual net fund flow.",
+      "gap_reason": "Historical amount and turnover coverage can be partial."
+    },
+    {
+      "series_id": "usd_cny",
+      "display_name": "USD/CNY",
+      "dataset_id": "fx",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "china_major_indices",
+      "display_name": "Major China Indices",
+      "dataset_id": "cn_indices_futures",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "trade_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "fed_funds",
+      "display_name": "Fed Funds Effective Rate",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "us2y",
+      "display_name": "US 2Y Yield",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "us10y",
+      "display_name": "US 10Y Yield",
+      "dataset_id": "rates",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "trade_weighted_usd",
+      "display_name": "Trade-weighted USD",
+      "dataset_id": "fx",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "observation_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "approved_fx_pairs",
+      "display_name": "Approved FX Pairs",
+      "dataset_id": "fx",
+      "availability": "partial_coverage",
+      "source_status": "production_candidate",
+      "qa_status": "pair_level_source_identity_varies",
+      "proxy_policy": null,
+      "gap_reason": "Pair-level source identity varies; USD/CNH remains a source gap."
+    },
+    {
+      "series_id": "approved_global_indices",
+      "display_name": "Approved Global Indices",
+      "dataset_id": "global_indices",
+      "availability": "partial_coverage",
+      "source_status": "known_limitation",
+      "qa_status": "partial_coverage",
+      "proxy_policy": null,
+      "gap_reason": "Several global index connectors remain failed or require licensed or approved proxy sources."
+    },
+    {
+      "series_id": "gold_benchmark",
+      "display_name": "Gold Benchmark",
+      "dataset_id": null,
+      "data_product_id": "dp_stage2_commodity_benchmark_sample_v1",
+      "availability": "available_product_registry_only",
+      "source_status": "production_candidate",
+      "qa_status": "benchmark_not_exchange_futures",
+      "proxy_policy": "Commodity benchmark; do not label as COMEX futures.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "wti_benchmark",
+      "display_name": "WTI Benchmark",
+      "dataset_id": null,
+      "data_product_id": "dp_stage2_commodity_benchmark_sample_v1",
+      "availability": "available_product_registry_only",
+      "source_status": "production_candidate",
+      "qa_status": "benchmark_not_exchange_futures",
+      "proxy_policy": "Commodity benchmark or spot-like observation; do not label as NYMEX futures.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "copper_benchmark",
+      "display_name": "Copper Benchmark",
+      "dataset_id": null,
+      "data_product_id": "dp_stage2_commodity_benchmark_sample_v1",
+      "availability": "available_product_registry_only",
+      "source_status": "production_candidate",
+      "qa_status": "benchmark_not_exchange_futures",
+      "proxy_policy": "Commodity benchmark; do not label as LME or SHFE futures.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "china_commodity_futures",
+      "display_name": "China Commodity Futures",
+      "dataset_id": "commodities",
+      "availability": "available_summary",
+      "source_status": "production_candidate",
+      "qa_status": "trade_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "non_china_exchange_futures",
+      "display_name": "Non-China Exchange Futures",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "not_available",
+      "proxy_policy": null,
+      "gap_reason": "CME, LME, and other exchange futures require source-specific connectors and terms review."
+    },
+    {
+      "series_id": "options_catalog",
+      "display_name": "Options Catalog",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "not_available",
+      "proxy_policy": null,
+      "gap_reason": "Options are not yet a catalog-complete product."
+    },
+    {
+      "series_id": "theme_etf_classification",
+      "display_name": "Theme ETF Classification",
+      "dataset_id": null,
+      "availability": "source_gap",
+      "source_status": "known_limitation",
+      "qa_status": "placeholder_only",
+      "proxy_policy": "Do not infer theme membership without a registry-backed mapping.",
+      "gap_reason": "Theme ETF classification remains placeholder-level."
+    },
+    {
+      "series_id": "commodities_cross_asset",
+      "display_name": "Commodity Cross-asset Summary",
+      "dataset_id": "commodities",
+      "availability": "available_summary",
+      "source_status": "production_candidate",
+      "qa_status": "supporting_context_only",
+      "proxy_policy": "Supporting cross-asset context only.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "company_daily",
+      "display_name": "Company Daily Trading",
+      "dataset_id": "a_share_daily",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "trade_date_only",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "structured_financial_summary",
+      "display_name": "Structured Financial Summary And Core Metrics",
+      "dataset_id": "financial_structured",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": null,
+      "gap_reason": null
+    },
+    {
+      "series_id": "structured_three_statements",
+      "display_name": "Structured Three Statements",
+      "dataset_id": "financial_structured",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "release_calendar_required",
+      "proxy_policy": "Primary quantitative source; PDF parse must not override these values.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "disclosure_metadata",
+      "display_name": "Disclosure Metadata",
+      "dataset_id": "disclosure_metadata",
+      "availability": "available",
+      "source_status": "production_candidate",
+      "qa_status": "announcement_date_only",
+      "proxy_policy": "Metadata availability does not imply PDF binary or parsed evidence availability.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "pdf_original_index",
+      "display_name": "Existing PDF Original Index",
+      "dataset_id": "pdf_corpus_governance",
+      "availability": "available_metadata_index",
+      "source_status": "production_candidate",
+      "qa_status": "per_file_binary_status_required",
+      "proxy_policy": "Open existing governed files only; do not start downloads or parse.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "user_selected_parsed_evidence",
+      "display_name": "User-selected Parsed Report Evidence",
+      "dataset_id": null,
+      "availability": "planned_disabled",
+      "source_status": "not_enabled",
+      "qa_status": "future_parse_lifecycle_required",
+      "proxy_policy": "Narrative evidence only; must not override structured financial metrics.",
+      "gap_reason": "User-selected parse lifecycle is designed but not enabled."
+    },
+    {
+      "series_id": "research_notes",
+      "display_name": "Research Notes And Uploaded Report References",
+      "dataset_id": null,
+      "availability": "available_project_artifacts",
+      "source_status": "project_layer",
+      "qa_status": "lightweight_artifacts_only",
+      "proxy_policy": "Human-authored or uploaded supporting context; not trusted market fact.",
+      "gap_reason": null
+    },
+    {
+      "series_id": "module_ai_context_pack",
+      "display_name": "Module AI Context Pack",
+      "dataset_id": null,
+      "availability": "available_local_preview",
+      "source_status": "local_generated_preview",
+      "qa_status": "read_only_registry_builder",
+      "proxy_policy": "Local copy-paste bridge only; no AI API call.",
+      "gap_reason": null
+    }
+  ],
+  "modules": [
+    {
+      "module_id": "rmb_liquidity",
+      "module_name": "人民币流动性 Module",
+      "module_category": "liquidity",
+      "module_type": "cross_asset_liquidity",
+      "purpose": "Study RMB money, credit, rates, FX, equity liquidity, and related asset-price conditions.",
+      "default_data_series": [
+        "china_m0",
+        "china_m1",
+        "china_m2",
+        "new_rmb_loans",
+        "lpr",
+        "rrr",
+        "shibor_3m",
+        "fdr007",
+        "cn10y",
+        "usd_cny",
+        "china_major_indices"
+      ],
+      "optional_data_series": [
+        "social_financing",
+        "cn1y",
+        "dr007_exact"
+      ],
+      "supporting_data_series": [
+        "a_share_turnover",
+        "etf_activity_proxy"
+      ],
+      "default_views": [
+        "summary_cards",
+        "rates_curve_table",
+        "liquidity_matrix",
+        "bounded_timeseries_charts",
+        "source_gap_panel"
+      ],
+      "available_actions": [
+        "view_summary",
+        "open_bounded_chart",
+        "inspect_source_gap",
+        "preview_ai_context_pack",
+        "copy_ai_context_pack"
+      ],
+      "notes_supported": true,
+      "ai_context_supported": true,
+      "export_supported": true,
+      "source_status": "partial_coverage_with_explicit_gaps",
+      "qa_status": "read_only_workspace_productized_v1_browser_verified",
+      "default_layout": "summary_matrix_then_on_demand_charts",
+      "required_data_categories": {
+        "base_categories": [
+          "macro_indicator",
+          "rates_bond",
+          "fx_currency",
+          "a_share_equity",
+          "etf_fund",
+          "index"
+        ],
+        "research_meanings": [
+          "rmb_liquidity",
+          "credit_cycle",
+          "a_share_main_money_flow"
+        ],
+        "display_categories": [
+          "宏观数据",
+          "利率 / 债券",
+          "外汇",
+          "沪深市场",
+          "ETF / 基金",
+          "指数"
+        ]
+      },
+      "related_company_scope": "none",
+      "related_pdf_scope": "none",
+      "dashboard_slot_supported": true,
+      "connection_dependencies": ["local_registry", "pbo_c", "china_bond", "cfets"],
+      "source_gap_policy": "Show TSF, CN1Y and exact DR007 as explicit source gaps. FDR007 is not a DR007 replacement.",
+      "proxy_warning": "A-share turnover and ETF activity are supporting observations only. ETF activity is not actual net fund flow.",
+      "status": "available_read_only"
+    },
+    {
+      "module_id": "usd_liquidity",
+      "module_name": "美元流动性 Module",
+      "module_category": "liquidity",
+      "module_type": "cross_asset_liquidity",
+      "purpose": "Study USD funding conditions and global asset-pricing context.",
+      "default_data_series": [
+        "fed_funds",
+        "us2y",
+        "us10y",
+        "trade_weighted_usd"
+      ],
+      "optional_data_series": [
+        "approved_fx_pairs",
+        "approved_global_indices"
+      ],
+      "supporting_data_series": [
+        "gold_benchmark",
+        "wti_benchmark"
+      ],
+      "default_views": [
+        "summary_cards",
+        "rates_curve_table",
+        "cross_asset_matrix",
+        "bounded_timeseries_charts",
+        "source_gap_panel"
+      ],
+      "available_actions": [
+        "view_summary",
+        "open_bounded_chart",
+        "inspect_source_gap",
+        "preview_ai_context_pack",
+        "copy_ai_context_pack"
+      ],
+      "notes_supported": true,
+      "ai_context_supported": true,
+      "export_supported": true,
+      "source_status": "partial_coverage_with_global_index_gaps",
+      "qa_status": "read_only_workspace_productized_v1_browser_verified",
+      "default_layout": "summary_matrix_then_on_demand_charts",
+      "required_data_categories": {
+        "base_categories": [
+          "rates_bond",
+          "fx_currency",
+          "asset_class",
+          "commodity",
+          "index"
+        ],
+        "research_meanings": [
+          "usd_liquidity",
+          "global_asset_pricing",
+          "risk_appetite"
+        ],
+        "display_categories": [
+          "利率 / 债券",
+          "外汇",
+          "黄金",
+          "大宗商品",
+          "指数"
+        ]
+      },
+      "related_company_scope": "none",
+      "related_pdf_scope": "none",
+      "dashboard_slot_supported": true,
+      "connection_dependencies": ["local_registry", "fred", "approved_fx_sources"],
+      "source_gap_policy": "Show approved FX and global-index coverage gaps explicitly. Do not silently substitute unapproved sources.",
+      "proxy_warning": "Gold and WTI are supporting cross-asset observations, not direct USD-liquidity measures.",
+      "status": "available_read_only"
+    },
+    {
+      "module_id": "commodities",
+      "module_name": "大宗商品 Module",
+      "module_category": "market",
+      "module_type": "commodity_cross_asset",
+      "purpose": "Study commodity benchmarks and futures while preserving instrument distinctions.",
+      "default_data_series": [
+        "gold_benchmark",
+        "wti_benchmark",
+        "copper_benchmark",
+        "china_commodity_futures"
+      ],
+      "optional_data_series": [
+        "non_china_exchange_futures",
+        "options_catalog"
+      ],
+      "supporting_data_series": [
+        "trade_weighted_usd",
+        "us10y"
+      ],
+      "default_views": [
+        "summary_cards",
+        "commodity_matrix",
+        "benchmark_vs_futures_table",
+        "bounded_timeseries_charts",
+        "source_gap_panel"
+      ],
+      "available_actions": [
+        "view_summary",
+        "open_bounded_chart",
+        "inspect_instrument_type",
+        "inspect_source_gap",
+        "preview_ai_context_pack",
+        "copy_ai_context_pack"
+      ],
+      "notes_supported": true,
+      "ai_context_supported": true,
+      "export_supported": true,
+      "source_status": "bounded_summary_available_with_exchange_source_gaps",
+      "qa_status": "read_only_workspace_productized_v1_browser_verified",
+      "default_layout": "commodity_matrix_then_on_demand_charts",
+      "required_data_categories": {
+        "base_categories": [
+          "commodity",
+          "futures_options",
+          "asset_class",
+          "rates_bond",
+          "fx_currency"
+        ],
+        "research_meanings": [
+          "commodity_cycle",
+          "inflation_pressure",
+          "usd_liquidity",
+          "safe_haven"
+        ],
+        "display_categories": [
+          "黄金",
+          "大宗商品",
+          "期货 / 期权",
+          "利率 / 债券",
+          "外汇"
+        ]
+      },
+      "related_company_scope": "none",
+      "related_pdf_scope": "none",
+      "dashboard_slot_supported": true,
+      "connection_dependencies": ["local_registry", "approved_commodity_sources", "china_futures_sources"],
+      "source_gap_policy": "Keep non-China exchange futures and options as explicit gaps until source-specific connectors are approved.",
+      "proxy_warning": "Commodity benchmarks and futures are distinct instrument types and must not be relabeled as each other.",
+      "status": "available_read_only"
+    },
+    {
+      "module_id": "a_share_main_money_flow",
+      "module_name": "A股主力资金走向 Module",
+      "module_category": "research_project",
+      "module_type": "equity_participation_and_rotation",
+      "purpose": "Track broad A-share participation and rotation with explicit activity-proxy boundaries.",
+      "default_data_series": [
+        "etf_activity_proxy",
+        "a_share_turnover",
+        "china_major_indices",
+        "cn10y",
+        "lpr",
+        "shibor_3m",
+        "usd_cny"
+      ],
+      "optional_data_series": [
+        "theme_etf_classification",
+        "dr007_exact"
+      ],
+      "supporting_data_series": [
+        "us10y",
+        "commodities_cross_asset"
+      ],
+      "default_views": [
+        "project_summary",
+        "etf_activity_table",
+        "style_rotation_matrix",
+        "bounded_timeseries_charts",
+        "notes_panel",
+        "source_gap_panel"
+      ],
+      "available_actions": [
+        "view_summary",
+        "open_bounded_chart",
+        "inspect_data_selection",
+        "create_note",
+        "upload_supporting_report",
+        "preview_ai_context_pack",
+        "copy_ai_context_pack",
+        "export_lightweight_pack"
+      ],
+      "notes_supported": true,
+      "ai_context_supported": true,
+      "export_supported": true,
+      "source_status": "partial_coverage_with_proxy_and_theme_mapping_gaps",
+      "qa_status": "read_only_workspace_productized_v1_browser_verified",
+      "default_layout": "project_summary_left_notes_and_ai_bridge_right",
+      "required_data_categories": {
+        "base_categories": [
+          "a_share_equity",
+          "etf_fund",
+          "index",
+          "rates_bond",
+          "fx_currency",
+          "macro_indicator",
+          "research_artifact"
+        ],
+        "research_meanings": [
+          "a_share_main_money_flow",
+          "rmb_liquidity",
+          "risk_appetite",
+          "ai_context"
+        ],
+        "display_categories": [
+          "沪深市场",
+          "ETF / 基金",
+          "指数",
+          "利率 / 债券",
+          "外汇",
+          "宏观数据",
+          "研究工作台"
+        ]
+      },
+      "related_company_scope": "optional_company_drilldown_only",
+      "related_pdf_scope": "none",
+      "dashboard_slot_supported": true,
+      "connection_dependencies": ["local_registry", "akshare_eastmoney", "approved_rates_sources", "approved_fx_sources"],
+      "source_gap_policy": "Keep theme ETF mapping and exact DR007 as explicit gaps. Supporting cross-asset series remain supporting evidence.",
+      "proxy_warning": "ETF amount, volume and turnover_rate are activity proxies, not actual net fund flow.",
+      "status": "available_read_only"
+    },
+    {
+      "module_id": "company_report",
+      "module_name": "公司财报 Module",
+      "module_category": "company",
+      "module_type": "company_financial_and_report_evidence",
+      "purpose": "Combine company daily trading, structured financials, disclosure metadata, existing PDF originals, optional user-selected parsed evidence, notes, and AI context.",
+      "default_data_series": [
+        "company_daily",
+        "structured_financial_summary",
+        "structured_three_statements",
+        "disclosure_metadata",
+        "pdf_original_index"
+      ],
+      "optional_data_series": [
+        "user_selected_parsed_evidence"
+      ],
+      "supporting_data_series": [
+        "research_notes",
+        "module_ai_context_pack"
+      ],
+      "default_views": [
+        "company_header",
+        "daily_trading_summary",
+        "financial_summary",
+        "core_metrics",
+        "three_statements",
+        "pdf_and_disclosure_table",
+        "parsed_evidence_panel",
+        "notes_panel",
+        "ai_bridge_panel"
+      ],
+      "available_actions": [
+        "resolve_company",
+        "view_structured_financials",
+        "open_existing_pdf",
+        "inspect_parse_status",
+        "view_existing_parsed_evidence",
+        "future_start_user_selected_parse_requires_explicit_authorization",
+        "future_cancel_user_selected_parse_requires_explicit_authorization",
+        "future_reparse_requires_explicit_authorization",
+        "create_note",
+        "preview_ai_context_pack",
+        "copy_ai_context_pack",
+        "export_lightweight_pack"
+      ],
+      "notes_supported": true,
+      "ai_context_supported": true,
+      "export_supported": true,
+      "source_status": "structured_financials_and_pdf_index_available_parse_disabled",
+      "qa_status": "read_only_workspace_productized_v1_browser_verified",
+      "default_layout": "company_financials_center_pdf_and_ai_bridge_right",
+      "required_data_categories": {
+        "base_categories": [
+          "a_share_equity",
+          "company_financial",
+          "disclosure_pdf",
+          "research_artifact"
+        ],
+        "research_meanings": [
+          "company_fundamentals",
+          "company_report_evidence",
+          "audit_and_risk_evidence",
+          "ai_context"
+        ],
+        "display_categories": [
+          "沪深市场",
+          "公司财务",
+          "财报公告",
+          "研究工作台"
+        ]
+      },
+      "related_company_scope": "user_selected_a_share_company_only",
+      "related_pdf_scope": "existing_governed_pdf_files_only_user_selects_company_and_file_parse_disabled_by_default",
+      "dashboard_slot_supported": true,
+      "connection_dependencies": ["local_registry", "cninfo", "local_files"],
+      "source_gap_policy": "Keep parsed evidence disabled until a separately authorized file-level lifecycle task is implemented.",
+      "proxy_warning": "PDF metadata and optional narrative evidence do not replace structured financial statements or core metrics.",
+      "status": "available_read_only_parse_disabled"
+    }
+  ],
+  "company_report_parse_contract": {
+    "full_corpus_parse_allowed": false,
+    "selection_policy": "User selects a researched company and then a specific report file.",
+    "structured_financials_remain_primary": true,
+    "parsed_evidence_role": "Narrative evidence and AI context only; never override structured three statements or core metrics.",
+    "parse_states": [
+      "not_parsed",
+      "queued",
+      "parsing",
+      "parsed",
+      "parse_failed",
+      "using_previous_parse",
+      "no_parse_needed",
+      "duplicate_skipped"
+    ],
+    "future_file_state_fields": [
+      "parse_status",
+      "parse_version",
+      "previous_success_parse_id",
+      "latest_attempt_id",
+      "parsed_doc_available",
+      "can_view_pdf",
+      "can_view_parsed",
+      "can_start_parse",
+      "can_cancel_parse",
+      "can_reparse",
+      "storage_cleanup_status"
+    ],
+    "reparse_failure_policy": "Keep the previous successful parse active; remove failed-attempt temporary files and record status.",
+    "temporary_cleanup_required": true,
+    "implementation_status": "contract_only_parse_not_started"
+  },
+  "ai_context_pack_contract": {
+    "contract_id": "fr_module_ai_context_pack_v1",
+    "implementation_status": "local_preview_copy_export_browser_verified_no_ai_api_call",
+    "supported_bridge": "copy_paste_web_ai",
+    "supported_targets": [
+      "GPT Web",
+      "Claude Web",
+      "Kimi Web",
+      "DeepSeek Web"
+    ],
+    "required_sections": [
+      "module_context",
+      "classification_context",
+      "data_summary",
+      "source_and_trust",
+      "proxy_warnings",
+      "company_context",
+      "evidence_context",
+      "research_notes",
+      "open_questions",
+      "copy_paste_prompt"
+    ],
+    "default_export_formats": [
+      "markdown",
+      "json"
+    ],
+    "large_timeseries_export_enabled_by_default": false,
+    "external_ai_api_calls_enabled": false
+  },
+  "research_workspace_ui_shell_contract": {
+    "implementation_status": "registry_driven_workspace_extension_protocol_v1_browser_verified",
+    "left_navigation": {
+      "reads": [
+        "module list",
+        "module category",
+        "module source status",
+        "module QA status",
+        "pinned modules",
+        "recent projects"
+      ],
+      "current_api": [
+        "GET /api/modules/list",
+        "GET /api/modules/detail?module_id=<module_id>"
+      ],
+      "future_api": []
+    },
+    "center_workspace": {
+      "reads": [
+        "selected module contract",
+        "default optional and supporting Data Series",
+        "summary cards",
+        "table and matrix definitions",
+        "bounded timeseries requests",
+        "source gaps",
+        "proxy warnings",
+        "company report state when relevant"
+      ],
+      "current_api": [
+        "GET /api/modules/summary?module_id=<module_id>",
+        "GET /api/modules/timeseries?module_id=<module_id>&series_id=<series_id>"
+      ],
+      "future_api": [
+        "GET /api/modules/data?module_id=<module_id>",
+        "GET /api/modules/company/reports?module_id=company_report&symbol=<symbol>"
+      ]
+    },
+    "right_ai_bridge": {
+      "reads": [
+        "selected module",
+        "selected Data Series",
+        "filters and date window",
+        "visible gaps and warnings",
+        "selected company and report evidence",
+        "notes and uploaded-report references"
+      ],
+      "current_api": [
+        "GET /api/modules/context_pack?module_id=<module_id>"
+      ],
+      "future_api": [],
+      "external_ai_api_calls_enabled": false
+    }
+  },
+  "formal_trusted_consumption_enabled": false
+}

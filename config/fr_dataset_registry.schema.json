@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FinancialResearch Unified Dataset Registry",
+  "type": "object",
+  "required": ["schema_version", "registry_id", "datasets"],
+  "properties": {
+    "schema_version": {"const": "fr_unified_dataset_registry_v1"},
+    "registry_id": {"const": "fr_project_wide_dataset_registry"},
+    "updated_at": {"type": "string"},
+    "semantic_contract": {
+      "type": "object",
+      "required": [
+        "fact_audit_contract_version",
+        "metric_registry",
+        "normalization_policy_version",
+        "promoted_fact_contract"
+      ],
+      "properties": {
+        "fact_audit_contract_version": {"type": "integer"},
+        "metric_registry": {"const": "config/metrics_registry.json"},
+        "normalization_policy_version": {"type": "string"},
+        "promoted_fact_contract": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "display_name",
+          "layer",
+          "path",
+          "format",
+          "metric_registry",
+          "source_observation_key_required",
+          "logical_fact_key_required_for_standard_facts",
+          "trust_status",
+          "qa_status"
+        ],
+        "properties": {
+          "dataset_id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "display_name": {"type": "string"},
+          "layer": {"type": "string", "enum": ["source_observations", "standard_facts", "read_models", "registry"]},
+          "path": {"type": "string"},
+          "format": {"type": "string"},
+          "metric_registry": {"const": "config/metrics_registry.json"},
+          "source_observation_key_required": {"const": true},
+          "logical_fact_key_required_for_standard_facts": {"const": true},
+          "trust_status": {"type": "string"},
+          "qa_status": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

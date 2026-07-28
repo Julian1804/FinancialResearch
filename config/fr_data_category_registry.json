@@ -1,0 +1,354 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "fr_data_category_registry_v1",
+  "status": "draft_active_reference",
+  "updated_at": "2026-06-02",
+  "business_language": {
+    "preferred_terms": [
+      "Module",
+      "Category",
+      "Classification",
+      "Data Catalog",
+      "Data Series",
+      "Research Workspace",
+      "AI Bridge"
+    ],
+    "taxonomy_compatibility_rule": "Historical filenames containing taxonomy remain compatibility filenames for classification files. Do not rename them without a dedicated migration."
+  },
+  "classification_layers": [
+    {
+      "layer_id": "base_category",
+      "label": "基础分类",
+      "cardinality": "one_or_more",
+      "categories": [
+        "a_share_equity",
+        "etf_fund",
+        "index",
+        "macro_indicator",
+        "rates_bond",
+        "fx_currency",
+        "commodity",
+        "futures_options",
+        "asset_class",
+        "company_financial",
+        "disclosure_pdf",
+        "research_artifact"
+      ]
+    },
+    {
+      "layer_id": "instrument_type",
+      "label": "工具类型分类",
+      "cardinality": "one_or_more",
+      "categories": [
+        "equity",
+        "etf",
+        "index",
+        "spot",
+        "fx_spot",
+        "fx_index",
+        "macro_series",
+        "policy_rate",
+        "sovereign_yield",
+        "interbank_rate",
+        "benchmark",
+        "settlement",
+        "futures_contract",
+        "continuous_futures",
+        "option_contract",
+        "structured_statement",
+        "financial_metric",
+        "disclosure_metadata",
+        "pdf_original",
+        "parsed_evidence",
+        "research_note",
+        "human_report",
+        "ai_handoff_pack"
+      ]
+    },
+    {
+      "layer_id": "research_meaning",
+      "label": "研究含义分类",
+      "cardinality": "zero_or_more",
+      "categories": [
+        "rmb_liquidity",
+        "usd_liquidity",
+        "a_share_main_money_flow",
+        "commodity_cycle",
+        "inflation_pressure",
+        "credit_cycle",
+        "global_asset_pricing",
+        "risk_appetite",
+        "safe_haven",
+        "company_fundamentals",
+        "company_report_evidence",
+        "audit_and_risk_evidence",
+        "ai_context"
+      ]
+    },
+    {
+      "layer_id": "display_category",
+      "label": "展示分类",
+      "cardinality": "one_or_more",
+      "categories": [
+        "沪深市场",
+        "ETF / 基金",
+        "指数",
+        "宏观数据",
+        "利率 / 债券",
+        "外汇",
+        "黄金",
+        "大宗商品",
+        "期货 / 期权",
+        "公司财务",
+        "财报公告",
+        "研究工作台"
+      ]
+    }
+  ],
+  "classification_rules": [
+    "A data object may have multiple categories and tags.",
+    "A Data Series has one canonical identity and may be referenced by multiple Modules without copied storage.",
+    "Display categories do not override economic meaning, provenance, trust status, unit, frequency, or time semantics.",
+    "Benchmark, spot-like, exchange futures, continuous futures, and options remain distinct instrument types.",
+    "Macro release date semantics remain distinct from market observation date semantics.",
+    "ETF amount, volume, and turnover_rate are activity proxies unless a source field explicitly represents fund flow.",
+    "Structured financials, disclosure metadata, PDF originals, and parsed evidence remain distinct objects.",
+    "Classification never opens formal trusted consumption."
+  ],
+  "canonical_examples": [
+    {
+      "object_id": "gold_benchmark",
+      "display_name": "Gold benchmark",
+      "base_categories": [
+        "commodity",
+        "asset_class"
+      ],
+      "instrument_types": [
+        "benchmark"
+      ],
+      "research_meanings": [
+        "safe_haven",
+        "inflation_pressure",
+        "usd_liquidity"
+      ],
+      "display_categories": [
+        "黄金",
+        "大宗商品"
+      ],
+      "distinction_rule": "Do not label benchmark data as COMEX futures."
+    },
+    {
+      "object_id": "us_10y_yield",
+      "display_name": "US 10Y Yield",
+      "base_categories": [
+        "rates_bond",
+        "asset_class"
+      ],
+      "instrument_types": [
+        "sovereign_yield"
+      ],
+      "research_meanings": [
+        "usd_liquidity",
+        "global_asset_pricing",
+        "risk_appetite"
+      ],
+      "display_categories": [
+        "利率 / 债券"
+      ],
+      "distinction_rule": "Use one canonical Data Series across rates and cross-asset Modules."
+    },
+    {
+      "object_id": "china_m2",
+      "display_name": "China M2",
+      "base_categories": [
+        "macro_indicator"
+      ],
+      "instrument_types": [
+        "macro_series"
+      ],
+      "research_meanings": [
+        "rmb_liquidity",
+        "credit_cycle",
+        "a_share_main_money_flow"
+      ],
+      "display_categories": [
+        "宏观数据"
+      ],
+      "distinction_rule": "Require release-calendar state for strict historical-information use."
+    },
+    {
+      "object_id": "usd_cny",
+      "display_name": "USD/CNY",
+      "base_categories": [
+        "fx_currency"
+      ],
+      "instrument_types": [
+        "fx_spot"
+      ],
+      "research_meanings": [
+        "rmb_liquidity",
+        "usd_liquidity",
+        "a_share_main_money_flow"
+      ],
+      "display_categories": [
+        "外汇"
+      ],
+      "distinction_rule": "Preserve source identity and observation-time semantics."
+    },
+    {
+      "object_id": "annual_report_pdf",
+      "display_name": "Annual report PDF",
+      "base_categories": [
+        "disclosure_pdf"
+      ],
+      "instrument_types": [
+        "pdf_original"
+      ],
+      "research_meanings": [
+        "company_report_evidence",
+        "audit_and_risk_evidence",
+        "ai_context"
+      ],
+      "display_categories": [
+        "财报公告"
+      ],
+      "distinction_rule": "PDF evidence does not replace structured financial statements."
+    }
+  ],
+  "default_module_category_requirements": [
+    {
+      "module_id": "rmb_liquidity",
+      "display_name": "人民币流动性 Module",
+      "required_research_meanings": [
+        "rmb_liquidity"
+      ],
+      "preferred_base_categories": [
+        "macro_indicator",
+        "rates_bond",
+        "fx_currency",
+        "a_share_equity",
+        "etf_fund",
+        "index"
+      ],
+      "initial_series_or_gaps": [
+        "M0",
+        "M1",
+        "M2",
+        "social_financing_gap",
+        "new_rmb_loans",
+        "LPR",
+        "RRR",
+        "SHIBOR",
+        "FDR007",
+        "exact_DR007_gap",
+        "China_sovereign_yields",
+        "A_share_turnover",
+        "ETF_turnover",
+        "USD_CNY",
+        "major_China_indices"
+      ]
+    },
+    {
+      "module_id": "usd_liquidity",
+      "display_name": "美元流动性 Module",
+      "required_research_meanings": [
+        "usd_liquidity"
+      ],
+      "preferred_base_categories": [
+        "rates_bond",
+        "fx_currency",
+        "asset_class",
+        "commodity",
+        "index"
+      ],
+      "initial_series_or_gaps": [
+        "Fed_Funds",
+        "US2Y",
+        "US10Y",
+        "trade_weighted_USD",
+        "approved_FX_pairs",
+        "gold_benchmark",
+        "WTI",
+        "approved_global_indices"
+      ]
+    },
+    {
+      "module_id": "commodities",
+      "display_name": "大宗商品 Module",
+      "required_research_meanings": [
+        "commodity_cycle"
+      ],
+      "preferred_base_categories": [
+        "commodity",
+        "futures_options",
+        "asset_class"
+      ],
+      "initial_series_or_gaps": [
+        "gold_benchmark",
+        "WTI",
+        "copper_benchmark",
+        "China_exchange_futures",
+        "non_China_exchange_futures_source_gap"
+      ]
+    },
+    {
+      "module_id": "a_share_main_money_flow",
+      "display_name": "A股主力资金走向 Module",
+      "required_research_meanings": [
+        "a_share_main_money_flow"
+      ],
+      "preferred_base_categories": [
+        "a_share_equity",
+        "etf_fund",
+        "index",
+        "rates_bond",
+        "fx_currency",
+        "macro_indicator"
+      ],
+      "initial_series_or_gaps": [
+        "ETF_activity_proxies",
+        "major_China_indices",
+        "CN10Y",
+        "US10Y",
+        "LPR",
+        "SHIBOR",
+        "USD_CNY",
+        "theme_ETF_classification_gap"
+      ]
+    },
+    {
+      "module_id": "company_report",
+      "display_name": "公司财报 Module",
+      "required_research_meanings": [
+        "company_fundamentals",
+        "company_report_evidence",
+        "ai_context"
+      ],
+      "preferred_base_categories": [
+        "company_financial",
+        "disclosure_pdf",
+        "research_artifact"
+      ],
+      "initial_series_or_gaps": [
+        "structured_financial_summary",
+        "structured_three_statements",
+        "disclosure_metadata",
+        "pdf_original",
+        "user_selected_parsed_evidence_future"
+      ]
+    }
+  ],
+  "historical_classification_inputs": [
+    "config/data_taxonomy.json",
+    "config/asset_class_taxonomy.json",
+    "config/market_data_domain_taxonomy.json",
+    "config/macro_taxonomy.json",
+    "config/rates_bond_taxonomy.json",
+    "config/fx_currency_taxonomy.json",
+    "config/commodity_taxonomy.json",
+    "config/fund_etf_taxonomy.json",
+    "config/research_object_types.json"
+  ],
+  "consumer_status": "draft_only_no_runtime_consumer_change",
+  "formal_trusted_consumption_enabled": false
+}
