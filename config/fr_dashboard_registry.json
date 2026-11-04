@@ -4,7 +4,7 @@
   "updated_at": "2026-06-02",
   "status": "active_read_only_productized_v1",
   "module_registry_ref": "config/fr_module_registry.json",
-  "persistence_policy": "Registry dashboards are read-only defaults. User-created Dashboards, Module Slots, Notes and AI Handoff drafts write only to controlled docs/FR_RETAINED_CONCLUSION_INDEX.md small JSON snapshots with immutable version history.",
+  "persistence_policy": "Included dashboards are read-only. This interface does not save user-created dashboards.",
   "required_dashboard_fields": [
     "dashboard_id",
     "dashboard_name",

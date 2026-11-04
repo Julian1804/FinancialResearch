@@ -115,7 +115,7 @@
       "is_internal": true,
       "is_external_future": false,
       "enabled": false,
-      "notes": "Exports write lightweight docs/FR_RETAINED_CONCLUSION_INDEX.md packs only."
+      "notes": "Project data packages are not available through the current interface."
     },
     {
       "app_id": "research_dashboards",

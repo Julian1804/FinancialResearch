@@ -97,38 +97,6 @@
     ],
     "explanation": "Physical buckets may combine several Universes or hold cross-Universe data. Resolve Universe from the real subject and accepted semantic contract, never from a partition or dataset-name string."
   },
-  "expected_universe_legacy_contract": {
-    "field_path": "config/metrics_registry.json#applicability_coverage_rule.expected_universe",
-    "status": "legacy_semantically_overloaded_behavior_frozen",
-    "canonical_universe_source": false,
-    "existing_values_must_remain_unchanged_in_this_migration": true,
-    "metric_expected_universe_mapping_sha256": "0b9b40016cddf5789d9790d9a97073bfbb31cf02a5604538158d99bba63d54e6",
-    "new_consumers_require_separate_contract_review": true,
-    "static_inventory_basis": "Exact-token scan of every Git-tracked text file outside archive, runtime and review. Active runtime/config/code occurrences are classified separately from documentation references; no file-type restriction is used.",
-    "active_code_config_occurrence_inventory": [
-      {"path": "config/fr_data_category_registry.json", "role": "vocabulary_governance_owner", "depends_on_legacy_behavior": false},
-      {"path": "config/metrics_registry.json", "role": "legacy_metric_field_owner", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_database_source_completion1_read_only_gap_inventory_and_execution_wave_plan.py", "role": "direct_metric_field_reader_and_reporter", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_databasedebt_provider_rebuild6r_public_equity_fund_financial_actual_full_scope_execution.py", "role": "legacy_source_inventory_field_producer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_databasedebt_provider_rebuild6r_public_equity_fund_financial_actual_full_scope_execution_independent_validator.py", "role": "legacy_source_inventory_field_validator", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_datafoundation2r_financial_ontology_and_database_final_closeout.py", "role": "legacy_coverage_group_producer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_datafoundation_final_subject_graph_series_reconstruction_and_fact_remediation.py", "role": "legacy_coverage_artifact_producer_and_consumer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_datafoundation_finalr_semantic_contract_graph_sourcekey_coverage_and_database_repair.py", "role": "legacy_coverage_artifact_producer_and_consumer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_datafoundation_registry1_canonical_plan_authoritative_id_source_catalog_and_legacy_convertibility.py", "role": "legacy_source_inventory_field_consumer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_legacyrebuild7_index_old_data_inventory.py", "role": "direct_metric_field_reader", "depends_on_legacy_behavior": true},
-      {"path": "scripts/fr_storagefoundation2_one_pass_semantic_transform_parquet_snapshot_and_control_plane_migration.py", "role": "legacy_coverage_artifact_consumer_and_producer", "depends_on_legacy_behavior": true},
-      {"path": "scripts/test_fr_datafoundation_finalr_semantic_contract_graph_sourcekey_coverage_and_database_repair.py", "role": "legacy_coverage_artifact_test", "depends_on_legacy_behavior": true},
-      {"path": "scripts/validate_fr_shared_semantic_seam.py", "role": "legacy_validator_with_stale_state_assertions", "depends_on_legacy_behavior": true},
-      {"path": "scripts/validate_fr_vocabulary_normalization.py", "role": "vocabulary_compatibility_validator", "depends_on_legacy_behavior": false}
-    ],
-    "documentation_reference_inventory": [
-      "AGENTS.md",
-      "docs/DATA_STORAGE_ARCHITECTURE.md",
-      "docs/FR_DATA_GUARDRAILS.md",
-      "docs/FR_PROJECT_MEMORY_AND_LESSONS.md"
-    ],
-    "migration_boundary": "A later separately bounded task may decompose Universe applicability, subject type and coverage-denominator semantics after consumer and physical-impact review."
-  },
   "business_language": {
     "preferred_terms": [
       "Module",

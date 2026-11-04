@@ -2,7 +2,7 @@
 
 FinancialResearch accepts public feedback, not unsolicited code changes.
 
-Ordinary users may submit Issues, Discussions, bug reports, design proposals,
+Ordinary users may submit Issues, bug reports, design proposals,
 research observations, and modification suggestions.
 
 Unsolicited code changes and pull requests are not accepted. Source changes to
