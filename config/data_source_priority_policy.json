@@ -17,6 +17,9 @@
         "FRED",
         "U.S. Treasury FiscalData",
         "BLS deferred retry"
+      ],
+      "provider_contract_notes": [
+        "FRED provider-level clean rebuild evidence is governed by official FRED API JSON metadata and series/observations response-body hashes; authenticated local credentials are private evidence and must not be serialized into public artifacts."
       ]
     },
     "us_regulatory_filings": {

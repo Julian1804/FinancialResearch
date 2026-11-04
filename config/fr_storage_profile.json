@@ -1,0 +1,142 @@
+{
+  "storage_profile_version": "fr_storage_profile_v1",
+  "logical_contract_version": "fr_finance_semantic_contract_v1",
+  "status": "composite_snapshot_read_model_cutover_supported",
+  "deployment_roots": {
+    "local_working_root": {
+      "environment_variable": "FR_LOCAL_STORAGE_ROOT",
+      "default_windows_path": null
+    },
+    "nas_publish_root": {
+      "environment_variable": "FR_NAS_ROOT",
+      "default_windows_path": null
+    }
+  },
+  "control_plane": {
+    "backend": "sqlite",
+    "root_ref": "local_working_root",
+    "relative_location": "control/fr_control_v1.sqlite",
+    "contents_policy": "compact_registries_manifests_checkpoints_and_partition_locators",
+    "excluded_contents": [
+      "all_source_observation_rows",
+      "all_standard_fact_rows",
+      "raw_provider_payloads",
+      "read_model_rows"
+    ],
+    "future_postgresql_boundary": "replace_control_repository_adapter_only_when_multi_host_writer_or_server_ha_is_required"
+  },
+  "identity_state": {
+    "backend": "sqlite",
+    "root_ref": "local_working_root",
+    "relative_location": "control/identity/fr_identity_state_v1.sqlite",
+    "backup_relative_location": "control/identity/backups",
+    "mirror_root_ref": "nas_publish_root",
+    "mirror_relative_location": "control/identity",
+    "contents_policy": "installation_and_database_generation_metadata_plus_immutable_identity_decision_to_subject_id_assignments",
+    "generation_reset_policy": "explicit_destructive_full_rebuild_only",
+    "normal_repair_policy": "restore_identity_state_before_rebuilding_subjects_facts_documents_relationships_or_read_models"
+  },
+  "logical_layers": {
+    "documents": {
+      "backend": "immutable_content_addressed_files",
+      "root_ref": "nas_publish_root",
+      "relative_location": "05_documents"
+    },
+    "source_observations": {
+      "backend": "immutable_source_files_and_partitioned_parquet",
+      "root_ref": "nas_publish_root",
+      "relative_location": "snapshots/source_observations"
+    },
+    "standard_facts": {
+      "backend": "versioned_partitioned_parquet_snapshots",
+      "root_ref": "nas_publish_root",
+      "relative_location": "snapshots/standard_facts"
+    },
+    "read_models": {
+      "backend": "versioned_partitioned_parquet",
+      "root_ref": "nas_publish_root",
+      "relative_location": "snapshots/read_models",
+      "authoritative": false
+    }
+  },
+  "query_engine": {
+    "engine": "duckdb",
+    "mode": "ephemeral_or_local_cache_only",
+    "authoritative_store": false
+  },
+  "snapshot_contract": {
+    "active_pointer_root_ref": "local_working_root",
+    "active_pointer_relative_location": "control/active_snapshot.json",
+    "rollback_descriptor_relative_location": "control/rollback/serving_release_previous_v1.json",
+    "legacy_rollback_descriptor_relative_location": "control/rollback/legacy_sqlite_compatibility_v1.json",
+    "serving_release_registry_relative_location": "control/serving/releases",
+    "manifest_version": "fr_snapshot_manifest_v1",
+    "composite_release_manifest_version": "fr_composite_serving_release_v1",
+    "publish_protocol": "unpublished_write_validate_manifest_atomic_pointer_replace",
+    "reader_consistency": "pin_snapshot_id_for_query_duration",
+    "rollback_protocol": "atomic_pointer_replace_to_retained_complete_serving_release",
+    "retention_policy": "retain_current_previous_and_audit_required_snapshots_until_explicit_governed_expiry"
+  },
+  "partitioning": {
+    "partition_spec_version": "fr_finance_partition_spec_v1",
+    "primary_dimensions": [
+      "domain",
+      "calendar_or_report_year"
+    ],
+    "conditional_dimensions": [
+      "dataset",
+      "subject_hash_bucket"
+    ],
+    "conditional_partition_rule": "add_dataset_or_hash_only_when_projected_compressed_partition_size_exceeds_256_mib_and_resulting_files_remain_at_least_64_mib",
+    "subject_hash_bucket_count": 32,
+    "prohibited_dimensions": [
+      "mutable_display_name",
+      "one_directory_per_instrument",
+      "one_file_per_instrument_day"
+    ]
+  },
+  "file_format": {
+    "format": "parquet",
+    "version": "2.6",
+    "compression": "zstd",
+    "compression_level": 6,
+    "target_file_size_mib": {
+      "minimum": 64,
+      "preferred": 128,
+      "maximum": 256
+    },
+    "small_file_compaction_threshold_mib": 32
+  },
+  "temporary_workspace": {
+    "root_ref": "local_working_root",
+    "relative_location": "tmp",
+    "nas_benchmark_relative_location": "_fr_storagefoundation1_benchmark_tmp",
+    "publishable": false,
+    "cleanup_required": true
+  },
+  "serving_derived": {
+    "backend": "local_release_bound_serving_store",
+    "root_ref": "local_working_root",
+    "relative_location": "serving_derived",
+    "contents_policy": "derived_serving_representations_built_from_immutable_standard_facts_under_one_release_binding",
+    "publishable": false,
+    "rebuildable": true
+  },
+  "recovery": {
+    "checkpoint_unit": "source_table_rowid_range_and_output_partition",
+    "checkpoint_interval_rows": 100000,
+    "partial_suffix": ".partial",
+    "resume_policy": "verify_completed_partition_hash_then_continue",
+    "writer_ownership": "single_controlled_writer_lease",
+    "reader_consistency": "immutable_snapshot_pin"
+  },
+  "compatibility": {
+    "old_monolithic_sqlite": {
+      "status": "immutable_migration_source_and_historical_baseline",
+      "root_ref": "nas_publish_root",
+      "relative_location": "database/fr_nas_research_v1.sqlite",
+      "repair_allowed": false,
+      "production_write_allowed": false
+    }
+  }
+}

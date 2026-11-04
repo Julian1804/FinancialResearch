@@ -6,6 +6,7 @@ from typing import Any
 import requests
 
 from backend.app.core.config import PARSE_LAB_BASE_URL
+from backend.app.core.diagnostic_safety import safe_exception_message
 
 
 class ParseLabClientError(RuntimeError):
@@ -75,11 +76,11 @@ class ParseLabClient:
             )
             response.raise_for_status()
         except requests.RequestException as exc:
-            raise ParseLabClientError(f"Parse Lab request failed: {method} {url}: {exc}") from exc
+            raise ParseLabClientError(f"Parse Lab request failed: {method} {url}: {safe_exception_message(exc)}") from exc
 
         if not response.text:
             return {}
         try:
             return response.json()
         except json.JSONDecodeError as exc:
-            raise ParseLabClientError(f"Parse Lab returned non-JSON response: {response.text[:500]}") from exc
+            raise ParseLabClientError(f"Parse Lab returned non-JSON response: {safe_exception_message(response.text[:500])}") from exc

@@ -5,6 +5,7 @@ import { renderSqlExplorerPage } from "../database-browser.js";
 import { lang } from "../i18n.js";
 
 let updateState = { status: "idle", startedAt: "", elapsedMs: 0, result: null };
+let tokenState = { saving: false, status: null, messageCode: "" };
 
 const COPY = {
   zh: {
@@ -34,6 +35,38 @@ const COPY = {
     canResume: "\u53ef\u7ee7\u7eed\u66f4\u65b0",
     advanced: "\u9ad8\u7ea7\u8bca\u65ad",
     none: "\u65e0",
+    tokenTitle: "Morningstar \u79c1\u6709\u51ed\u636e",
+    tokenField: "\u65b0 Morningstar Token",
+    saveToken: "\u4fdd\u5b58\u5e76\u9a8c\u8bc1",
+    cancelToken: "\u53d6\u6d88",
+    maskedSuffix: "\u5df2\u4fdd\u5b58\u540e\u7f00",
+    lastUpdate: "\u6700\u540e\u66f4\u65b0\u65f6\u95f4",
+    expiry: "\u5b89\u5168\u89e3\u7801\u8fc7\u671f\u65f6\u95f4",
+    validation: "\u6700\u540e\u9a8c\u8bc1\u7ed3\u679c",
+    capability: "\u672c\u5730\u9a8c\u8bc1\u80fd\u529b",
+    packageVersion: "\u9a8c\u8bc1\u5305\u7248\u672c",
+    validationCallable: "\u9a8c\u8bc1\u8def\u7531",
+    unconfigured: "\u672a\u914d\u7f6e",
+    configured: "\u5df2\u914d\u7f6e",
+    expiringSoon: "\u5373\u5c06\u8fc7\u671f",
+    expired: "\u5df2\u8fc7\u671f",
+    validationFailed: "\u9a8c\u8bc1\u5931\u8d25",
+    savingToken: "\u6b63\u5728\u9a8c\u8bc1\u65b0\u7684 Morningstar \u51ed\u636e...",
+    savedToken: "Morningstar \u51ed\u636e\u5df2\u66f4\u65b0\u5e76\u901a\u8fc7\u9a8c\u8bc1\u3002",
+    invalidToken: "\u65b0\u51ed\u636e\u672a\u901a\u8fc7\u9a8c\u8bc1\uff0c\u539f\u51ed\u636e\u672a\u88ab\u66ff\u6362\u3002",
+    dependencyUnavailable: "Morningstar \u672c\u5730\u9a8c\u8bc1\u73af\u5883\u4e0d\u53ef\u7528\uff0c\u539f\u51ed\u636e\u672a\u88ab\u66ff\u6362\u3002",
+    unsupportedCallable: "Morningstar \u672c\u5730\u9a8c\u8bc1\u8def\u7531\u4e0d\u53d7\u5f53\u524d\u5305\u652f\u6301\uff0c\u539f\u51ed\u636e\u672a\u88ab\u66ff\u6362\u3002",
+    providerFailure: "\u6682\u65f6\u65e0\u6cd5\u8fde\u63a5 Morningstar\u3002\u539f\u51ed\u636e\u672a\u88ab\u66ff\u6362\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002",
+    persistenceFailure: "\u65e0\u6cd5\u5b89\u5168\u4fdd\u5b58\u51ed\u636e\u3002\u539f\u914d\u7f6e\u4fdd\u6301\u4e0d\u53d8\u3002",
+    operational: "\u53ef\u7528",
+    dependencyUnavailableShort: "\u4f9d\u8d56\u4e0d\u53ef\u7528",
+    unsupportedCallableShort: "\u8def\u7531\u4e0d\u652f\u6301",
+    providerFailureShort: "\u63d0\u4f9b\u65b9\u4e0d\u53ef\u7528",
+    validatedValue: "\u5df2\u9a8c\u8bc1",
+    invalidValue: "\u65e0\u6548",
+    expiredValue: "\u5df2\u8fc7\u671f",
+    providerTimeoutValue: "\u63d0\u4f9b\u65b9\u8d85\u65f6",
+    noneValue: "\u65e0",
   },
   en: {
     kicker: "Data Connections",
@@ -62,6 +95,38 @@ const COPY = {
     canResume: "Can Continue",
     advanced: "Advanced diagnostics",
     none: "None",
+    tokenTitle: "Morningstar Private Credential",
+    tokenField: "New Morningstar Token",
+    saveToken: "Save and validate",
+    cancelToken: "Cancel",
+    maskedSuffix: "Saved suffix",
+    lastUpdate: "Last update time",
+    expiry: "Safely decoded expiry",
+    validation: "Last validation result",
+    capability: "Local validation capability",
+    packageVersion: "Validation package version",
+    validationCallable: "Validation route",
+    unconfigured: "Not configured",
+    configured: "Configured",
+    expiringSoon: "Expiring soon",
+    expired: "Expired",
+    validationFailed: "Validation failed",
+    savingToken: "Validating the new Morningstar credential...",
+    savedToken: "Morningstar credential was updated and validated.",
+    invalidToken: "The new credential did not validate; the original credential was not replaced.",
+    dependencyUnavailable: "The local Morningstar validation environment is unavailable. The original credential was not replaced.",
+    unsupportedCallable: "The installed Morningstar package does not support the selected validation route. The original credential was not replaced.",
+    providerFailure: "Morningstar is temporarily unreachable. The original credential was not replaced; try again later.",
+    persistenceFailure: "The credential could not be saved safely. Existing configuration is unchanged.",
+    operational: "Operational",
+    dependencyUnavailableShort: "Dependency unavailable",
+    unsupportedCallableShort: "Unsupported route",
+    providerFailureShort: "Provider unavailable",
+    validatedValue: "Validated",
+    invalidValue: "Invalid",
+    expiredValue: "Expired",
+    providerTimeoutValue: "Provider timeout",
+    noneValue: "None",
   },
 };
 
@@ -159,6 +224,7 @@ function renderBody(c) {
       <button class="btn primary connection-action" data-connection-mode="update" data-run-update>${escapeHtml(c.update)}</button>
       <button class="btn connection-action" data-connection-mode="browser" data-connection-view-data>${escapeHtml(c.view)}</button>
     </section>
+    ${renderTokenPanel(c)}
     <section class="product-section connection-update-panel">
       <div class="section-head"><div><h2>${escapeHtml(c.updateTitle)}</h2><p>${escapeHtml(c.subtitle)}</p></div></div>
       ${metrics(c)}
@@ -230,6 +296,113 @@ function bind() {
       });
     }
   });
+  document.querySelector("[data-token-cancel]")?.addEventListener("click", () => {
+    const input = document.querySelector("[data-token-input]");
+    if (input) input.value = "";
+    tokenState.messageCode = "";
+    renderConnections();
+  });
+  document.querySelector("[data-token-form]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const c = copy();
+    const input = document.querySelector("[data-token-input]");
+    const token = (input?.value || "").trim();
+    if (!token || tokenState.saving) return;
+    tokenState = { ...tokenState, saving: true, messageCode: "saving" };
+    renderConnections();
+    try {
+      await workspaceApi.connections.updateToken({ md_auth_token: token });
+      if (input) input.value = "";
+      tokenState = { saving: false, status: await workspaceApi.connections.tokenStatus(), messageCode: "saved" };
+    } catch (error) {
+      if (input) input.value = "";
+      const text = String(error?.message || "");
+      let messageCode = "invalid";
+      if (text.includes("dependency_unavailable")) messageCode = "dependency";
+      else if (text.includes("unsupported_callable")) messageCode = "unsupported";
+      else if (text.includes("provider_failure")) messageCode = "provider";
+      else if (text.includes("persistence_failure")) messageCode = "persistence";
+      tokenState = { saving: false, status: await safeTokenStatus(), messageCode };
+    }
+    renderConnections();
+  });
+}
+
+function tokenLabel(c, status) {
+  if (!status?.configured) return c.unconfigured;
+  if (status.status === "validation_failed") return c.validationFailed;
+  if (status.status === "expired") return c.expired;
+  if (status.status === "expiring_soon") return c.expiringSoon;
+  return c.configured;
+}
+
+function localizedValidation(c, status) {
+  const value = status?.last_validation_status || "";
+  const labels = {
+    validated: c.validatedValue,
+    invalid_token: c.invalidValue,
+    expired_token: c.expiredValue,
+    provider_timeout: c.providerTimeoutValue,
+    provider_failure: c.providerFailureShort,
+    dependency_unavailable: c.dependencyUnavailableShort,
+    unsupported_callable: c.unsupportedCallableShort,
+  };
+  return labels[value] || value || c.none;
+}
+
+function capabilityLabel(c, capability) {
+  if (!capability) return c.none;
+  if (capability.operational) return c.operational;
+  if (capability.status === "unsupported_callable") return c.unsupportedCallableShort;
+  if (capability.status === "provider_failure") return c.providerFailureShort;
+  return c.dependencyUnavailableShort;
+}
+
+function tokenMessage(c) {
+  const messages = {
+    saving: c.savingToken,
+    saved: c.savedToken,
+    invalid: c.invalidToken,
+    dependency: c.dependencyUnavailable,
+    unsupported: c.unsupportedCallable,
+    provider: c.providerFailure,
+    persistence: c.persistenceFailure,
+  };
+  return messages[tokenState.messageCode] || "";
+}
+
+function renderTokenPanel(c) {
+  const status = tokenState.status || {};
+  const capability = status.credential_capability || {};
+  const label = tokenLabel(c, status);
+  const cls = status.status === "validation_failed" || status.status === "expired" ? "error" : status.status === "expiring_soon" || !status.configured ? "warning" : "ok";
+  return `<section class="product-section morningstar-token-panel" data-morningstar-token-panel>
+    <div class="section-head"><div><h2>${escapeHtml(c.tokenTitle)}</h2></div><span class="chip ${cls}">${escapeHtml(label)}</span></div>
+    <div class="card token-card">
+      <div class="token-status">
+        <span><b>${escapeHtml(c.maskedSuffix)}</b><br>${escapeHtml(status.masked_token || c.none)}</span>
+        <span><b>${escapeHtml(c.lastUpdate)}</b><br>${escapeHtml(status.last_update_time || c.none)}</span>
+        <span><b>${escapeHtml(c.expiry)}</b><br>${escapeHtml(status.jwt_expires_at || status.estimated_expires_at || c.none)}</span>
+        <span><b>${escapeHtml(c.validation)}</b><br>${escapeHtml(localizedValidation(c, status))}</span>
+        <span><b>${escapeHtml(c.capability)}</b><br>${escapeHtml(capabilityLabel(c, capability))}</span>
+        <span><b>${escapeHtml(c.packageVersion)}</b><br>${escapeHtml(capability.package_version || c.none)}</span>
+        <span><b>${escapeHtml(c.validationCallable)}</b><br>${escapeHtml(capability.validation_callable || c.none)}</span>
+      </div>
+      <form data-token-form autocomplete="off">
+        <label>${escapeHtml(c.tokenField)}<input data-token-input type="password" autocomplete="new-password" ${tokenState.saving ? "disabled" : ""}></label>
+        <div class="actions">
+          <button class="btn primary" type="submit" ${tokenState.saving ? "disabled" : ""}>${escapeHtml(c.saveToken)}</button>
+          <button class="btn" type="button" data-token-cancel ${tokenState.saving ? "disabled" : ""}>${escapeHtml(c.cancelToken)}</button>
+        </div>
+      </form>
+      <div class="refresh-status" aria-live="polite">${escapeHtml(tokenMessage(c))}</div>
+    </div>
+  </section>`;
+}
+
+async function safeTokenStatus() {
+  try { return await workspaceApi.connections.tokenStatus(); }
+  catch (error) { return tokenState.status || null; }
 }
 
 export function renderConnections() {
@@ -237,4 +410,10 @@ export function renderConnections() {
   const c = copy();
   document.getElementById("workspace-main").innerHTML = `<div class="page connections">${head(c.kicker, c.title, c.subtitle)}${renderBody(c)}</div>`;
   bind();
+  if (!tokenState.status && !tokenState.saving) {
+    workspaceApi.connections.tokenStatus().then((status) => {
+      tokenState.status = status;
+      renderConnections();
+    }).catch(() => {});
+  }
 }

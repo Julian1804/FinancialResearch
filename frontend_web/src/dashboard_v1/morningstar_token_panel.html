@@ -3,134 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morningstar Token Management</title>
+<title>Morningstar · Financial Research</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#1a1a2e;color:#e0e0e0;padding:20px}
-.panel{max-width:520px;margin:0 auto;background:#16213e;border:1px solid #2a2a4a;border-radius:8px;overflow:hidden}
-.header{background:#0f3460;padding:14px 20px;display:flex;align-items:center;gap:10px}
-.header h2{font-size:15px;font-weight:600;color:#e0e0e0}
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.status-dot.valid{background:#4ade80}
-.status-dot.expiring{background:#f59e0b}
-.status-dot.expired{background:#ef4444}
-.status-dot.missing{background:#6b7280}
-.body{padding:20px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;color:#94a3b8;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
-.field input{width:100%;padding:8px 12px;border:1px solid #334155;border-radius:4px;background:#1e293b;color:#e0e0e0;font-size:13px;font-family:monospace}
-.field input:focus{outline:none;border-color:#3b82f6}
-.actions{display:flex;gap:10px;margin-top:18px}
-.btn{padding:8px 18px;border-radius:4px;border:none;font-size:13px;cursor:pointer;font-weight:500}
-.btn-primary{background:#2563eb;color:#fff}
-.btn-primary:hover{background:#1d4ed8}
-.btn-secondary{background:#334155;color:#e0e0e0}
-.btn-secondary:hover{background:#475569}
-.status-card{background:#1e293b;border:1px solid #334155;border-radius:6px;padding:14px;margin-top:16px}
-.status-card h3{font-size:13px;font-weight:600;margin-bottom:10px;color:#94a3b8}
-.status-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
-.status-row .label{color:#64748b}
-.status-row .value{color:#e0e0e0;font-family:monospace}
-.warning{background:#451a03;color:#fbbf24;padding:8px 12px;border-radius:4px;font-size:11px;margin-top:12px;line-height:1.5}
-.note{font-size:10px;color:#64748b;margin-top:10px;line-height:1.5}
-.toggle-btn{font-size:11px;color:#64748b;cursor:pointer;background:none;border:none;text-decoration:underline}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0c1117;color:#edf2f7;padding:24px}
+.panel{max-width:720px;margin:0 auto;background:#151e29;border:1px solid #273241;border-radius:8px;overflow:hidden}
+.header{padding:18px 22px;border-bottom:1px solid #273241;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header h1{font-size:20px}
+.chip{display:inline-block;padding:3px 9px;border-radius:4px;font-size:12px;background:#333;color:#aaa}
+.chip.ok{background:#064e3b;color:#6ee7b7}.chip.warning{background:#78350f;color:#fcd34d}.chip.error{background:#7f1d1d;color:#fca5a5}
+.body{padding:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:18px}
+.metric{background:#101720;border:1px solid #273241;border-radius:6px;padding:10px}
+.metric b{display:block;font-size:12px;color:#79899c;margin-bottom:6px}.metric span{font-family:ui-monospace,Consolas,monospace;font-size:12px;word-break:break-word}
+label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
+input{width:100%;padding:9px 11px;border:1px solid #273241;border-radius:5px;background:#0c1117;color:#edf2f7;font-size:13px}
+input:focus{outline:none;border-color:#6ea8fe}
+.actions{display:flex;gap:10px;margin-top:14px}
+button{border:1px solid #273241;background:#243143;color:#edf2f7;border-radius:5px;padding:8px 14px;cursor:pointer}
+button.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+button:disabled{opacity:.55;cursor:not-allowed}
+.message{min-height:22px;margin-top:14px;font-size:13px;color:#cbd5e1}
+.message.error{color:#fca5a5}.message.ok{color:#6ee7b7}
+a{color:#6ea8fe;text-decoration:none}
 </style>
 </head>
 <body>
 <div class="panel">
   <div class="header">
-    <span class="status-dot" id="statusDot"></span>
-    <h2>Morningstar Token</h2>
+    <div><a href="/">Financial Research</a><h1 data-zh="Morningstar 凭据" data-en="Morningstar credential">Morningstar credential</h1></div>
+    <span class="chip" id="stateChip">Loading</span>
   </div>
   <div class="body">
-    <div class="field">
-      <label>Token (paste JWT token)</label>
-      <input type="password" id="tokenInput" placeholder="Paste JWT token here...">
+    <div class="grid">
+      <div class="metric"><b data-zh="已保存凭据尾号" data-en="Saved credential suffix">Saved credential suffix</b><span id="masked">-</span></div>
+      <div class="metric"><b data-zh="最近更新时间" data-en="Last updated">Last updated</b><span id="updated">-</span></div>
+      <div class="metric"><b data-zh="凭据有效期" data-en="Credential expiry">Credential expiry</b><span id="expiry">-</span></div>
+      <div class="metric"><b data-zh="最近验证结果" data-en="Last validation">Last validation</b><span id="validation">-</span></div>
     </div>
-    <div class="field">
-      <label>Account Hint (optional)</label>
-      <input type="text" id="hintInput" placeholder="user@morningstar.com">
-    </div>
-    <div class="actions">
-      <button class="btn btn-primary" onclick="saveToken()">Save Token</button>
-      <button class="btn btn-secondary" onclick="refreshStatus()">Refresh Status</button>
-    </div>
-    <div class="status-card" id="statusCard">
-      <h3>Token Status</h3>
-      <div id="statusContent">Loading...</div>
-    </div>
-    <div class="note">
-      Morningstar token is stored locally in config/local_secrets.json and is not committed to git.
-      Estimated expiry is calculated from saved time and 24-hour validity. JWT exp is extracted from token payload when available.
-    </div>
+    <form id="tokenForm" autocomplete="off">
+      <label for="tokenInput" data-zh="新的 Morningstar 凭据" data-en="New Morningstar credential">New Morningstar credential</label>
+      <input id="tokenInput" type="password" autocomplete="new-password">
+      <div class="actions">
+        <button class="primary" id="saveButton" type="submit" data-zh="保存并验证" data-en="Save and validate">Save and validate</button>
+        <button id="cancelButton" type="button" data-zh="取消" data-en="Cancel">Cancel</button>
+      </div>
+    </form>
+    <div class="message" id="message" aria-live="polite"></div>
   </div>
 </div>
 <script>
-function maskToken(token) {
-  if (!token) return null;
-  return '****' + token.slice(-4);
+const LANGUAGE=localStorage.getItem("fr_workspace_language")==="en"?"en":"zh";
+document.documentElement.lang=LANGUAGE==="en"?"en":"zh-CN";
+document.querySelectorAll("[data-zh]").forEach(node=>{node.textContent=node.dataset[LANGUAGE]});
+const MESSAGES={
+  en:{saving:"Validating the new Morningstar credential…",success:"Morningstar credential was updated and validated.",invalid:"The new credential did not validate; the original credential was not replaced.",provider:"Morningstar is temporarily unreachable. The original credential was not replaced; try again later.",persistence:"The credential could not be saved safely. Existing configuration is unchanged."},
+  zh:{saving:"正在验证新的 Morningstar 凭据…",success:"Morningstar 凭据已更新并验证。",invalid:"新凭据未通过验证；原凭据未被替换。",provider:"暂时无法连接 Morningstar；原凭据未被替换，请稍后重试。",persistence:"未能安全保存凭据；现有配置保持不变。"}
+}[LANGUAGE];
+const STATUS={en:{notConfigured:"Not configured",validationFailed:"Validation failed",expired:"Expired",expiring:"Expiring soon",configured:"Configured"},zh:{notConfigured:"未配置",validationFailed:"验证失败",expired:"已过期",expiring:"即将过期",configured:"已配置"}}[LANGUAGE];
+function api(path){return path}
+function text(id,value){document.getElementById(id).textContent=value||"-"}
+function statusLabel(data){
+  if(!data||!data.configured)return[STATUS.notConfigured,"warning"];
+  if(data.status==="validation_failed")return[STATUS.validationFailed,"error"];
+  if(data.status==="expired")return[STATUS.expired,"error"];
+  if(data.status==="expiring_soon")return[STATUS.expiring,"warning"];
+  return[STATUS.configured,"ok"];
 }
-
-async function refreshStatus() {
-  try {
-    const resp = await fetch('/api/dashboard/morningstar/token_status');
-    const data = await resp.json();
-    renderStatus(data);
-  } catch (e) {
-    document.getElementById('statusContent').innerHTML = '<span style="color:#ef4444">Failed to load status</span>';
+async function request(path,options){
+  const response=await fetch(api(path),options);
+  const raw=await response.text();
+  let data={};
+  try{data=raw?JSON.parse(raw):{}}catch(error){}
+  if(!response.ok){
+    const detail=data.detail||{};
+    const err=new Error(detail.error_type||detail.reason||String(response.status));
+    err.detail=detail;
+    throw err;
+  }
+  return data;
+}
+async function refreshStatus(){
+  try{
+    const data=await request("/api/dashboard/morningstar/token_status");
+    const state=statusLabel(data);
+    const chip=document.getElementById("stateChip");
+    chip.textContent=state[0];
+    chip.className="chip "+state[1];
+    text("masked",data.masked_token);
+    text("updated",data.last_update_time);
+    text("expiry",data.jwt_expires_at||data.estimated_expires_at);
+    text("validation",STATUS[data.last_validation_status]||data.last_validation_status);
+  }catch(error){
+    const chip=document.getElementById("stateChip");
+    chip.textContent=STATUS.validationFailed;
+    chip.className="chip error";
   }
 }
-
-function renderStatus(data) {
-  const dot = document.getElementById('statusDot');
-  dot.className = 'status-dot ' + (data.status === 'valid_estimated' ? 'valid' : data.status === 'expiring_soon' ? 'expiring' : data.status === 'expired_estimated' ? 'expired' : 'missing');
-
-  let html = '';
-  html += '<div class="status-row"><span class="label">Token</span><span class="value">' + (data.masked_token || 'none')
-    + ' <button class="toggle-btn" onclick="toggleShow()">show</button></span></div>';
-  html += '<div class="status-row"><span class="label">Status</span><span class="value">' + data.status + '</span></div>';
-  html += '<div class="status-row"><span class="label">Saved At</span><span class="value">' + (data.token_saved_at || 'unknown') + '</span></div>';
-  html += '<div class="status-row"><span class="label">Est. Expires</span><span class="value">' + (data.estimated_expires_at || 'unknown') + '</span></div>';
-  html += '<div class="status-row"><span class="label">Remaining</span><span class="value">' + data.remaining_hours + 'h (' + data.remaining_minutes + 'm)</span></div>';
-  if (data.jwt_exp) html += '<div class="status-row"><span class="label">JWT exp</span><span class="value">' + data.jwt_exp + '</span></div>';
-  if (data.account_hint) html += '<div class="status-row"><span class="label">Account</span><span class="value">' + data.account_hint + '</span></div>';
-  if (data.fallback_used) html += '<div class="warning">&#9888; Using file modification time as fallback. Token saved_at timestamp not available.</div>';
-  if (data.expired_estimated) html += '<div class="warning">&#9888; Token is estimated to have expired. Paste a new token and save.</div>';
-  if (data.expiring_soon) html += '<div class="warning">&#9888; Token will expire soon (&lt;2h). Consider refreshing.</div>';
-  document.getElementById('statusContent').innerHTML = html;
-
-  // Store full token for toggle
-  window._tokenStatus = data;
+function clearInput(){document.getElementById("tokenInput").value=""}
+function setBusy(on){
+  document.getElementById("saveButton").disabled=on;
+  document.getElementById("cancelButton").disabled=on;
+  document.getElementById("tokenInput").disabled=on;
 }
-
-async function saveToken() {
-  const token = document.getElementById('tokenInput').value.trim();
-  const hint = document.getElementById('hintInput').value.trim();
-  if (!token) { alert('Please paste a token'); return; }
-  try {
-    const resp = await fetch('/api/dashboard/morningstar/token', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({md_auth_token: token, account_hint: hint || undefined})
-    });
-    const data = await resp.json();
-    if (data.status === 'ok') {
-      document.getElementById('tokenInput').value = '';
-      await refreshStatus();
-    } else {
-      alert('Error: ' + (data.reason || ''));
-    }
-  } catch (e) { alert('Failed to save token'); }
-}
-
-let _showing = false;
-function toggleShow() {
-  const token = document.getElementById('tokenInput');
-  _showing = !_showing;
-  token.type = _showing ? 'text' : 'password';
-  if (_showing) setTimeout(() => { token.type = 'password'; _showing = false; }, 5000);
-}
-
+document.getElementById("cancelButton").addEventListener("click",()=>{
+  clearInput();
+  document.getElementById("message").textContent="";
+});
+document.getElementById("tokenForm").addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const token=document.getElementById("tokenInput").value.trim();
+  if(!token)return;
+  const message=document.getElementById("message");
+  message.className="message";
+  message.textContent=MESSAGES.saving;
+  setBusy(true);
+  try{
+    await request("/api/dashboard/morningstar/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({md_auth_token:token})});
+    clearInput();
+    message.className="message ok";
+    message.textContent=MESSAGES.success;
+    await refreshStatus();
+  }catch(error){
+    clearInput();
+    const type=error.detail?.error_type||error.message;
+    message.className="message error";
+    message.textContent=type==="provider_failure"?MESSAGES.provider:type==="persistence_failure"?MESSAGES.persistence:MESSAGES.invalid;
+    await refreshStatus();
+  }finally{
+    setBusy(false);
+  }
+});
 refreshStatus();
 </script>
 </body>

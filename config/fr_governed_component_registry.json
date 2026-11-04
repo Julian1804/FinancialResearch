@@ -1,0 +1,15 @@
+{
+  "schema_version": "fr_governed_component_registry_v1",
+  "registry_id": "fr_governed_components_v1",
+  "components": [
+    {"component_id": "CN_PUBLIC_FUND", "universe_id": "fund", "scope": "china_public_fund", "serving_enabled": true, "compatibility_id": true},
+    {"component_id": "CN_A_SHARE", "universe_id": "equity", "scope": "china_equity", "serving_enabled": true, "compatibility_id": true},
+    {"component_id": "FR_FIXED_INCOME", "universe_id": "fixed_income", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_DERIVATIVES", "universe_id": "derivatives", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_COMMODITY", "universe_id": "commodity", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_INDEX", "universe_id": "index", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_INTEREST_RATE", "universe_id": "interest_rate", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_FOREIGN_EXCHANGE", "universe_id": "foreign_exchange", "scope": "universe", "serving_enabled": false, "compatibility_id": false},
+    {"component_id": "FR_MACRO", "universe_id": "macro", "scope": "universe", "serving_enabled": false, "compatibility_id": false}
+  ]
+}

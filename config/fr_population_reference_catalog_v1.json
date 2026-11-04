@@ -1,0 +1,59 @@
+{
+  "schema_version": "fr_population_reference_catalog_v1",
+  "catalog_role": "release_time_reference_seed",
+  "authoritative_financial_facts": false,
+  "online_reconciliation_required": true,
+  "dimensions": [
+    "universe",
+    "region",
+    "market_jurisdiction",
+    "venue",
+    "instrument_or_product_classification",
+    "data_families",
+    "time_range"
+  ],
+  "scopes": [
+    {
+      "universe": "Equity",
+      "region": "China",
+      "market_jurisdiction": "Mainland China",
+      "venues": ["SSE", "SZSE", "BSE"],
+      "instrument_or_product_classification": ["A_share", "B_share"],
+      "source_contract": "fr_public_fund_equity_bootstrap_sources",
+      "population_status": "source_reconciled_at_install",
+      "fact_status": "requested_by_profile"
+    },
+    {
+      "universe": "Equity",
+      "region": "China",
+      "market_jurisdiction": "Hong Kong",
+      "venues": ["HKEX"],
+      "instrument_or_product_classification": ["H_share", "other_HKEX_equity"],
+      "source_contract": "fr_public_fund_equity_bootstrap_sources",
+      "population_discovery": {
+        "providers": ["Sina", "Eastmoney"],
+        "reconciliation": "cross_provider_current_candidate_with_explicit_identity_lifecycle_gaps",
+        "adapter_status": "available_but_entitlement_neutral",
+        "default_execution": "disabled_until_installation_local_provider_rights_configuration",
+        "unconfigured_behavior": "explicit_provider_unconfigured_gap; absence does not imply delisting"
+      },
+      "population_status": "installation_local_provider_discovery_with_online_reconciliation_and_explicit_identity_gaps",
+      "fact_status": "requested_by_profile"
+    },
+    {
+      "universe": "Fund",
+      "region": "China",
+      "market_jurisdiction": "Mainland China",
+      "venues": ["SSE", "SZSE"],
+      "instrument_or_product_classification": ["public_fund", "ETF", "LOF", "public_REIT"],
+      "source_contract": "fr_public_fund_equity_bootstrap_sources",
+      "population_status": "source_reconciled_at_install",
+      "fact_status": "requested_by_profile"
+    }
+  ],
+  "compatibility_notes": [
+    "CN_A_SHARE and CN_PUBLIC_FUND remain persisted compatibility identifiers until a separately reviewed migration.",
+    "A/B/H share classification is not a top-level Universe.",
+    "This catalog is not a bundled financial dataset and does not define completeness by fact availability."
+  ]
+}

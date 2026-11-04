@@ -1,0 +1,120 @@
+{
+  "schema_version": "fr_authoritative_subject_registry_schema_v1",
+  "description": "Active shared subject, identity-reuse, alias, relationship and snapshot-locator contract for canonical onboarding and bounded source/fact access.",
+  "required_subject_types": [
+    "entity",
+    "fund",
+    "instrument",
+    "debt_issue",
+    "listing",
+    "series",
+    "fund_share_class",
+    "futures_options_product",
+    "futures_options_contract",
+    "index",
+    "currency",
+    "currency_pair",
+    "yield_rate_curve",
+    "macroeconomic_series",
+    "provider_scoped_alias"
+  ],
+  "compatibility_only_subject_types": [
+    "provider_scoped_alias"
+  ],
+  "active_onboarding_rule": "new durable subject allocation is limited to required_subject_types excluding compatibility_only_subject_types; provider and exchange aliases attach to real subjects through the alias contract",
+  "required_fields": [
+    "registry_subject_id",
+    "subject_type",
+    "authority_status",
+    "current_name",
+    "historical_names",
+    "current_code",
+    "historical_codes",
+    "start_date",
+    "suspension_periods",
+    "resumption_dates",
+    "end_date",
+    "exchange_or_market",
+    "currency",
+    "successor_relationships",
+    "provider_aliases",
+    "alias_effective_date",
+    "alias_expiry_date",
+    "source_evidence"
+  ],
+  "provider_alias_rule": "provider codes, tickers, names and hashes are scoped aliases only; they cannot create confirmed FR internal IDs without independent identity evidence",
+  "identity_reuse_contract": {
+    "owner": "installation identity state accepted_identity_crosswalk table",
+    "rule": "accepted scoped crosswalks may find an existing identity decision before allocation; an external identifier never derives a subject UUID",
+    "required_fields": [
+      "identity_decision_id",
+      "subject_type",
+      "subject_id",
+      "authority",
+      "identifier_type",
+      "identifier_value",
+      "scope_json",
+      "effective_start",
+      "effective_end",
+      "provenance_json"
+    ],
+    "universe_is_identity_namespace": false
+  },
+  "alias_contract": {
+    "owner": "snapshot-local subject_alias_registry",
+    "schema_version": "fr_shared_semantic_control_v1",
+    "required_fields": [
+      "alias_id",
+      "subject_type",
+      "subject_id",
+      "alias_type",
+      "alias_value",
+      "scope_json",
+      "effective_start",
+      "effective_end",
+      "provenance_json",
+      "acceptance_status"
+    ],
+    "rule": "aliases attach to an accepted subject, are scoped and effective-dated, and cannot allocate or replace a durable subject identity"
+  },
+  "relationship_contract": {
+    "owner": "snapshot-local subject_relationship_registry",
+    "schema_version": "fr_shared_semantic_control_v1",
+    "required_fields": [
+      "relationship_id",
+      "from_type",
+      "from_id",
+      "to_type",
+      "to_id",
+      "relationship_type",
+      "effective_start",
+      "effective_end",
+      "attributes_json",
+      "resolution_status"
+    ],
+    "extension_rule": "each accepted relationship type supplies a stable definition reference and provenance; Universe foundations add only relationships proved by their real financial objects"
+  },
+  "snapshot_locator_contract": {
+    "owner": "snapshot-local subject_partition_locator_registry",
+    "membership_owner": "snapshot_catalog plus partition_manifest in the same snapshot control SQLite",
+    "schema_version": "fr_shared_semantic_control_v1",
+    "allowed_layers": [
+      "source_observations",
+      "standard_facts",
+      "read_models"
+    ],
+    "lookup_key": "snapshot_id + subject_type + subject_id + layer + optional metric/scope + time interval",
+    "path_rule": "relative paths and content hashes identify physical files; path or physical-domain names never determine Universe or subject identity",
+    "incremental_rule": "register only completed members proved by the same snapshot control manifest; inherit locators only when predecessor and successor manifests both prove the unchanged relative path and content hash; replace locators for changed partitions in the successor transaction"
+  },
+  "incoming_data_subject_routing": {
+    "company_financial_statement": "entity",
+    "listed_equity_price": "listing",
+    "fund_product_reference": "fund",
+    "fund_nav": "fund_share_class",
+    "futures_quote": "futures_options_contract",
+    "index_observation": "index",
+    "fx_observation": "currency_pair",
+    "macro_observation": "macroeconomic_series"
+  }
+}

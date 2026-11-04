@@ -1,8 +1,134 @@
 {
   "schema_version": "1.0",
   "registry_id": "fr_data_category_registry_v1",
-  "status": "draft_active_reference",
-  "updated_at": "2026-06-02",
+  "status": "active_current_vocabulary_owner",
+  "updated_at": "2026-10-15",
+  "vocabulary_version": "fr_universe_vocabulary_v1",
+  "universe_vocabulary": {
+    "top_level_concept": "Universe",
+    "structural_principle": "Universe -> real financial object -> durable FR ID -> real relationships -> data attached to the correct object",
+    "version_semantics": "This is the approved current set for this vocabulary version, not a permanent limit on future FR Universes.",
+    "universes": [
+      {"universe_id": "equity", "display_name": "Equity"},
+      {"universe_id": "fund", "display_name": "Fund"},
+      {"universe_id": "fixed_income", "display_name": "Fixed Income"},
+      {"universe_id": "derivatives", "display_name": "Derivatives"},
+      {"universe_id": "commodity", "display_name": "Commodity"},
+      {"universe_id": "index", "display_name": "Index"},
+      {"universe_id": "interest_rate", "display_name": "Interest Rate"},
+      {"universe_id": "foreign_exchange", "display_name": "Foreign Exchange"},
+      {"universe_id": "macro", "display_name": "Macro"}
+    ],
+    "cross_universe_subject_types": [
+      "Entity",
+      "Person",
+      "Document"
+    ],
+    "non_universe_concepts": [
+      "financial statements",
+      "market data",
+      "research artifact",
+      "read model",
+      "coverage",
+      "source observation"
+    ],
+    "classification_rule": "Universe classifies financial asset type, not geography: China Equity means Equity scoped to region China, not a separate Universe. Region, market/jurisdiction, venue, regulatory status, security or product type, board, share type, listing episode, structure, mandate, strategy, market role, tenor, trading currency and quote convention remain separate dimensions where financially applicable.",
+    "dimension_model": "Universe x region x market/jurisdiction x venue x instrument/security classification x board x listing episode x trading currency/quote convention; each dimension retains its own evidence and no venue token is also a share classification.",
+    "equity_scope_examples": {
+      "mainland_china": "Universe=Equity; region=China; market/jurisdiction=Mainland China; venues=SSE|SZSE|BSE. Ordinary RMB shares on all three venues are A-shares; SSE/SZSE foreign-currency shares are B-shares.",
+      "hong_kong": "Universe=Equity; region=China; market/jurisdiction=Hong Kong; venue=HKEX. H-share is one evidence-supported classification and is not synonymous with all Hong Kong Equity."
+    },
+    "operational_ownership_rule": "Mainland China Equity and Hong Kong Equity may use distinct market-specific source, identity/lifecycle and update owners; they converge through neutral Equity standard-data, serving/publication and Research contracts.",
+    "foreign_exchange_boundary": "Currencies, currency pairs, spot observations and fixings belong to Foreign Exchange. Forwards, NDFs, swaps, options and other derivative contracts belong to Derivatives and relate to the relevant currencies or pairs.",
+    "fund_boundary": "Public Fund and Private Fund are classifications within Fund. Region, jurisdiction, venue, product structure such as ETF or LOF, legal structure, mandate and share class are separate dimensions. China Fund means Fund scoped to region China; China Public Fund adds the public-fund classification, not another top-level Universe."
+  },
+  "contextual_legacy_aliases": [
+    {
+      "term": "A-share",
+      "canonical_context": "Equity classification",
+      "allowed_contexts": ["A-share security", "A-share source or data route", "A-share operation", "historical identifier"],
+      "prohibited_current_use": "Do not use A-share as the formal name of the broader China Equity scope."
+    },
+    {
+      "term": "H-share",
+      "canonical_context": "Equity classification",
+      "allowed_contexts": ["H-share security", "H-share source or data route", "historical identifier"],
+      "prohibited_current_use": "Do not use H-share as the formal name of all HKEX equity securities or China-region Equity."
+    },
+    {
+      "term": "BSE Equity",
+      "canonical_context": "legacy venue-encoded compatibility label",
+      "allowed_contexts": ["persisted object type or key", "immutable historical identifier", "compatibility projection"],
+      "prohibited_current_use": "Do not use BSE Equity or bse_equity as a current share/security classification; an ordinary RMB share at venue BSE is an A-share."
+    },
+    {
+      "term": "CN_A_SHARE",
+      "canonical_context": "persisted component compatibility identifier",
+      "allowed_contexts": ["persisted component ID", "release or snapshot binding", "historical identifier"],
+      "prohibited_current_use": "Do not use CN_A_SHARE as the Equity Universe name or as proof that the bound component covers every China-region Equity market."
+    },
+    {
+      "term": "Fund/ETF",
+      "canonical_context": "retired composite current-Universe expression",
+      "allowed_contexts": ["immutable historical identifier", "legacy physical name", "source-interface name"],
+      "prohibited_current_use": "Do not use Fund/ETF as the current Fund Universe name; ETF remains a valid Fund product-structure classification."
+    },
+    {
+      "term": "fund_etf",
+      "canonical_context": "legacy compatibility token",
+      "allowed_contexts": ["immutable dataset or task identifier", "legacy physical name", "source-interface name"],
+      "prohibited_current_use": "Do not derive canonical Universe from this token."
+    },
+    {
+      "term": "funds_etfs",
+      "canonical_context": "legacy metric or physical compatibility token",
+      "allowed_contexts": ["existing metric value", "immutable dataset identifier", "legacy physical name"],
+      "prohibited_current_use": "Do not derive canonical Universe from this token."
+    }
+  ],
+  "physical_compatibility_names": {
+    "mapping_rule": "no_direct_universe_mapping",
+    "examples": [
+      "funds_etfs",
+      "macro_fx_rates",
+      "indices_derivatives",
+      "financial_statements",
+      "information_documents"
+    ],
+    "explanation": "Physical buckets may combine several Universes or hold cross-Universe data. Resolve Universe from the real subject and accepted semantic contract, never from a partition or dataset-name string."
+  },
+  "expected_universe_legacy_contract": {
+    "field_path": "config/metrics_registry.json#applicability_coverage_rule.expected_universe",
+    "status": "legacy_semantically_overloaded_behavior_frozen",
+    "canonical_universe_source": false,
+    "existing_values_must_remain_unchanged_in_this_migration": true,
+    "metric_expected_universe_mapping_sha256": "0b9b40016cddf5789d9790d9a97073bfbb31cf02a5604538158d99bba63d54e6",
+    "new_consumers_require_separate_contract_review": true,
+    "static_inventory_basis": "Exact-token scan of every Git-tracked text file outside archive, runtime and review. Active runtime/config/code occurrences are classified separately from documentation references; no file-type restriction is used.",
+    "active_code_config_occurrence_inventory": [
+      {"path": "config/fr_data_category_registry.json", "role": "vocabulary_governance_owner", "depends_on_legacy_behavior": false},
+      {"path": "config/metrics_registry.json", "role": "legacy_metric_field_owner", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_database_source_completion1_read_only_gap_inventory_and_execution_wave_plan.py", "role": "direct_metric_field_reader_and_reporter", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_databasedebt_provider_rebuild6r_public_equity_fund_financial_actual_full_scope_execution.py", "role": "legacy_source_inventory_field_producer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_databasedebt_provider_rebuild6r_public_equity_fund_financial_actual_full_scope_execution_independent_validator.py", "role": "legacy_source_inventory_field_validator", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_datafoundation2r_financial_ontology_and_database_final_closeout.py", "role": "legacy_coverage_group_producer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_datafoundation_final_subject_graph_series_reconstruction_and_fact_remediation.py", "role": "legacy_coverage_artifact_producer_and_consumer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_datafoundation_finalr_semantic_contract_graph_sourcekey_coverage_and_database_repair.py", "role": "legacy_coverage_artifact_producer_and_consumer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_datafoundation_registry1_canonical_plan_authoritative_id_source_catalog_and_legacy_convertibility.py", "role": "legacy_source_inventory_field_consumer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_legacyrebuild7_index_old_data_inventory.py", "role": "direct_metric_field_reader", "depends_on_legacy_behavior": true},
+      {"path": "scripts/fr_storagefoundation2_one_pass_semantic_transform_parquet_snapshot_and_control_plane_migration.py", "role": "legacy_coverage_artifact_consumer_and_producer", "depends_on_legacy_behavior": true},
+      {"path": "scripts/test_fr_datafoundation_finalr_semantic_contract_graph_sourcekey_coverage_and_database_repair.py", "role": "legacy_coverage_artifact_test", "depends_on_legacy_behavior": true},
+      {"path": "scripts/validate_fr_shared_semantic_seam.py", "role": "legacy_validator_with_stale_state_assertions", "depends_on_legacy_behavior": true},
+      {"path": "scripts/validate_fr_vocabulary_normalization.py", "role": "vocabulary_compatibility_validator", "depends_on_legacy_behavior": false}
+    ],
+    "documentation_reference_inventory": [
+      "AGENTS.md",
+      "docs/DATA_STORAGE_ARCHITECTURE.md",
+      "docs/FR_DATA_GUARDRAILS.md",
+      "docs/FR_PROJECT_MEMORY_AND_LESSONS.md"
+    ],
+    "migration_boundary": "A later separately bounded task may decompose Universe applicability, subject type and coverage-denominator semantics after consumer and physical-impact review."
+  },
   "business_language": {
     "preferred_terms": [
       "Module",
@@ -13,12 +139,13 @@
       "Research Workspace",
       "AI Bridge"
     ],
-    "taxonomy_compatibility_rule": "Historical filenames containing taxonomy remain compatibility filenames for classification files. Do not rename them without a dedicated migration."
+    "taxonomy_compatibility_rule": "Historical filenames containing taxonomy remain compatibility filenames for classification files. They do not define canonical Universe and must not be renamed without a dedicated migration."
   },
   "classification_layers": [
     {
       "layer_id": "base_category",
       "label": "基础分类",
+      "semantic_role": "legacy_research_classification_not_universe",
       "cardinality": "one_or_more",
       "categories": [
         "a_share_equity",
@@ -38,6 +165,7 @@
     {
       "layer_id": "instrument_type",
       "label": "工具类型分类",
+      "semantic_role": "legacy_object_and_data_classification_not_universe",
       "cardinality": "one_or_more",
       "categories": [
         "equity",
@@ -68,6 +196,7 @@
     {
       "layer_id": "research_meaning",
       "label": "研究含义分类",
+      "semantic_role": "research_concept_not_universe",
       "cardinality": "zero_or_more",
       "categories": [
         "rmb_liquidity",
@@ -88,13 +217,14 @@
     {
       "layer_id": "display_category",
       "label": "展示分类",
+      "semantic_role": "legacy_display_group_not_universe",
       "cardinality": "one_or_more",
       "categories": [
-        "沪深市场",
-        "ETF / 基金",
+        "A股市场",
+        "ETF（基金产品结构）",
         "指数",
         "宏观数据",
-        "利率 / 债券",
+        "利率与固定收益",
         "外汇",
         "黄金",
         "大宗商品",
@@ -106,6 +236,8 @@
     }
   ],
   "classification_rules": [
+    "The universe_vocabulary object is the only current canonical Universe enumeration in this registry.",
+    "The legacy classification layers below remain compatibility research/display tags and never override canonical Universe.",
     "A data object may have multiple categories and tags.",
     "A Data Series has one canonical identity and may be referenced by multiple Modules without copied storage.",
     "Display categories do not override economic meaning, provenance, trust status, unit, frequency, or time semantics.",
@@ -153,7 +285,7 @@
         "risk_appetite"
       ],
       "display_categories": [
-        "利率 / 债券"
+        "利率与固定收益"
       ],
       "distinction_rule": "Use one canonical Data Series across rates and cross-asset Modules."
     },
@@ -349,6 +481,6 @@
     "config/fund_etf_taxonomy.json",
     "config/research_object_types.json"
   ],
-  "consumer_status": "draft_only_no_runtime_consumer_change",
+  "consumer_status": "current_semantic_owner_no_runtime_behavior_change",
   "formal_trusted_consumption_enabled": false
 }

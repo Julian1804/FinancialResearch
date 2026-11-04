@@ -69,3 +69,6 @@ htmlcov/
 # Local task files / caches if created outside data
 runtime_tasks/
 cache/
+
+# Installation-owned accepted identity reference, never part of source distribution
+config/fr_hkex_equity_population_reference_v1.json

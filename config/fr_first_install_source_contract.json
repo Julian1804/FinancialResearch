@@ -1,0 +1,93 @@
+{
+  "schema_version": "fr_first_install_source_contract_v1",
+  "contract_id": "fr_public_fund_equity_bootstrap_sources",
+  "contract_version": "3",
+  "execution_status": "source_driven_current_population_and_bounded_history_pending_full_history",
+  "provider_execution_policy": {
+    "provider_capable_entitlement_neutral": true,
+    "default_public_routes_enabled": false,
+    "installation_local_configuration": "FR_PROVIDER_ROUTE_CONFIG",
+    "installation_local_default": "provider_route_config.json adjacent to the installation control DB; explicit FR_PROVIDER_ROUTE_CONFIG takes precedence",
+    "unconfigured_provider_behavior": "explicit_provider_unconfigured_gap; no delisting or population absence inference",
+    "hkex_public_candidate_routes": {
+      "Sina": {
+        "interfaces": ["Market_Center.getHKStockData", "hkstock_klc2_kl"],
+        "adapter_status": "available",
+        "default_enabled": false,
+        "requires_installation_configuration": true,
+        "rights_basis": "user_configured_entitlement_required"
+      },
+      "Eastmoney": {
+        "interfaces": ["qt/clist/get"],
+        "adapter_status": "available",
+        "default_enabled": false,
+        "requires_installation_configuration": true,
+        "rights_basis": "user_configured_entitlement_required"
+      }
+    },
+    "sina_financial_statements": {
+      "interface": "CompanyFinanceService.getFinanceReport2022",
+      "adapter_status": "available",
+      "default_enabled": false,
+      "requires_installation_configuration": true,
+      "rights_basis": "user_configured_entitlement_required"
+    },
+    "configured_provider_boundary": "Credentials, entitlements, licensed feeds, user-owned files and custom API settings are installation-local and never bundled or committed."
+  },
+  "bounded_code_filter_required": false,
+  "full_available_history_executable": false,
+  "bootstrap_population_modes": [
+    "explicit_selection",
+    "current_population",
+    "historical_interval_population"
+  ],
+  "population_semantics": {
+    "explicit_selection": "Caller supplies venue and code, optionally a listing start to disambiguate code reuse. FR resolves the authoritative episode.",
+    "current_population": "Supported executable provider inventories are enumerated at acquisition time. The resulting package is source-discovered and records explicit identity, lifecycle, and availability gaps; it does not claim an absolute market denominator.",
+    "historical_interval_population": "SSE and SZSE current and terminated Equity directories define supported historical Mainland episodes. BSE and HKEX executable providers provide current candidates plus explicit historical-population gaps. Current SSE/SZSE Fund directories identify surviving listings; terminated Fund population outside a supported directory remains an explicit unsupported population gap. Source-discovered rows are reconciled individually and unresolved rows remain explicit gaps."
+  },
+  "universes": {
+    "CN_PUBLIC_FUND": {
+      "bootstrap_executable_venues": ["SSE", "SZSE"],
+      "identity_authorities": ["CSRC_EID", "SSE", "SZSE"],
+      "fact_sources": ["CSRC_EID", "Tencent"],
+      "supported_data_families": ["fund_nav"],
+      "supported_metrics": [
+        "fund.nav",
+        "fund.accumulated_nav"
+      ]
+    },
+    "CN_A_SHARE": {
+      "bootstrap_executable_venues": ["SSE", "SZSE", "BSE", "HKEX"],
+      "identity_authorities": ["SSE", "SZSE", "BSE", "HKEX"],
+      "fact_sources": ["Tencent", "Sina"],
+      "supported_data_families": ["unadjusted_daily_market"],
+      "supported_metrics": [
+        "equity.open",
+        "equity.high",
+        "equity.low",
+        "equity.close",
+        "market.volume",
+        "market.trade_amount",
+        "market.turnover_rate"
+      ],
+      "adjustment_basis": "unadjusted",
+      "population_sources": {
+        "HKEX": [
+          {"provider": "Sina", "interface": "Market_Center.getHKStockData", "role": "current_candidate_inventory", "url": "https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHKStockData"},
+          {"provider": "Eastmoney", "interface": "qt/clist/get", "role": "independent_current_candidate_crosscheck", "url": "https://push2.eastmoney.com/api/qt/clist/get"}
+        ]
+      },
+      "venue_metric_boundaries": {
+        "SSE_B_SZSE_B": "Tencent amount remains source detail unless a venue/time native currency and scale contract is independently proved.",
+        "HKEX": "Sina unadjusted daily data is attempted only after executable provider candidates are cross-checked and an installation-local identity/lifecycle decision exists. Provider discovery does not supply currency or exact listing-start semantics; rows without a proved currency/time regime remain explicit coverage gaps and raw source detail."
+      }
+    }
+  },
+  "evidence_boundary": {
+    "requires_direct_public_evidence_identity": true,
+    "permits_bundled_financial_history": false,
+    "permits_developer_runtime_dependency": false,
+    "identity_blocked_fact_promotion": false
+  }
+}

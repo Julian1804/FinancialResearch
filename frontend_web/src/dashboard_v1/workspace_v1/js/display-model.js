@@ -1,5 +1,5 @@
 const ZH = {
-  all: "\u5168\u90e8", a_share: "A\u80a1", hk: "\u6e2f\u80a1", etf: "ETF", index: "\u6307\u6570", fx: "FX \u6c47\u7387", rates_bonds: "\u5229\u7387 / \u503a\u5238", commodities: "\u5546\u54c1 / \u671f\u8d27", macro: "\u5b8f\u89c2", events: "\u4e8b\u4ef6",
+  all: "\u5168\u90e8", a_share: "A\u80a1", hk: "\u6e2f\u80a1", etf: "ETF", index: "\u6307\u6570", fx: "\u5916\u6c47", rates_bonds: "\u5229\u7387\u4e0e\u56fa\u5b9a\u6536\u76ca", commodities: "\u5546\u54c1\u4e0e\u884d\u751f\u54c1", macro: "\u5b8f\u89c2", events: "\u4e8b\u4ef6",
   close: "\u6536\u76d8\u4ef7", amount: "\u6210\u4ea4\u989d", volume: "\u6210\u4ea4\u91cf", return: "\u6536\u76ca\u7387", market_cap: "\u5e02\u503c", nav: "\u51c0\u503c", shares: "\u4efd\u989d", fx_rate: "\u6c47\u7387", yield: "\u6536\u76ca\u7387 / \u5229\u7387", commodity_price: "\u5546\u54c1\u4ef7\u683c", event: "\u4e8b\u4ef6",
   daily: "\u65e5\u9891", weekly: "\u5468\u9891", monthly: "\u6708\u9891", report_period: "\u62a5\u544a\u671f", snapshot: "\u5feb\u7167", raw: "\u539f\u59cb", derived: "\u63a8\u5bfc",
   CNY: "\u4eba\u6c11\u5e01", HKD: "\u6e2f\u5143", USD: "\u7f8e\u5143", ratio: "\u6bd4\u7387", shares: "\u80a1 / \u4efd", fund_units: "\u57fa\u91d1\u4efd\u989d", price: "\u4ef7\u683c", index: "\u6307\u6570", event: "\u4e8b\u4ef6",
@@ -9,7 +9,7 @@ const ZH = {
   Variable: "\u53d8\u91cf", Role: "\u89d2\u8272", Missing: "\u7f3a\u5931\u7387", Mean: "\u5747\u503c", Median: "\u4e2d\u4f4d\u6570", Std: "\u6807\u51c6\u5dee", Min: "\u6700\u5c0f\u503c", Max: "\u6700\u5927\u503c", "Full metrics": "\u5168\u6307\u6807\u8868",
 };
 const EN = {
-  all: "All", a_share: "A-share equities", hk: "Hong Kong equities", etf: "ETFs", index: "Indices", fx: "FX rates", rates_bonds: "Rates and bonds", commodities: "Commodities and futures", macro: "Macro", events: "Events",
+  all: "All", a_share: "A-share equities", hk: "Hong Kong equities", etf: "ETFs", index: "Indices", fx: "Foreign Exchange", rates_bonds: "Interest Rate and Fixed Income", commodities: "Commodity and Derivatives", macro: "Macro", events: "Events",
   close: "Close", amount: "Traded amount", volume: "Trading volume", return: "Return", market_cap: "Market capitalization", nav: "Net asset value", shares: "Shares", fx_rate: "FX rate", yield: "Yield", commodity_price: "Commodity price", event: "Event",
   daily: "Daily", weekly: "Weekly", monthly: "Monthly", report_period: "Reporting period", snapshot: "Snapshot", raw: "Raw", derived: "Derived",
   CNY: "CNY", HKD: "HKD", USD: "USD", ratio: "Ratio", shares: "Shares", fund_units: "Fund units", price: "Price", index: "Index", event: "Event",

@@ -5,39 +5,41 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/workspace_v1/styles/workspace.css">
-  <title>FR Research Workspace</title>
+  <title>Financial Research</title>
 </head>
 <body>
-<div class="shell" id="workspace-shell">
-  <aside class="rail" id="left-rail">
-    <div class="brand">FR Workspace<small>RESEARCH OPERATING DESK</small></div>
-    <div class="language-toggle" aria-label="Language">
-      <button class="btn active" id="lang-zh" data-language="zh">中文</button>
-      <span>|</span>
-      <button class="btn" id="lang-en" data-language="en">English</button>
+<div class="app-shell" id="workspace-shell">
+  <div class="mobile-bar">
+    <button id="nav-open" class="icon-button" type="button" aria-controls="left-rail" aria-expanded="false" aria-label="打开导航">☰</button>
+    <span>Financial Research</span>
+  </div>
+  <div class="nav-scrim" id="nav-scrim" hidden></div>
+  <aside class="app-rail" id="left-rail" aria-label="Product navigation">
+    <div class="rail-top">
+      <a class="product-brand" href="#/home">Financial Research<small data-label-zh="金融数据与研究" data-label-en="Financial data and research">金融数据与研究</small></a>
+      <button id="nav-close" class="icon-button mobile-only" type="button" aria-label="关闭导航">×</button>
     </div>
-    <input class="search" id="global-search" placeholder="搜索工作台">
-    <nav class="nav" aria-label="Workspace navigation">
-      <div class="section">研究工作台</div>
-      <button id="nav-overview" class="active" data-view="overview">总览</button>
-      <button id="nav-database_status" data-view="database_status">数据库</button>
-      <button id="nav-modeling_workbench" data-view="modeling_workbench">建模工作台</button>
-      <button id="nav-agent_simulation" data-view="agent_simulation">模拟实验</button>
-      <button id="nav-connections" data-view="connections">数据连接</button>
-      <div class="dashboard-subnav" id="dashboard-subnav" aria-label="Dashboard shortcuts"></div>
+    <nav class="app-nav" aria-label="Product navigation">
+      <a id="nav-home" data-route="/home" href="#/home"><span data-label-zh="首页" data-label-en="Home">首页</span></a>
+      <div class="nav-group" data-nav-section="data">
+        <a id="nav-data" data-route="/data" href="#/data"><span data-label-zh="数据" data-label-en="Data">数据</span></a>
+        <div class="nav-children"><a id="nav-fund" data-route="/data/fund/china-public" href="#/data/fund/china-public"><span data-label-zh="基金" data-label-en="Funds">基金</span></a><a id="nav-equity" data-route="/data/equity/china" href="#/data/equity/china"><span data-label-zh="股票" data-label-en="Equities">股票</span></a></div>
+      </div>
+      <div class="nav-group" data-nav-section="research">
+        <span class="nav-group-label" data-label-zh="研究" data-label-en="Research">研究</span>
+        <div class="nav-children"><a id="nav-statistics" data-route="/research/statistics" href="#/research/statistics"><span data-label-zh="统计分析" data-label-en="Statistics">统计分析</span></a><a id="nav-modeling" data-route="/research/modeling" href="#/research/modeling"><span data-label-zh="建模" data-label-en="Modeling">建模</span></a></div>
+      </div>
+      <div class="nav-group nav-secondary" data-nav-section="settings">
+        <a id="nav-settings" data-route="/settings/data-status" href="#/settings/data-status"><span data-label-zh="设置" data-label-en="Settings">设置</span></a>
+        <div class="nav-children"><a id="nav-status" data-route="/settings/data-status" href="#/settings/data-status"><span data-label-zh="数据状态" data-label-en="Data Status">数据状态</span></a><a id="nav-update" data-route="/settings/data-update" href="#/settings/data-update"><span data-label-zh="更新数据" data-label-en="Data Update">更新数据</span></a></div>
+      </div>
     </nav>
-    <div class="rail-foot">本地研究工作区<br><span id="build-version">加载中</span></div>
+    <div class="rail-bottom">
+      <details class="advanced-nav" id="advanced-nav"><summary data-label-zh="高级" data-label-en="Advanced">高级</summary><a id="nav-advanced" data-route="/advanced" href="#/advanced"><span data-label-zh="技术与审阅工具" data-label-en="Technical & review tools">技术与审阅工具</span></a></details>
+      <div class="language-toggle" aria-label="Language"><button id="lang-zh" type="button" data-language="zh">中文</button><span aria-hidden="true">/</span><button id="lang-en" type="button" data-language="en">English</button></div>
+    </div>
   </aside>
-  <div class="splitter" id="left-splitter" data-resize="left" role="separator" aria-label="Resize navigation panel" aria-orientation="vertical"></div>
-  <main class="workspace" id="workspace-main"><div class="empty workspace-empty">Loading workspace...</div></main>
-  <div class="splitter" id="right-splitter" data-resize="right" role="separator" aria-label="Resize result panel" aria-orientation="vertical"></div>
-  <aside class="bridge result-bridge" id="ai-bridge">
-    <div class="bridge-title"><div><div class="eyebrow">总览</div><h3 id="bridge-name">平台状态摘要</h3></div><span class="tag ok">本地</span></div>
-    <p>当前显示平台状态摘要。选择左侧功能后，右侧显示该功能的结果。</p>
-    <div class="targets">面板归属：<b id="bridge-module">平台状态摘要</b></div>
-    <div class="bridge-status" id="bridge-status" aria-live="polite">平台状态摘要已显示。</div>
-    <div id="bridge-preview" class="bridge-preview"><div class="result-empty">选择数据库字段、运行预览、检查更新或运行模拟后，这里显示对应结果。</div></div>
-  </aside>
+  <main class="app-main" id="workspace-main" tabindex="-1"><div class="loading-state">正在打开 Financial Research…</div></main>
 </div>
 <script type="module" src="/workspace_v1/js/main.js"></script>
 </body>

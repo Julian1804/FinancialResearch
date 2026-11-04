@@ -1,15 +1,72 @@
-﻿import{state}from"./state.js";
-import{resetBridgeMode}from"./ai-bridge.js";
-import{renderDashboardSubnav}from"./dashboard-nav.js";
-import{resolveView}from"./view-registry.js";
-import{addPlugInDraftToDashboard,explainAddModuleToDashboard,inspectDashboardSlot,inspectDataSeries,openDashboardDetail,openDashboardTab,openSeriesChart,refreshAiHandoffPreview,saveDashboardRecord,toggleObservationSeries,viewDataSeries}from"./views/dashboard-detail.js";
-import{archiveDashboard,confirmWorkspaceRollback,deleteDashboardFromList,duplicateDashboardFromList,exportWorkspacePack,openDashboardForm,previewWorkspaceRollback,renameDashboardFromInput,renderDashboards,restoreDashboard,saveDashboardDraft,saveDashboardLifecycle}from"./views/dashboards.js";
-import{renderModuleDetail}from"./views/module-detail.js";
-import{editPlugInDraft,openPlugInDraftForm,openPlugInGroupForm,renderModules,savePlugInDraftFromForm,savePlugInGroupFromForm}from"./views/modules.js";
-import{openInvestmentSample,renderDataShellPreview}from"./views/data-shell-preview.js";
-import{exportProjectPackage,openProjectDetail,previewProjectPackage,updateProjectPackageFields}from"./views/projects.js";
-export function setActiveNav(view){document.querySelectorAll(".nav button").forEach((button)=>button.classList.remove("active"));document.getElementById(`nav-${view}`)?.classList.add("active");renderDashboardSubnav()}
-export function openView(view){const definition=resolveView(view)||resolveView("overview");state.activeView=definition.view_id;setActiveNav(definition.view_id);if(definition.view_id!=="modeling_workbench")resetBridgeMode();definition.render()}
-export function openApp(target){if(target.startsWith("/"))window.location.href=target;else if(target==="company_report")renderModuleDetail(target);else openView(target)}
-export function workspaceSearch(query){state.search=String(query||"").trim().toLowerCase();if(state.activeView==="modules")renderModules();else if(state.activeView==="dashboards")renderDashboards()}
-export function bindNavigation(){document.querySelector(".nav").addEventListener("click",(event)=>{const dashboard=event.target.closest("[data-nav-dashboard]"),button=event.target.closest("[data-view]");if(dashboard)openDashboardDetail(dashboard.dataset.navDashboard);else if(button)openView(button.dataset.view)});document.getElementById("global-search")?.addEventListener("input",(event)=>workspaceSearch(event.target.value));document.getElementById("workspace-main").addEventListener("change",(event)=>{const observed=event.target.closest("[data-observe-series]");if(observed)toggleObservationSeries(observed.dataset.observeSeries,observed.checked);else if(event.target.closest("[data-project-package-dataset]"))updateProjectPackageFields()});document.getElementById("workspace-main").addEventListener("click",(event)=>{const backButton=event.target.closest("[data-back-dashboards]"),backDashboardButton=event.target.closest("[data-back-dashboard]"),moduleButton=event.target.closest("[data-open-module],[data-open-slot-module]"),dashboardButton=event.target.closest("[data-open-dashboard]"),tabButton=event.target.closest("[data-open-dashboard-tab]"),inspectButton=event.target.closest("[data-inspect-slot]"),seriesButton=event.target.closest("[data-view-series]"),seriesDetailButton=event.target.closest("[data-open-series-detail]"),chartButton=event.target.closest("[data-open-series-chart]"),refreshAiButton=event.target.closest("[data-refresh-ai-context]"),aiReportButton=event.target.closest("[data-save-ai-return-report]"),aiNoteButton=event.target.closest("[data-save-ai-return-note]"),appButton=event.target.closest("[data-open-app]"),samplePreviewButton=event.target.closest("[data-open-investment-sample]"),sampleInvestmentButton=event.target.closest("[data-open-investment-sample-id]"),projectButton=event.target.closest("[data-open-project]"),projectPreviewButton=event.target.closest("[data-project-package-preview]"),projectDryRunButton=event.target.closest("[data-project-package-dry-run]"),projectExportButton=event.target.closest("[data-project-package-export]"),dashboardFormButton=event.target.closest("[data-open-dashboard-form]"),dashboardSaveButton=event.target.closest("[data-save-user-dashboard]"),dashboardModuleButton=event.target.closest("[data-add-module-to-dashboard]"),dashboardPluginButton=event.target.closest("[data-add-plugin-draft-to-dashboard]"),pluginGroupFormButton=event.target.closest("[data-open-plugin-group-form]"),pluginGroupSaveButton=event.target.closest("[data-save-plugin-group]"),pluginDraftFormButton=event.target.closest("[data-open-plugin-draft-form]"),pluginDraftSaveButton=event.target.closest("[data-save-plugin-draft]"),pluginEditButton=event.target.closest("[data-edit-plugin]"),noteSaveButton=event.target.closest("[data-save-workspace-note]"),reportSaveButton=event.target.closest("[data-save-workspace-report-draft]"),lifecycleSaveButton=event.target.closest("[data-save-dashboard-lifecycle]"),renameButton=event.target.closest("[data-rename-dashboard]"),duplicateButton=event.target.closest("[data-duplicate-dashboard]"),deleteButton=event.target.closest("[data-delete-dashboard]"),archiveButton=event.target.closest("[data-archive-dashboard]"),restoreButton=event.target.closest("[data-restore-dashboard]"),exportButton=event.target.closest("[data-export-user-workspace]"),rollbackPreviewButton=event.target.closest("[data-preview-rollback]"),rollbackConfirmButton=event.target.closest("[data-confirm-rollback]");if(backDashboardButton){const target=state.returnDashboard||state.activeDashboard;if(target)openDashboardDetail(target);else openView("dashboards")}else if(backButton)openView("dashboards");else if(samplePreviewButton)renderDataShellPreview();else if(sampleInvestmentButton)openInvestmentSample(sampleInvestmentButton.dataset.openInvestmentSampleId);else if(seriesButton)viewDataSeries(seriesButton.dataset.viewSeries,seriesButton.dataset.slotModule);else if(seriesDetailButton)inspectDataSeries(seriesDetailButton.dataset.seriesModule,seriesDetailButton.dataset.openSeriesDetail);else if(chartButton)openSeriesChart(chartButton.dataset.seriesModule,chartButton.dataset.openSeriesChart);else if(refreshAiButton)refreshAiHandoffPreview();else if(aiReportButton)saveDashboardRecord("report_draft","ai_return");else if(aiNoteButton)saveDashboardRecord("note","ai_return");else if(inspectButton)inspectDashboardSlot(inspectButton.dataset.inspectSlot,inspectButton.dataset.slotModule);else if(moduleButton)renderModuleDetail(moduleButton.dataset.openModule||moduleButton.dataset.openSlotModule);else if(dashboardButton)openDashboardDetail(dashboardButton.dataset.openDashboard);else if(tabButton)openDashboardTab(tabButton.dataset.openDashboardTab);else if(appButton)openApp(appButton.dataset.openApp);else if(projectButton)openProjectDetail(projectButton.dataset.openProject);else if(projectPreviewButton)previewProjectPackage(false);else if(projectDryRunButton)previewProjectPackage(true);else if(projectExportButton)exportProjectPackage();else if(dashboardFormButton)openDashboardForm();else if(dashboardSaveButton)saveDashboardDraft();else if(dashboardModuleButton)explainAddModuleToDashboard();else if(dashboardPluginButton)addPlugInDraftToDashboard(dashboardPluginButton.dataset.addPluginDraftToDashboard);else if(pluginGroupFormButton)openPlugInGroupForm();else if(pluginGroupSaveButton)savePlugInGroupFromForm();else if(pluginDraftFormButton)openPlugInDraftForm(pluginDraftFormButton.dataset.openPluginDraftForm);else if(pluginDraftSaveButton)savePlugInDraftFromForm();else if(pluginEditButton)editPlugInDraft(pluginEditButton.dataset.editPlugin);else if(noteSaveButton)saveDashboardRecord("note");else if(reportSaveButton)saveDashboardRecord("report_draft");else if(lifecycleSaveButton)saveDashboardLifecycle(lifecycleSaveButton.dataset.saveDashboardLifecycle);else if(renameButton)renameDashboardFromInput(renameButton.dataset.renameDashboard);else if(duplicateButton)duplicateDashboardFromList(duplicateButton.dataset.duplicateDashboard);else if(deleteButton)deleteDashboardFromList(deleteButton.dataset.deleteDashboard);else if(archiveButton)archiveDashboard(archiveButton.dataset.archiveDashboard);else if(restoreButton)restoreDashboard(restoreButton.dataset.restoreDashboard);else if(exportButton)exportWorkspacePack();else if(rollbackPreviewButton)previewWorkspaceRollback();else if(rollbackConfirmButton)confirmWorkspaceRollback()})}
+import {escapeHtml} from "./components.js";
+import {state} from "./state.js";
+import {normalizeRoute, resolveRoute} from "./view-registry.js";
+
+let renderRevision = 0;
+let lastRoute = "";
+
+function setActiveNavigation(route) {
+  document.querySelectorAll("[data-route]").forEach((item) => {
+    const active = item.dataset.route === route && item.id !== "nav-settings";
+    item.classList.toggle("active", active);
+    if (active) item.setAttribute("aria-current", "page");
+    else item.removeAttribute("aria-current");
+  });
+  for (const area of ["data", "research", "settings"]) {
+    document.querySelector(`[data-nav-section="${area}"]`)?.classList.toggle("current-section", route.startsWith(`/${area}`));
+  }
+  if (route === "/advanced") document.getElementById("advanced-nav").open = true;
+}
+
+export function closeNavigation() {
+  document.body.classList.remove("nav-open");
+  document.getElementById("nav-scrim").hidden = true;
+  document.getElementById("nav-open").setAttribute("aria-expanded", "false");
+}
+
+export async function renderCurrentRoute({preservePosition = false} = {}) {
+  const revision = ++renderRevision;
+  const definition = resolveRoute(window.location.hash);
+  if (window.location.hash !== `#${definition.path}`) window.history.replaceState(null, "", `#${definition.path}`);
+  const routeChanged = lastRoute !== definition.path;
+  const readingPosition = preservePosition || !routeChanged ? window.scrollY : 0;
+  if (state.activeRoute !== definition.path) state.routeVisitRevision += 1;
+  state.activeRoute = definition.path;
+  setActiveNavigation(definition.path);
+  const titles = state.language === "en" ? {"/home":"Home","/data":"Data","/data/fund/china-public":"Funds","/data/equity/china":"Equities","/research/statistics":"Statistics","/research/modeling":"Modeling","/settings/data-update":"Data Update","/settings/data-status":"Data Status","/advanced":"Advanced"} : {"/home":"首页","/data":"数据","/data/fund/china-public":"基金","/data/equity/china":"股票","/research/statistics":"统计分析","/research/modeling":"建模","/settings/data-update":"更新数据","/settings/data-status":"数据状态","/advanced":"高级"};
+  document.title = `${titles[definition.path] || definition.title} · Financial Research`;
+  const main = document.getElementById("workspace-main");
+  if (routeChanged) main.innerHTML = `<div class="loading-state">${state.language === "en" ? "Opening…" : "正在打开…"}</div>`;
+  try {
+    const render = await definition.load();
+    if (revision !== renderRevision) return;
+    await render();
+    if (revision !== renderRevision) return;
+    lastRoute = definition.path;
+    window.scrollTo({top: readingPosition, behavior: "instant"});
+    if (routeChanged) main.focus({preventScroll: true});
+  } catch (error) {
+    if (revision !== renderRevision) return;
+    main.innerHTML = `<div class="page"><div class="risk" role="alert">${state.language === "en" ? "This page could not be opened." : "无法打开此页面。"}</div><details class="technical-detail"><summary>${state.language === "en" ? "Technical details" : "技术详情"}</summary><code>${escapeHtml(error?.message || error)}</code></details></div>`;
+  }
+}
+
+export function navigate(route) {
+  const normalized = normalizeRoute(route);
+  if (window.location.hash === `#${normalized}`) renderCurrentRoute({preservePosition: true});
+  else window.location.hash = normalized;
+}
+
+export function startNavigation() {
+  document.getElementById("nav-open").addEventListener("click", () => {
+    document.body.classList.add("nav-open");
+    document.getElementById("nav-scrim").hidden = false;
+    document.getElementById("nav-open").setAttribute("aria-expanded", "true");
+  });
+  document.getElementById("nav-close").addEventListener("click", closeNavigation);
+  document.getElementById("nav-scrim").addEventListener("click", closeNavigation);
+  document.querySelectorAll(".app-rail a").forEach((link) => link.addEventListener("click", closeNavigation));
+  window.addEventListener("hashchange", () => {closeNavigation(); renderCurrentRoute();});
+  if (!window.location.hash) window.location.replace("#/home");
+  else renderCurrentRoute();
+}

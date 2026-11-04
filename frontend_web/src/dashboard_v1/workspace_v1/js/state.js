@@ -1,4 +1,50 @@
-export const state={apps:[],dashboards:[],archivedDashboards:[],modules:[],projects:[],products:{},sources:{},token:{},userWorkspace:{dashboards:[],research_records:[],project_data_packages:[],plug_in_groups:[],plug_in_drafts:[],dashboard_plug_ins:[]},rollbackPreview:null,activeProject:"a_share_main_money_flow",projectDetail:null,projectPackageOptions:null,projectPackagePreview:null,projectPackageExport:null,projectPackageForm:null,investmentSample:null,investmentSampleDetail:null,activeInvestmentSample:"",activeModule:"",activeDashboard:"",returnDashboard:"",activeTab:"overview",selectedSlots:[],selectedSeries:[],seriesLookback:90,activeView:"overview",language:"zh",context:null,contextDashboard:"",contextFormat:"markdown",search:"",workspaceNotice:"",dashboardFormOpen:false,pluginGroupFormOpen:false,pluginDraftFormGroup:"",pluginDraftEditing:"",dashboardPluginChooserOpen:false};
-export function primarySource(id){return({rmb_liquidity:"China macro and rates data",usd_liquidity:"FRED and FX data",commodities:"Commodity market data",a_share_main_money_flow:"ETF and China market summaries",company_report:"Structured financials and disclosure metadata"})[id]||"Curated research data"}
-export function contextRequest(){return{scope:"dashboard",dashboard_id:state.contextDashboard,selected_series:state.selectedSeries}}
-export function moduleById(id){return state.modules.find((module)=>module.module_id===id)||{module_id:id,module_name:id,module_category:"plug_in",purpose:"Registered Plug-in",data_status_counts:{}}}
+export const state = {
+  language: "zh",
+  activeRoute: "/home",
+  routeVisitRevision: 0,
+  readiness: null,
+  platformHealth: null,
+  configurationReadError: null,
+  capabilityCatalog: null,
+  configuration: null,
+  lifecycle: {
+    loading: false,
+    error: null,
+    revision: 0,
+    observedAt: null,
+    readback: null,
+    pendingScopes: {},
+    pendingConfiguredUpdate: false,
+  },
+};
+
+const lifecycleListeners = new Set();
+
+export function setLanguage(language) {
+  state.language = language === "en" ? "en" : "zh";
+}
+
+export function captureRouteVisit(path) {
+  return {path, revision: state.routeVisitRevision};
+}
+
+export function ownsRouteVisit(visit) {
+  return visit?.path === state.activeRoute && visit.revision === state.routeVisitRevision;
+}
+
+export function isReady(capabilityId) {
+  return state.readiness?.checks?.[capabilityId]?.status === "ready";
+}
+
+export function subscribeLifecycle(listener) {
+  lifecycleListeners.add(listener);
+  return () => lifecycleListeners.delete(listener);
+}
+
+export function setLifecycleState(patch = {}) {
+  state.lifecycle = {...state.lifecycle, ...patch};
+  lifecycleListeners.forEach((listener) => {
+    try { listener(state.lifecycle); } catch { /* presentation subscribers are non-authoritative */ }
+  });
+  return state.lifecycle;
+}

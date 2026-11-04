@@ -36,4 +36,9 @@ Core Data Only does not mean retaining only PDFs and dropping useful text. Finan
 
 AI analysis may consume cleaned text, sections, chunks, evidence maps and summaries; parser intermediates cannot override authoritative structured financial interfaces.
 
-PDF parser output is explanatory evidence. It must not override authoritative structured financial interfaces for core financial metrics.
+Official filings and issuer/regulatory disclosures remain authoritative report
+evidence. The AI-consumable text layer is derived explanatory material for
+analysis and traceability. Parser extraction, OCR, cleaned text, chunks,
+summaries, and evidence maps must not override authoritative structured
+financial interfaces or official filing evidence for core financial metrics
+without an explicit evidence-backed correction.

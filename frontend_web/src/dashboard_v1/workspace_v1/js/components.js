@@ -1,5 +1,16 @@
-import{primarySource,state}from"./state.js";
+function primarySource(){return ""}
 export function escapeHtml(value){return String(value===undefined||value===null?"":value).replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
+export function equityMatchReason(candidate, query, language = "zh") {
+  const matched = String(candidate?.matched_value || "").trim();
+  if (!matched) return "";
+  const same = matched.toLocaleLowerCase() === String(query || "").trim().toLocaleLowerCase();
+  const english = language === "en";
+  if (candidate.match_kind === "code") return english ? `Code match: ${matched}` : `代码匹配：${matched}`;
+  if (candidate.match_kind === "code_alias") return english ? `Recorded code alias: ${matched}` : `登记代码别名匹配：${matched}`;
+  if (candidate.match_kind === "name_alias") return english ? `Recorded name alias: ${matched}` : `已记录名称别名匹配：${matched}`;
+  if (candidate.match_kind === "name" && matched === candidate.display_name) return english ? `${same ? "Name" : "Partial name"} match: ${matched}` : `${same ? "名称" : "名称部分"}匹配：${matched}`;
+  return english ? `Recorded name match: ${matched}` : `已记录名称匹配：${matched}`;
+}
 export function number(value){return Number(value||0)}
 export const PRODUCT_LABELS={dataQuality:"数据质量",timeBasis:"时点口径",freshness:"更新状态",lastCheck:"最近检查",latestDate:"最新日期"};
 export function humanStatus(value){const text=String(value||"unknown"),lower=text.toLowerCase(),map={ok:"\u53ef\u7528",success:"\u53ef\u7528",passed:"\u53ef\u7528",ready:"\u53ef\u7528",available:"\u53ef\u7528",updateable:"\u53ef\u68c0\u67e5",partial:"\u90e8\u5206\u53ef\u7528",source_gap:"\u9700\u8981\u6269\u5c55\u6570\u636e\u6e90",missing:"\u6570\u636e\u7f3a\u5931",failed:"\u9700\u8981\u6ce8\u610f",error:"\u9700\u8981\u6ce8\u610f",never_run:"\u5c1a\u672a\u68c0\u67e5",not_checked:"\u5c1a\u672a\u68c0\u67e5",disabled:"\u5df2\u5173\u95ed",candidate:"\u5019\u9009\u72b6\u6001",production_candidate:"\u5019\u9009\u72b6\u6001",quality_warning:"\u53ef\u7528\uff0c\u6709\u8d28\u91cf\u63d0\u793a",passed_with_warnings:"\u53ef\u7528\uff0c\u6709\u63d0\u793a",usable_with_warnings:"\u53ef\u7528\uff0c\u6709\u63d0\u793a",trade_date_only:"\u6309\u4ea4\u6613\u65e5\u5bf9\u9f50",trade_or_observation_date_only:"\u6309\u89c2\u6d4b\u65e5\u5bf9\u9f50",observation_date_aligned:"\u6309\u89c2\u6d4b\u65e5\u5bf9\u9f50",release_calendar_required:"\u9700\u8981\u53d1\u5e03\u65f6\u95f4\u8868",release_calendar_required_or_trade_date_only:"\u9700\u8981\u6838\u5bf9\u65f6\u95f4\u53e3\u5f84",licensed_snapshot_update:"\u6388\u6743\u6570\u636e\u6e90\u5237\u65b0",blocked_no_publish_time:"\u7f3a\u5c11\u53d1\u5e03\u65f6\u95f4\u8bc1\u636e",not_implemented:"\u5c1a\u672a\u8fde\u63a5",no_production_write:"\u751f\u4ea7\u5199\u5165\u672a\u53d1\u751f",publish_date_missing:"\u4e25\u683c\u65f6\u70b9\u4f7f\u7528\u5df2\u963b\u65ad",publish_date_required:"\u9700\u8981\u4e25\u683c\u65f6\u70b9\u8bc1\u660e",latest_research:"\u6700\u65b0\u7814\u7a76\u89c6\u56fe","akshare-dependent targets require akshare importable in fr venv":"A\u80a1\u76f8\u5173\u66f4\u65b0\u9700\u8981\u672c\u5730 AKShare \u73af\u5883\u53ef\u7528"};return map[lower]||text.replace(/_/g," ").replace(/\b\w/g,(char)=>char.toUpperCase())}
@@ -8,7 +19,7 @@ export function helpIcon(text){return`<span class="help-dot" title="${escapeHtml
 export function statusCounts(module){const counts=module.data_status_counts||{};return`<div class="stats"><span><b>${number(counts.available)}</b> available</span><span><b>${number(counts.partial)}</b> partial</span><span><b>${number(counts.source_gap)}</b> gaps</span></div>`}
 export function riskTag(module){const counts=module.data_status_counts||{};return number(counts.source_gap)?`<span class="tag warn">${humanStatus("source_gap")}</span>`:number(counts.partial)?`<span class="tag warn">${humanStatus("partial")}</span>`:`<span class="tag ok">${humanStatus("available")}</span>`}
 export function head(kicker,title,subtitle){return`<div class="head"><div><div class="eyebrow">${escapeHtml(kicker)}</div><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)}</p></div></div>`}
-export function workspaceNotice(){return state.workspaceNotice?`<div class="risk workspace-notice" aria-live="polite">${escapeHtml(state.workspaceNotice)}</div>`:""}
+export function workspaceNotice(){return ""}
 export function plugInName(value){return String(value||"").replace(/\s+Module$/i,"")}
 export function readableSource(value){const text=String(value||"").trim(),lower=text.toLowerCase(),aliases={akshare_tencent_a_share_daily:"AKShare / Tencent A-share daily"};return !text||["recovery_summary_v1","dashboard_bootstrap","registry","registry summary","known_limitation","production_candidate","candidate"].includes(lower)?"":aliases[lower]||text}
 export function categoryLabel(value){const text=String(value||"").trim();if(!text)return"Uncategorized";if(text==="module_local")return"Source gap";if(text.startsWith("dp_stage2_"))return"Commodity benchmark";return text.split("_").map((part)=>part?part[0].toUpperCase()+part.slice(1):"").join(" ")}

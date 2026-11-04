@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from backend.app.clients.parse_lab_client import ParseLabClient
+from backend.app.core.diagnostic_safety import safe_exception_message
 from backend.app.modules.financial_report.services.parsed_document_registry import (
     find_by_task_id,
     list_registry_entries,
@@ -111,7 +112,7 @@ def update_review_decision(document_id: str, request: ReviewDecisionRequest) -> 
             review_notes=request.review_notes,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(status_code=400, detail=safe_exception_message(exc)) from exc
     return {
         "decision": decision,
         "review_item": get_review_item_by_document_id(document_id),
